@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mentoria em Escaneamento Intraoral | Ananda Marga Odontologia Digital</title>
+<meta name="description" content="Mentoria individual, presencial ou online, para o dentista que cansou de repetir escaneamento e de receber prova devolvida do laboratório. Com Ananda Marga, +1.000 bocas escaneadas.">
+<meta property="og:title" content="Escaneia de novo. O lab devolve de novo. O paciente espera de novo.">
+<meta property="og:description" content="Mentoria individual em escaneamento intraoral e fluxo digital, para dentistas de todo o Brasil.">
+<meta property="og:image" content="img/ananda-scanners.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --grafite:#3F3F3F; --grafite-2:#2f2f2f; --nude:#E2C7B1; --nude-2:#F4EBE3; --nude-3:#EBDACB;
+  --azul:#77A9CA; --azul-esc:#4c7fa1; --branco:#fff; --mute:#7a746f;
+  --serif:'Playfair Display',Georgia,serif; --sans:'Hanken Grotesk',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);font-weight:300;color:var(--grafite);background:var(--branco);line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+section{position:relative}
+.sec{padding:112px 0}
+@media(min-width:900px){.sec{padding:160px 0}}
+.bg-nude{background:var(--nude-2)}
+.bg-dark{background:var(--grafite);color:#f3ece6}
+.eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;font-weight:500;color:var(--azul-esc);display:flex;gap:14px;align-items:center;margin-bottom:28px}
+.eyebrow b{font-family:var(--serif);font-weight:400;font-size:15px;letter-spacing:.05em;color:var(--nude);filter:saturate(1.4) brightness(.85)}
+.bg-dark .eyebrow{color:var(--azul)}
+.bg-dark .eyebrow b{color:var(--nude);filter:none}
+h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.12;letter-spacing:-.01em}
+h2{font-size:clamp(32px,5vw,60px);max-width:16em;text-wrap:balance}
+h2 em,h1 em{font-style:italic;color:var(--azul-esc)}
+.bg-dark h2 em{color:var(--azul)}
+.lede{font-size:clamp(17px,1.6vw,20px);color:var(--mute);max-width:36em;margin-top:28px}
+.bg-dark .lede{color:#cfc4bb}
+.btn{display:inline-flex;align-items:center;gap:12px;background:var(--grafite);color:#fff;text-decoration:none;font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:600;padding:18px 30px;border:1px solid var(--grafite);transition:.35s;cursor:pointer;font-family:var(--sans)}
+.btn:hover{background:var(--azul-esc);border-color:var(--azul-esc)}
+.btn.ghost{background:transparent;color:var(--grafite)}
+.btn.ghost:hover{background:var(--grafite);color:#fff}
+.btn.nude{background:var(--nude);color:var(--grafite);border-color:var(--nude)}
+.btn.nude:hover{background:#fff;border-color:#fff}
+.btn svg{width:16px;height:16px;fill:currentColor}
+.ctas{display:flex;flex-wrap:wrap;gap:14px;margin-top:40px}
+
+/* topo */
+header{position:fixed;inset:0 0 auto 0;z-index:50;transition:.4s;padding:16px 0}
+header.solid{background:rgba(255,255,255,.92);backdrop-filter:blur(10px);box-shadow:0 1px 0 rgba(63,63,63,.08)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}
+header img{height:46px;width:auto}
+header .btn{padding:13px 20px}
+@media(max-width:560px){header img{height:36px}header .btn{padding:11px 14px;letter-spacing:.16em}}
+
+/* hero */
+.hero{min-height:100svh;display:grid;align-items:end;padding:120px 0 64px;background:linear-gradient(180deg,#fff 0%,var(--nude-2) 100%);overflow:hidden}
+.hero .grid{display:grid;gap:40px;align-items:end}
+@media(min-width:900px){.hero .grid{grid-template-columns:1.25fr .85fr}}
+.hero h1{font-size:clamp(36px,3.8vw,56px)}
+@media(min-width:900px){.hero .grid{grid-template-columns:1fr 400px!important}.hero h1 span{white-space:nowrap}}
+@media(max-width:899px){.hero h1{font-size:clamp(34px,8.4vw,52px)}}
+.hero h1 span{display:block}
+.hero .sub{font-size:clamp(17px,1.5vw,20px);max-width:34em;margin-top:32px;color:#5b5652}
+.hero .photo{position:relative;aspect-ratio:3/4;max-height:78vh;justify-self:end;width:100%;max-width:460px}
+.hero .photo img.p{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.hero .photo::before{content:"";position:absolute;inset:-18px -18px 18px 18px;border:1px solid var(--nude);z-index:-1}
+.hero .mono{position:absolute;right:-6%;top:-4%;width:min(70vw,720px);opacity:.1;pointer-events:none;z-index:0}
+.hero .wrap{position:relative;z-index:1}
+.proof{display:flex;flex-wrap:wrap;gap:12px 36px;margin-top:48px;padding-top:28px;border-top:1px solid rgba(63,63,63,.14);font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:var(--grafite)}
+.proof span::before{content:"";display:inline-block;width:6px;height:6px;background:var(--azul);margin-right:12px;vertical-align:middle}
+
+/* menu lateral */
+.dots{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:40;display:none;flex-direction:column;gap:14px;align-items:flex-end}
+@media(min-width:1280px){.dots{display:flex}}
+.dots a{font-size:9px;letter-spacing:.24em;text-transform:uppercase;text-decoration:none;color:rgba(63,63,63,.45);display:flex;gap:10px;align-items:center;font-weight:500;transition:.3s}
+.dots a::after{content:"";width:6px;height:6px;background:rgba(63,63,63,.25);transition:.3s}
+.dots a.on{color:var(--grafite)}
+.dots a.on::after{background:var(--azul);transform:scale(1.4)}
+.dots.dk a{color:rgba(255,255,255,.5)}.dots.dk a::after{background:rgba(255,255,255,.3)}.dots.dk a.on{color:#fff}
+
+/* cenário */
+.list{margin-top:72px;border-top:1px solid rgba(63,63,63,.14)}
+.list li{list-style:none;display:grid;grid-template-columns:56px 1fr;gap:12px;padding:30px 0;border-bottom:1px solid rgba(63,63,63,.14);font-family:var(--serif);font-size:clamp(20px,2.4vw,30px);line-height:1.3}
+.list li i{font-style:normal;font-size:14px;color:var(--azul-esc);letter-spacing:.1em;padding-top:.7em;font-family:var(--sans);font-weight:500}
+.close-note{margin-top:56px;padding-left:24px;border-left:2px solid var(--azul);font-size:clamp(18px,1.9vw,24px);max-width:34em;font-family:var(--serif);font-style:italic}
+.close-note strong{font-weight:500;font-style:normal}
+
+/* cards em grade com linha de 1px */
+.cards{display:grid;gap:1px;background:rgba(63,63,63,.14);margin-top:72px;border:1px solid rgba(63,63,63,.14)}
+@media(min-width:720px){.cards.c2{grid-template-columns:1fr 1fr}.cards.c3{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--branco);padding:40px 36px;transition:background .5s}
+.bg-nude .card{background:var(--nude-2)}
+.card:hover{background:#fff}
+.bg-nude .card:hover{background:#fbf6f1}
+.card .n{font-family:var(--serif);color:var(--azul-esc);font-size:15px;margin-bottom:18px;display:block}
+.card h3{font-size:clamp(22px,2.2vw,28px);margin-bottom:14px}
+.card p{color:var(--mute);font-size:16px}
+
+/* comparativo */
+.vs{display:grid;gap:1px;margin-top:72px;background:rgba(255,255,255,.14)}
+@media(min-width:820px){.vs{grid-template-columns:1fr 1fr}}
+.vs>div{background:var(--grafite);padding:44px 40px}
+.vs h3{font-size:12px;letter-spacing:.3em;text-transform:uppercase;font-family:var(--sans);font-weight:500;color:var(--nude);margin-bottom:6px}
+.vs .t{font-family:var(--serif);font-size:clamp(34px,4vw,50px);margin-bottom:28px}
+.vs .r .t{color:var(--azul)}
+.vs li{list-style:none;padding:15px 0;border-top:1px solid rgba(255,255,255,.12);font-size:17px;color:#e8dfd7}
+.vs .r li{color:#fff}
+.vs .r li::before{content:"+";color:var(--azul);margin-right:14px;font-weight:500}
+.vs .l li::before{content:"–";color:var(--nude);opacity:.6;margin-right:14px}
+.dark-note{margin-top:48px;font-family:var(--serif);font-size:clamp(20px,2.4vw,30px);max-width:28em;font-style:italic;color:var(--nude)}
+
+/* amanhã */
+.day{display:grid;gap:0;margin-top:72px}
+@media(min-width:820px){.day{grid-template-columns:1fr 1fr;gap:0 80px}}
+.day p{padding:28px 0;border-top:1px solid rgba(63,63,63,.14);font-size:clamp(18px,1.8vw,22px)}
+.day p b{font-weight:500}
+
+/* método */
+.steps{margin-top:72px;display:grid;gap:1px;background:rgba(63,63,63,.14);border:1px solid rgba(63,63,63,.14)}
+@media(min-width:900px){.steps{grid-template-columns:repeat(5,1fr)}}
+.step{background:var(--branco);padding:36px 26px;min-height:240px;transition:.5s;position:relative}
+.step:hover{background:var(--nude-2)}
+.step .rn{font-family:var(--serif);font-size:44px;color:var(--nude);line-height:1;margin-bottom:34px;display:block;filter:saturate(1.3) brightness(.9)}
+.step h3{font-size:22px;margin-bottom:10px}
+.step p{font-size:15px;color:var(--mute);line-height:1.55}
+.tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:48px}
+.tags span{border:1px solid rgba(63,63,63,.2);padding:10px 16px;font-size:13px;letter-spacing:.04em}
+
+/* implante */
+.split{display:grid;gap:56px;align-items:start}
+@media(min-width:900px){.split{grid-template-columns:1fr 1fr;gap:96px}}
+.ticks li{list-style:none;padding:20px 0;border-top:1px solid rgba(63,63,63,.14);display:flex;gap:18px;align-items:baseline;font-size:18px}
+.ticks li:last-child{border-bottom:1px solid rgba(63,63,63,.14)}
+.ticks li::before{content:"";flex:none;width:8px;height:8px;background:var(--azul);transform:translateY(-1px)}
+
+/* resultado */
+.two{display:grid;gap:1px;background:rgba(63,63,63,.14);margin-top:72px;border:1px solid rgba(63,63,63,.14)}
+@media(min-width:820px){.two{grid-template-columns:1fr 1fr}}
+.two>div{background:var(--nude-2);padding:44px 40px}
+.two h3{font-family:var(--sans);font-size:11px;letter-spacing:.3em;text-transform:uppercase;font-weight:600;color:var(--azul-esc);margin-bottom:26px}
+.two li{list-style:none;padding:14px 0;border-top:1px solid rgba(63,63,63,.12);font-size:18px}
+.big-quote{margin-top:64px;font-family:var(--serif);font-size:clamp(24px,3.2vw,42px);max-width:22em;line-height:1.25}
+.big-quote em{color:var(--azul-esc)}
+
+/* formato */
+.modes{display:grid;gap:1px;background:rgba(255,255,255,.14);margin-top:72px}
+@media(min-width:820px){.modes{grid-template-columns:1fr 1fr}}
+.modes>div{background:var(--grafite);padding:44px 40px}
+.modes small{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--azul);font-weight:600}
+.modes h3{font-size:clamp(28px,3vw,38px);margin:12px 0 16px;color:#fff}
+.modes p{color:#cfc4bb;font-size:16px}
+.modes .note{margin-top:18px;font-size:14px;color:var(--nude);border-top:1px solid rgba(255,255,255,.14);padding-top:16px}
+.time{margin-top:72px;display:grid;gap:0}
+@media(min-width:820px){.time{grid-template-columns:repeat(4,1fr)}}
+.time div{padding:28px 24px 28px 0;border-top:1px solid rgba(255,255,255,.2);position:relative}
+.time div::before{content:"";position:absolute;top:-4px;left:0;width:7px;height:7px;background:var(--azul)}
+.time b{display:block;font-family:var(--serif);font-weight:400;font-size:24px;color:#fff;margin-bottom:6px;margin-top:10px}
+.time span{font-size:14px;color:#cfc4bb}
+
+/* quem */
+.who{display:grid;gap:56px;align-items:center}
+@media(min-width:900px){.who{grid-template-columns:.9fr 1.1fr;gap:96px}}
+.who .ph{position:relative}
+.who .ph img{width:100%;aspect-ratio:2/3;object-fit:cover;object-position:50% 30%}
+@media(min-width:900px){.who .ph{max-width:460px}}
+.who .ph::after{content:"";position:absolute;inset:18px -18px -18px 18px;border:1px solid var(--azul);z-index:-1}
+.who p{margin-top:22px;font-size:18px}
+.who .sig{font-family:var(--serif);font-style:italic;font-size:clamp(22px,2.4vw,30px);margin-top:34px;line-height:1.3}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(63,63,63,.14);margin-top:44px;border:1px solid rgba(63,63,63,.14)}
+.nums div{background:var(--branco);padding:22px 16px;text-align:center}
+.nums b{display:block;font-family:var(--serif);font-weight:400;font-size:clamp(24px,3vw,38px);color:var(--azul-esc);line-height:1.1}
+.nums span{font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500}
+.neutral{font-size:14px!important;color:var(--mute);margin-top:22px!important}
+
+/* depoimentos */
+.flag{display:inline-block;background:var(--nude);color:var(--grafite);font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;padding:6px 12px;margin-bottom:24px}
+.quote{padding:40px 34px}
+.quote q{display:block;font-family:var(--serif);font-size:20px;line-height:1.4;quotes:none;margin-bottom:26px}
+.quote cite{font-style:normal;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);font-weight:500}
+
+/* faq */
+.faq{margin-top:72px;border-top:1px solid rgba(63,63,63,.14);max-width:860px}
+.faq details{border-bottom:1px solid rgba(63,63,63,.14)}
+.faq summary{list-style:none;cursor:pointer;padding:28px 40px 28px 0;font-family:var(--serif);font-size:clamp(20px,2.2vw,26px);position:relative;line-height:1.3}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:4px;top:26px;font-family:var(--sans);font-weight:300;font-size:28px;color:var(--azul-esc);transition:.3s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 40px 30px 0;color:var(--mute);font-size:17px}
+
+/* cta final */
+.final{background:var(--grafite);color:#f3ece6;overflow:hidden}
+.final .mono{position:absolute;left:-8%;bottom:-18%;width:min(80vw,760px);opacity:.07;filter:invert(1);pointer-events:none}
+.final .grid{display:grid;gap:64px;position:relative}
+@media(min-width:960px){.final .grid{grid-template-columns:1fr 1fr;gap:96px}}
+form{display:grid;gap:22px}
+.f2{display:grid;gap:22px}
+@media(min-width:560px){.f2{grid-template-columns:1fr 1fr}}
+label{display:block;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--nude);font-weight:600;margin-bottom:8px}
+input,select,textarea{width:100%;background:transparent;border:0;border-bottom:1px solid rgba(255,255,255,.3);color:#fff;font:400 17px var(--sans);padding:10px 0;border-radius:0;outline:0;transition:.3s}
+select option{color:#222}
+input:focus,select:focus,textarea:focus{border-color:var(--azul)}
+input::placeholder{color:rgba(255,255,255,.35)}
+.fnote{font-size:13px;color:#b9ada3;margin-top:4px}
+.alt{margin-top:36px;font-size:14px;color:#cfc4bb}
+.alt a{color:var(--nude)}
+
+footer{background:var(--grafite-2);color:#b9ada3;padding:56px 0;font-size:13px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center}
+footer img{height:54px;filter:brightness(0) invert(1);opacity:.85}
+
+/* botão flutuante */
+.fab{position:fixed;right:18px;bottom:18px;z-index:60;background:var(--grafite);color:#fff;width:56px;height:56px;display:grid;place-items:center;box-shadow:0 8px 30px rgba(0,0,0,.25);transition:.3s}
+.fab:hover{background:var(--azul-esc)}
+.fab svg{width:26px;height:26px;fill:currentColor}
+
+/* reveal */
+[data-r]{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+[data-r].in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){[data-r]{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header id="top">
+  <div class="wrap">
+    <a href="#hero" aria-label="Ananda Marga Odontologia Digital"><img src="img/logo-horizontal.png" alt="Ananda Marga Odontologia Digital"></a>
+    <a class="btn" href="#contato" data-wa>Quero a mentoria</a>
+  </div>
+</header>
+
+<nav class="dots" id="dots" aria-label="Seções">
+  <a href="#cenario">Cenário</a>
+  <a href="#custo">Custo</a>
+  <a href="#virada">Domínio</a>
+  <a href="#metodo">Método</a>
+  <a href="#implante">Implantes</a>
+  <a href="#formato">Formato</a>
+  <a href="#ananda">Ananda</a>
+  <a href="#contato">Contato</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <img class="mono" src="img/logo-quadrada.png" alt="" aria-hidden="true">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <div class="eyebrow" data-r>Mentoria individual · presencial ou online · todo o Brasil</div>
+        <h1>
+          <span data-r style="--d:.05s">Escaneia de novo.</span>
+          <span data-r style="--d:.2s">O lab devolve de novo.</span>
+          <span data-r style="--d:.35s">O paciente <em>espera de novo.</em></span>
+        </h1>
+        <p class="sub" data-r style="--d:.5s">Eu te ensino o protocolo que acaba com a repetição, com a prova devolvida pelo laboratório e com a insegurança no implante. Mentoria individual em escaneamento intraoral e fluxo digital, baseada em mais de mil bocas escaneadas.</p>
+        <div class="ctas" data-r style="--d:.65s">
+          <a class="btn" href="#contato" data-wa>Quero a mentoria <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.300 1.200-1.800 1.200-.5.1-1 .2-3.300-.7-2.800-1.100-4.600-4-4.700-4.200-.1-.2-1.100-1.500-1.100-2.800 0-1.300.7-1.900.9-2.200.2-.3.5-.3.700-.3h.5c.2 0 .4 0 .6.500l.8 2c.1.200.1.400 0 .5l-.3.500-.4.400c-.1.200-.3.300-.1.600.2.300.8 1.300 1.700 2.100 1.200 1 2.100 1.300 2.400 1.500.3.100.5.100.6-.1l.9-1.100c.2-.3.400-.2.600-.1l1.900.9c.3.100.5.200.5.300.1.200.1.700-.1 1.300Z"/></svg></a>
+          <a class="btn ghost" href="#metodo">Ver como funciona</a>
+        </div>
+      </div>
+      <div class="photo" data-r style="--d:.3s">
+        <img class="p" src="img/ananda-scanners.jpg" alt="Ananda Marga segurando scanners intraorais de diferentes marcas, com um escaneamento na tela ao fundo">
+      </div>
+    </div>
+    <div class="proof" data-r style="--d:.7s">
+      <span>+1.000 bocas escaneadas</span><span>Multi-scanner</span><span>Clínica + laboratório</span>
+    </div>
+  </div>
+</section>
+
+<!-- 01 CENÁRIO -->
+<section class="sec" id="cenario">
+  <div class="wrap">
+    <div class="eyebrow" data-r><b>01</b> O que ninguém fala no dia da compra</div>
+    <h2 data-r>Você conhece <em>essa rotina.</em></h2>
+    <ul class="list">
+      <li data-r><i>01</i><span>Você escaneia a arcada e a malha volta com furo. Escaneia de novo.</span></li>
+      <li data-r><i>02</i><span>O laboratório devolve dizendo que a margem não ficou boa.</span></li>
+      <li data-r><i>03</i><span>No caso de implante, na hora do scanbody, bate a dúvida.</span></li>
+      <li data-r><i>04</i><span>O scanner está na clínica, mas nos casos difíceis você volta para a moldagem.</span></li>
+      <li data-r><i>05</i><span>O paciente está na cadeira, esperando, e você não quer parecer inseguro.</span></li>
+    </ul>
+    <p class="close-note" data-r>Isso não é falta de competência. É falta de um <strong>protocolo padronizado</strong> para conduzir o fluxo digital do começo ao fim. E protocolo se aprende.</p>
+  </div>
+</section>
+
+<!-- 02 CUSTO -->
+<section class="sec bg-nude" id="custo">
+  <div class="wrap">
+    <div class="eyebrow" data-r><b>02</b> O preço que não aparece na nota fiscal</div>
+    <h2 data-r>O custo está no que o seu <em>scanner não entrega.</em></h2>
+    <div class="cards c2">
+      <div class="card" data-r><span class="n">I</span><h3>Escaneamentos incompletos</h3><p>Capturas falhas que exigem repetição e consomem o tempo do atendimento.</p></div>
+      <div class="card" data-r style="--d:.1s"><span class="n">II</span><h3>Retrabalho com o laboratório</h3><p>Comunicação que falha gera atraso, custo extra e insatisfação dos dois lados.</p></div>
+      <div class="card" data-r><span class="n">III</span><h3>Insegurança em implantes</h3><p>Dúvida sobre scanbody e posicionamento compromete o resultado do caso.</p></div>
+      <div class="card" data-r style="--d:.1s"><span class="n">IV</span><h3>Ferramentas subutilizadas</h3><p>Recursos do scanner ficam esquecidos por falta de orientação prática.</p></div>
+    </div>
+    <p class="close-note" data-r>Cada repetição é tempo de cadeira. Cada prova devolvida é custo e paciente esperando. <strong>O scanner parado é o item mais caro da clínica.</strong></p>
+  </div>
+</section>
+
+<!-- 03 VIRADA -->
+<section class="sec bg-dark" id="virada">
+  <div class="wrap">
+    <div class="eyebrow" data-r><b>03</b> Duas formas de ter o mesmo equipamento</div>
+    <h2 data-r>Ter scanner e dominar o scanner <em>são coisas diferentes.</em></h2>
+    <div class="vs">
+      <div class="l" data-r>
+        <h3>Hoje</h3><div class="t">Tem o scanner</div>
+        <ul>
+          <li>Escaneia e torce para a malha fechar</li>
+          <li>Repete a arcada quando algo falha</li>
+          <li>Envia o arquivo e espera o retorno do lab</li>
+          <li>Evita implante no digital</li>
+          <li>Usa o básico do software</li>
+        </ul>
+      </div>
+      <div class="r" data-r style="--d:.12s">
+        <h3>Depois</h3><div class="t">Domina o fluxo</div>
+        <ul>
+          <li>Segue uma sequência e sabe onde corrigir</li>
+          <li>Identifica e corrige a falha em tempo real</li>
+          <li>Envia o que o laboratório precisa, sem ruído</li>
+          <li>Conduz implante com scanbody e perfil de emergência</li>
+          <li>Usa as ferramentas do equipamento a favor do atendimento</li>
+        </ul>
+      </div>
+    </div>
+    <p class="dark-note" data-r>O scanner não substitui a técnica. Ele potencializa quem sabe conduzir o fluxo digital com segurança.</p>
+  </div>
+</section>
+
+<!-- 04 DIA SEGUINTE -->
+<section class="sec" id="resultado">
+  <div class="wrap">
+    <div class="eyebrow" data-r><b>04</b> Depois da mentoria</div>
+    <h2 data-r>Imagine a sua rotina <em>com o fluxo padronizado.</em></h2>
+    <div class="day">
+      <p data-r><b>A arcada fecha de primeira,</b> e você sabe por quê.</p>
+      <p data-r style="--d:.1s"><b>O caso de implante entra no digital</b> sem aquele frio na barriga.</p>
+      <p data-r><b>O laboratório recebe o arquivo certo</b> e a peça volta sem ajuste.</p>
+      <p data-r style="--d:.1s"><b>O paciente sai mais cedo, mais confortável,</b> e percebe que a clínica é moderna.</p>
+    </div>
+    <p class="close-note" data-r>Não é promessa de máquina nova. É o mesmo scanner que você já tem, finalmente <strong>rendendo o que você pagou por ele.</strong></p>
+  </div>
+</section>
+
+<!-- 05 MÉTODO -->
+<section class="sec bg-nude" id="metodo">
+  <div class="wrap">
+    <div class="eyebrow" data-r><b>05</b> Protocolo padronizado da Ananda</div>
+    <h2 data-r>Cinco etapas. Uma sequência. <em>Zero improviso.</em></h2>
+    <p class="lede" data-r>Técnica própria de padronização, construída em mais de mil bocas escaneadas e válida para qualquer scanner. Você aprende a ordem, o porquê de cada passo e como corrigir no meio do caminho.</p>
+    <div class="steps">
+      <div class="step" data-r><span class="rn">I</span><h3>Preparação</h3><p>Campo seco e isolado, instrumentos prontos.</p></div>
+      <div class="step" data-r style="--d:.08s"><span class="rn">II</span><h3>Arcada superior</h3><p>Escaneamento sistemático, sem pular região.</p></div>
+      <div class="step" data-r style="--d:.16s"><span class="rn">III</span><h3>Arcada inferior</h3><p>Mesma lógica, mesma previsibilidade.</p></div>
+      <div class="step" data-r style="--d:.24s"><span class="rn">IV</span><h3>Registro de mordida</h3><p>Captura precisa da oclusão em máxima intercuspidação.</p></div>
+      <div class="step" data-r style="--d:.32s"><span class="rn">V</span><h3>Revisão</h3><p>Verificar e corrigir falhas em tempo real, antes de enviar.</p></div>
+    </div>
+    <div class="tags" data-r>
+      <span>Sequência padronizada</span><span>Arcadas superior e inferior</span><span>Registro de mordida com precisão</span><span>Correção de falhas em tempo real</span><span>Controle de umidade e campo clínico</span><span>Leitura de margens e detalhes críticos</span>
+    </div>
+  </div>
+</section>
+
+<!-- 06 IMPLANTE E LAB -->
+<section class="sec" id="implante">
+  <div class="wrap">
+    <div class="split">
+      <div>
+        <div class="eyebrow" data-r><b>06</b> Do escaneamento ao envio correto</div>
+        <h2 data-r>O arquivo certo chega ao lab. <em>A peça volta certa.</em></h2>
+        <p class="lede" data-r>Você sai sabendo o que realmente precisa ser enviado para o laboratório executar o trabalho com segurança, como organizar e como evitar o ruído que gera atraso.</p>
+      </div>
+      <ul class="ticks" data-r style="--d:.15s;margin-top:8px">
+        <li>Escaneamento de perfil de emergência</li>
+        <li>Posicionamento e leitura correta do scanbody</li>
+        <li>Organização da caixa de componentes</li>
+        <li>Arquivos e informações essenciais para o laboratório</li>
+        <li>Como eliminar ruídos, atrasos e retrabalhos</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 07 RESULTADO -->
+<section class="sec bg-nude">
+  <div class="wrap">
+    <div class="eyebrow" data-r><b>07</b> Para a clínica e para o paciente</div>
+    <h2 data-r>Mais previsibilidade para você. Mais conforto <em>para quem está na cadeira.</em></h2>
+    <div class="two">
+      <div data-r>
+        <h3>Para o dentista</h3>
+        <ul>
+          <li>Mais segurança e domínio no uso do scanner</li>
+          <li>Menos retrabalho e menos custo com laboratório</li>
+          <li>Mais agilidade e fluidez no atendimento</li>
+          <li>Comunicação clínica-laboratório sem falhas</li>
+          <li>Melhor retorno sobre o investimento em tecnologia</li>
+        </ul>
+      </div>
+      <div data-r style="--d:.12s">
+        <h3>Para o paciente</h3>
+        <ul>
+          <li>Mais conforto durante os procedimentos</li>
+          <li>Menos retornos desnecessários à clínica</li>
+          <li>Tratamentos mais ágeis e previsíveis</li>
+          <li>Percepção clara de modernidade e cuidado</li>
+        </ul>
+      </div>
+    </div>
+    <p class="big-quote" data-r>Um dentista que domina o fluxo digital entrega resultados superiores. <em>E o paciente percebe a diferença.</em></p>
+  </div>
+</section>
+
+<!-- 08 FORMATO -->
+<section class="sec bg-dark" id="formato">
+  <div class="wrap">
+    <div class="eyebrow" data-r><b>08</b> Formato</div>
+    <h2 data-r>Uma mentoria só sua. Com o seu scanner, <em>de onde você estiver.</em></h2>
+    <p class="lede" data-r>Sem turma, sem aula genérica, sem sair da sua rotina. O foco total é a sua dificuldade e a aplicação prática do fluxo digital completo.</p>
+    <div class="modes">
+      <div data-r>
+        <small>Presencial</small>
+        <h3>No seu consultório, com paciente real</h3>
+        <p>Eu vou até você e conduzo o escaneamento no seu atendimento, com o seu scanner e o seu paciente.</p>
+        <p class="note">Atendo outras cidades, desde que o deslocamento fique a cargo do dentista.</p>
+      </div>
+      <div data-r style="--d:.12s">
+        <small>Online · todo o Brasil</small>
+        <h3>Videochamada ao vivo, sem viajar</h3>
+        <p>Acompanhamento individual e ao vivo, com a prática guiada por mim, e revisão da sua malha depois para corrigir o que ainda trava.</p>
+        <p class="note">Mesmo número de períodos e o mesmo follow-up do presencial.</p>
+      </div>
+    </div>
+    <div class="time">
+      <div data-r><b>Período 1</b><span>Encontro individual</span></div>
+      <div data-r style="--d:.08s"><b>Período 2</b><span>Encontro individual</span></div>
+      <div data-r style="--d:.16s"><b>Período 3</b><span>Encontro individual</span></div>
+      <div data-r style="--d:.24s"><b>Follow-up</b><span>45 dias após o terceiro encontro</span></div>
+    </div>
+    <div class="cards c2" style="margin-top:72px;border-color:rgba(255,255,255,.14);background:rgba(255,255,255,.14)">
+      <div class="card" style="background:var(--grafite);color:#f3ece6" data-r><h3>Escaneamento na prática</h3><p style="color:#cfc4bb">Prática direta no seu atendimento (presencial) ou guiada ao vivo (online), com treino em modelo quando o caso pede.</p></div>
+      <div class="card" style="background:var(--grafite);color:#f3ece6" data-r><h3>Dentes e implantes</h3><p style="color:#cfc4bb">Protocolos específicos para cada situação clínica, com orientação sobre scanbodies.</p></div>
+      <div class="card" style="background:var(--grafite);color:#f3ece6" data-r><h3>Comunicação com o laboratório</h3><p style="color:#cfc4bb">Padronização do envio de arquivos para eliminar falhas e retrabalho.</p></div>
+      <div class="card" style="background:var(--grafite);color:#f3ece6" data-r><h3>Ferramentas do scanner</h3><p style="color:#cfc4bb">Domínio dos recursos do equipamento para otimizar cada atendimento.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 ANANDA -->
+<section class="sec" id="ananda">
+  <div class="wrap">
+    <div class="who">
+      <div class="ph" data-r><img src="img/ananda-retrato.jpg" alt="Ananda Marga, especialista em Odontologia Digital" loading="lazy"></div>
+      <div>
+        <div class="eyebrow" data-r><b>09</b> Sua mentora</div>
+        <h2 data-r>Ananda Marga <em>escaneou o caminho.</em> Agora ela mostra.</h2>
+        <p data-r>Eu atuo há anos com odontologia digital, escaneamento intraoral e suporte a dentistas de diferentes especialidades. Já passei por mais de mil bocas escaneadas, em vários equipamentos, vendo as duas pontas do fluxo: a clínica e o laboratório.</p>
+        <p data-r>Foi assim que desenvolvi uma técnica própria de padronização, com foco em previsibilidade, agilidade e menos retrabalho.</p>
+        <p class="sig" data-r>Eu não ensino apenas teoria. Eu ensino o caminho. Eu dou direção.</p>
+        <div class="nums" data-r>
+          <div><b>+1.000</b><span>Bocas escaneadas</span></div>
+          <div><b>Multi</b><span>Scanner</span></div>
+          <div><b>Clínica</b><span>+ Laboratório</span></div>
+        </div>
+        <p class="neutral" data-r>O protocolo é o mesmo para qualquer scanner. A mentoria atende quem tem equipamento de qualquer marca.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 DEPOIMENTOS (bloco reservado) -->
+<section class="sec bg-nude" id="depoimentos">
+  <div class="wrap">
+    <span class="flag" data-r>Exemplo · substituir por depoimentos reais antes de publicar</span>
+    <div class="eyebrow" data-r><b>10</b> Quem já passou pela mentoria</div>
+    <h2 data-r>O que mudou <em>na cadeira deles.</em></h2>
+    <div class="cards c3">
+      <div class="card quote" data-r><q>Eu repetia a arcada três vezes por caso. Hoje fecho em uma e o laboratório parou de devolver prova.</q><cite>Dr(a). [Nome] · [especialidade] · [cidade]</cite></div>
+      <div class="card quote" data-r style="--d:.1s"><q>Eu fugia de implante no digital. Agora conduzo o scanbody com segurança.</q><cite>Dr(a). [Nome] · [especialidade] · [cidade]</cite></div>
+      <div class="card quote" data-r style="--d:.2s"><q>O laboratório me elogiou pela organização do arquivo.</q><cite>Dr(a). [Nome] · [especialidade] · [cidade]</cite></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="eyebrow" data-r><b>11</b> Perguntas que você pode estar fazendo</div>
+    <h2 data-r>Antes de me <em>chamar.</em></h2>
+    <div class="faq" data-r>
+      <details><summary>Meu scanner veio com treinamento do fabricante. Preciso mesmo?</summary><p>O treinamento do fabricante costuma ensinar o software. A mentoria ensina o protocolo clínico: sequência, implante, scanbody e envio ao laboratório.</p></details>
+      <details><summary>Funciona no meu scanner?</summary><p>Sim. O protocolo é padronizado e vale para qualquer equipamento. Eu já trabalhei com várias marcas.</p></details>
+      <details><summary>Já sei escanear. Faz sentido?</summary><p>Faz, se a malha ainda volta com falha, se o laboratório devolve prova ou se implante ainda é motivo de insegurança. A mentoria parte do seu nível, não do zero.</p></details>
+      <details><summary>Moro fora de Brasília. Dá para fazer?</summary><p>Dá. A mentoria online atende dentistas de todo o Brasil, com videochamada ao vivo e revisão da sua malha depois. Se preferir presencial na sua cidade, também é possível, com o deslocamento a cargo do dentista.</p></details>
+      <details><summary>A mentoria online funciona de verdade para escaneamento?</summary><p>Funciona porque o que se ensina é protocolo e critério: a sequência, onde errar e como corrigir. Eu guio você ao vivo e, depois, reviso a sua malha para apontar o que ainda trava.</p></details>
+      <details><summary>Não tenho tempo.</summary><p>São três períodos, mais um follow-up, e as datas são combinadas com a sua agenda.</p></details>
+      <details><summary>Preciso falar com meu sócio.</summary><p>Ele pode participar da mentoria com você. Conversamos pelo WhatsApp sobre as condições.</p></details>
+      <details><summary>Tenho receio de errar na frente do paciente.</summary><p>Por isso eu estou do seu lado, conduzindo cada passo. Você aprende fazendo, com orientação em tempo real.</p></details>
+      <details><summary>Quanto custa?</summary><p>Depende do formato e de quantas pessoas participam. Me chama no WhatsApp que eu te passo os valores.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="sec final" id="contato">
+  <img class="mono" src="img/logo-quadrada.png" alt="" aria-hidden="true">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <div class="eyebrow" data-r>Agenda individual</div>
+        <h2 data-r>Quanto tempo de cadeira você ainda vai perder <em>com o mesmo problema?</em></h2>
+        <p class="lede" data-r>Me conta qual scanner você usa e onde está a sua maior dificuldade. Eu respondo pessoalmente e te digo se a mentoria faz sentido para o seu momento.</p>
+        <p class="alt" data-r>Prefere falar direto? <a href="https://wa.me/5517982170527" data-wa-direct>Chamar no WhatsApp</a> · <a href="https://instagram.com/ananda_odontodigital" target="_blank" rel="noopener">@ananda_odontodigital</a></p>
+      </div>
+      <form id="form" data-r style="--d:.15s" novalidate>
+        <div class="f2">
+          <div><label for="nome">Seu nome *</label><input id="nome" required autocomplete="name"></div>
+          <div><label for="cidade">Cidade *</label><input id="cidade" required autocomplete="address-level2"></div>
+        </div>
+        <div class="f2">
+          <div><label for="scanner">Qual scanner você usa?</label><input id="scanner" placeholder="Ex.: iTero, Helios, Trios..."></div>
+          <div><label for="esp">Sua especialidade</label><input id="esp"></div>
+        </div>
+        <div class="f2">
+          <div><label for="trava">Onde você mais trava?</label>
+            <select id="trava"><option value="">Selecione</option><option>Escaneamento incompleto / repetição</option><option>Implante e scanbody</option><option>Laboratório devolvendo prova</option><option>Uso das ferramentas do scanner</option><option>Outro</option></select></div>
+          <div><label for="fmt">Formato de interesse</label>
+            <select id="fmt"><option value="">Selecione</option><option>Online</option><option>Presencial</option><option>Ainda não sei</option></select></div>
+        </div>
+        <div><button class="btn nude" type="submit">Enviar pelo WhatsApp</button>
+        <p class="fnote">Abre direto no WhatsApp da Ananda, com a mensagem já preenchida.</p></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <img src="img/logo-horizontal.png" alt="Ananda Marga Odontologia Digital">
+    <div>Brasília, Goiânia e online para todo o Brasil<br>© 2026 Ananda Marga Odontologia Digital</div>
+  </div>
+</footer>
+
+<a class="fab" href="https://wa.me/5517982170527" data-wa-direct aria-label="Falar no WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.800-1.100-4.600-4-4.700-4.200-.1-.2-1.100-1.500-1.100-2.800 0-1.300.7-1.900.9-2.200.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.500l.8 2c.1.200.1.400 0 .5l-.3.500-.4.400c-.1.200-.3.300-.1.600.2.300.8 1.300 1.700 2.100 1.200 1 2.100 1.300 2.400 1.500.3.100.5.100.6-.1l.9-1.100c.2-.3.4-.2.6-.1l1.900.9c.3.100.5.200.5.300.1.200.1.700-.1 1.300Z"/></svg></a>
+
+<script>
+(function(){
+  var WA='5517982170527';
+  var base='Olá, Ananda! Vi a página da mentoria em escaneamento intraoral e quero saber mais.';
+  function go(msg){window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(msg),'_blank','noopener')}
+  // botões "quero a mentoria" levam direto ao WhatsApp
+  document.querySelectorAll('[data-wa]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();go(base)})});
+  document.querySelectorAll('[data-wa-direct]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();go(base)})});
+  // formulário
+  document.getElementById('form').addEventListener('submit',function(e){
+    e.preventDefault();
+    var v=function(id){return (document.getElementById(id).value||'').trim()};
+    if(!v('nome')||!v('cidade')){alert('Preencha seu nome e sua cidade.');return}
+    var m='Olá, Ananda! Vi a página da mentoria em escaneamento intraoral e quero saber mais.\n\n'
+      +'Nome: '+v('nome')+'\nCidade: '+v('cidade');
+    if(v('scanner'))m+='\nScanner: '+v('scanner');
+    if(v('esp'))m+='\nEspecialidade: '+v('esp');
+    if(v('trava'))m+='\nOnde mais trava: '+v('trava');
+    if(v('fmt'))m+='\nFormato de interesse: '+v('fmt');
+    go(m);
+  });
+  if(/[?&]shot/.test(location.search)){var st=document.createElement('style');st.textContent='.hero{min-height:'+(/[?&]shot=m/.test(location.search)?'780':'900')+'px!important}';document.head.appendChild(st)}
+  // header sólido
+  var h=document.getElementById('top');
+  function sc(){h.classList.toggle('solid',window.scrollY>40)}
+  sc();addEventListener('scroll',sc,{passive:true});
+  // reveal
+  var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('[data-r]').forEach(function(el){io.observe(el);if(/[?&]shot/.test(location.search))el.classList.add('in')});
+  // menu lateral
+  var links=[].slice.call(document.querySelectorAll('#dots a')),dots=document.getElementById('dots');
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+  var so=new IntersectionObserver(function(es){es.forEach(function(x){
+    if(x.isIntersecting){var i=secs.indexOf(x.target);links.forEach(function(l,j){l.classList.toggle('on',j===i)});
+      dots.classList.toggle('dk',x.target.classList.contains('bg-dark')||x.target.classList.contains('final'));}
+  })},{rootMargin:'-45% 0px -50% 0px'});
+  secs.forEach(function(s){if(s)so.observe(s)});
+})();
+</script>
+</body>
+</html>
