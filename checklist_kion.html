@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#173f43">
+<title>Checklist de envio de casos | KION</title>
+<style>
+:root{color-scheme:light;--ink:#183b3e;--muted:#526967;--green:#245b56;--line:#dce6df;--bg:#f4f7f3;--soft:#eaf3ec}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 system-ui,sans-serif}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #9e7535;outline-offset:3px}.layout{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}.sidebar{position:sticky;top:0;align-self:start;min-height:100vh;background:#173f43;color:#fff;padding:32px 18px}.brand{padding:0 12px 25px}.brand strong{display:block;letter-spacing:.2em;font-size:1.5rem}.brand small{color:#c1d7d3}.nav{display:grid;gap:5px}.nav button{border:0;border-radius:9px;background:transparent;color:inherit;text-align:left;padding:10px 12px;min-height:44px}.nav button:hover,.nav button[aria-pressed=true]{background:#ffffff22}.nav button[aria-pressed=true]{box-shadow:inset 3px 0 #b9d49d}main{min-width:0;width:100%;max-width:1180px;margin:0 auto;padding:clamp(18px,4vw,54px)}h1{font:normal clamp(2rem,5vw,3.45rem)/1.05 Georgia,serif;margin:0 0 12px}h2{font:normal 1.52rem/1.15 Georgia,serif;margin:0}.intro{color:var(--muted);margin:0 0 24px;max-width:580px}.panel,.card{background:white;border:1px solid var(--line);border-radius:14px}.panel{padding:20px;margin-bottom:22px}.fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.fields label{display:grid;gap:5px;font-size:.8rem;font-weight:650;min-width:0}.fields input{width:100%;min-width:0;border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--ink);background:#fcfdfc;min-height:42px}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.action{padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:white;color:var(--ink);min-height:42px}.primary{background:var(--green);color:white;border-color:var(--green)}progress{display:block;width:100%;height:10px;appearance:none;border:none;background:var(--soft);border-radius:20px;overflow:hidden}progress::-webkit-progress-bar{background:var(--soft)}progress::-webkit-progress-value{background:var(--green)}progress::-moz-progress-bar{background:var(--green)}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}.card{overflow:hidden;min-width:0}.card[hidden]{display:none}.card-head{padding:17px 18px;background:var(--soft);display:flex;justify-content:space-between;align-items:center;gap:10px}.count{white-space:nowrap;font-size:.78rem;color:var(--muted)}.items{list-style:none;padding:3px 17px;margin:0}.row{display:flex;align-items:center;gap:7px;border-bottom:1px solid #edf1ed}.row:last-child{border:0}.row label{display:flex;flex:1;gap:10px;padding:11px 0;align-items:flex-start;cursor:pointer;min-width:0}.row input{flex:none;width:18px;height:18px;margin:4px 0 0;accent-color:var(--green)}.row span{min-width:0;overflow-wrap:anywhere;font-size:.91rem}.row.checked{background:#f7fbf7}.row.skipped label{opacity:.65}.skip{border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--muted);font-size:.73rem;padding:5px;min-height:36px}.skip[aria-pressed=true]{background:var(--soft);color:var(--ink)}.cards.single{grid-template-columns:minmax(0,1fr)}.hint{font-size:.82rem;color:var(--muted);margin-top:20px}
+@media(max-width:1050px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.cards{grid-template-columns:minmax(0,1fr)}}@media(max-width:700px){.layout{display:block}.sidebar{position:static;min-height:0;padding:14px 15px}.brand{padding:0 5px 11px}.brand strong{font-size:1.15rem}.brand small{display:none}.nav{display:flex;flex-wrap:wrap;gap:5px}.nav button{font-size:.78rem;padding:6px 8px}.panel{padding:14px}.card-head{padding:14px}.items{padding:2px 13px}.toolbar{align-items:flex-start}.actions .action{font-size:.83rem}}@media(max-width:350px){.fields{grid-template-columns:1fr}.card-head{align-items:flex-start}.card-head h2{font-size:1.3rem}}@media print{.layout{display:block}.sidebar,.actions,.skip,.hint{display:none}body{background:#fff}main{padding:0;max-width:none}.panel{margin-bottom:12px}.cards{display:block}.card{margin-bottom:12px;break-inside:avoid}.card-head{background:#eee}.row label{padding:5px 0}.fields input{border:0;border-bottom:1px solid #ccc}.row input{print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar"><div class="brand"><strong>KION</strong><small>Conferência antes do envio</small></div><nav class="nav" id="navigation" aria-label="Tipos de caso"></nav></aside>
+<main>
+<h1>Checklist de envio de casos</h1>
+<p class="intro">Selecione o tipo de caso e marque os itens conferidos. Em casos combinados, use as seções correspondentes.</p>
+<section class="panel" aria-label="Identificação do caso">
+<div class="fields">
+<label>Paciente<input type="text" id="patient" autocomplete="off"></label>
+<label>Dentista<input type="text" id="dentist" autocomplete="off"></label>
+<label>Data<input type="date" id="date"></label>
+<label>Caso ou elementos<input type="text" id="case" autocomplete="off"></label>
+</div>
+</section>
+<section class="panel" aria-label="Andamento da conferência">
+<div class="toolbar"><strong id="progress-label" aria-live="polite"></strong><div class="actions"><button class="action" id="reset" type="button">Limpar marcações</button><button class="action primary" id="print" type="button">Imprimir / salvar PDF</button></div></div>
+<progress id="progress" aria-label="Itens conferidos"></progress>
+</section>
+<div class="cards" id="cards"></div>
+<p class="hint">As marcações e os campos desta página são apagados ao recarregar.</p>
+<noscript>Ative o JavaScript no navegador para usar o checklist.</noscript>
+</main>
+</div>
+<script>
+const face = 'Paciente sentado, cabeça reta, sorriso entreaberto, orelhas aparentes e íris alinhadas.';
+const substrate = ['Foto do substrato','Enviar com escala de cor de referência, principalmente quando houver metal.'];
+const workShade = ['Foto da cor final do trabalho em boca','Enviar com a escala de cor. Alinhar a incisal da escala à incisal do dente de referência.'];
+const fullScan = 'Enviar as arcadas superior e inferior completas e as mordidas dos lados direito e esquerdo.';
+const groups = [
+  {id:'planejamento',title:'Planejamento',items:[
+    ['Foto do rosto',face],
+    ['Arquivos STL','Enviar as arcadas superior e inferior e o registro da mordida.'],
+    ['Aumento de DVO','Se houver aumento, registrar a mordida com jig na dimensão pretendida.',true]
+  ]},
+  {id:'dentes',title:'Preparo sobre dente',items:[
+    substrate,
+    ['Foto com escala de cor em boca','Alinhar a incisal da escala à incisal do dente de referência.'],
+    ['Afastamento gengival','Preferencialmente usar um fio totalmente incluído e um segundo fio para afastamento, retirado no momento do escaneamento.'],
+    ['Arcadas completas','Enviar as arcadas superior e inferior.'],
+    ['Duas mordidas','Enviar os registros do lado direito e do lado esquerdo.']
+  ]},
+  {id:'anteriores',title:'Reabilitação de anteriores',items:[
+    ['Foto para planejamento',face],
+    substrate,
+    ['Referência escaneada','Enviar sempre a referência, como mock-up ou provisório escaneado em boca.'],
+    ['Escaneamento completo',fullScan+' Quando houver preparo sobre dente ou prótese sobre implante, confira também as seções correspondentes.'],
+    workShade
+  ]},
+  {id:'zirconia',title:'Protocolo de zircônia',items:[
+    ['Foto do rosto com sorriso entreaberto',face],
+    ['Referência escaneada','Enviar a referência do caso.'],
+    ['Scan bodies em posição','Enviar o escaneamento e indicar na comanda em qual pilar está cada scan body e a marca utilizada.'],
+    ['Perfil de emergência','Enviar o registro sem os scan bodies.'],
+    ['Escaneamento completo',fullScan],
+    workShade
+  ]},
+  {id:'implante',title:'Prótese sobre implante',items:[
+    ['Referência escaneada','Enviar sempre. Se houver provisório, escaneá-lo em boca como referência.'],
+    ['Scan body em posição','Enviar o escaneamento com o componente assentado.'],
+    ['Perfil de emergência','Enviar o registro sem o scan body.'],
+    ['STL completo',fullScan],
+    ['Direto no implante','Identificar qual é o implante e informar a marca do scan body.',true],
+    ['Sobre pilar','Identificar qual é o pilar e informar a marca do scan body.',true],
+    workShade
+  ]}
+];
+const nav = document.getElementById('navigation');
+const cards = document.getElementById('cards');
+const progress = document.getElementById('progress');
+const progressLabel = document.getElementById('progress-label');
+let active = 'all';
+
+function updateProgress() {
+  let total = 0, checked = 0;
+  for (const card of cards.children) {
+    const rows = [...card.querySelectorAll('.row')];
+    const applicable = rows.filter(row => !row.classList.contains('skipped'));
+    const done = applicable.filter(row => row.querySelector('input').checked).length;
+    card.querySelector('.count').textContent = done + ' / ' + applicable.length;
+    if (!card.hidden) {
+      total += applicable.length;
+      checked += done;
+    }
+  }
+  progress.max = Math.max(1,total);
+  progress.value = checked;
+  progressLabel.textContent = checked + ' de ' + total + ' itens conferidos';
+}
+
+function selectGroup(id) {
+  active = id;
+  for (const button of nav.children) button.setAttribute('aria-pressed', String(button.dataset.group === active));
+  for (const card of cards.children) card.hidden = active !== 'all' && card.dataset.group !== active;
+  cards.classList.toggle('single', active !== 'all');
+  updateProgress();
+}
+
+function addFilter(id, label) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.dataset.group = id;
+  button.textContent = label;
+  button.addEventListener('click', () => selectGroup(id));
+  nav.append(button);
+}
+
+function addItem(list, groupId, item, index) {
+  const [title, description, conditional] = item;
+  const row = document.createElement('li');
+  row.className = 'row';
+  const label = document.createElement('label');
+  const input = document.createElement('input');
+  input.type = 'checkbox';
+  input.id = groupId + '-' + index;
+  const text = document.createElement('span');
+  const name = document.createElement('strong');
+  name.textContent = title + '. ';
+  text.append(name, description);
+  label.append(input,text);
+  row.append(label);
+  input.addEventListener('change', () => {
+    row.classList.toggle('checked',input.checked);
+    updateProgress();
+  });
+  if (conditional) {
+    const skip = document.createElement('button');
+    skip.type = 'button';
+    skip.className = 'skip';
+    skip.textContent = 'N/A';
+    skip.title = 'Marcar como não aplicável';
+    skip.setAttribute('aria-label',title + ', não se aplica');
+    skip.setAttribute('aria-pressed','false');
+    skip.addEventListener('click', () => {
+      const skipped = row.classList.toggle('skipped');
+      skip.setAttribute('aria-pressed',String(skipped));
+      input.disabled = skipped;
+      input.checked = false;
+      row.classList.remove('checked');
+      updateProgress();
+    });
+    row.append(skip);
+  }
+  list.append(row);
+}
+
+addFilter('all','Todos os casos');
+for (const group of groups) {
+  addFilter(group.id,group.title);
+  const card = document.createElement('section');
+  card.className = 'card';
+  card.dataset.group = group.id;
+  const head = document.createElement('div');
+  head.className = 'card-head';
+  const title = document.createElement('h2');
+  title.textContent = group.title;
+  const count = document.createElement('span');
+  count.className = 'count';
+  head.append(title,count);
+  const list = document.createElement('ul');
+  list.className = 'items';
+  group.items.forEach((item,index) => addItem(list,group.id,item,index));
+  card.append(head,list);
+  cards.append(card);
+}
+selectGroup('all');
+
+document.getElementById('reset').addEventListener('click', () => {
+  for (const row of cards.querySelectorAll('.row')) {
+    const input = row.querySelector('input');
+    input.checked = false;
+    input.disabled = false;
+    row.classList.remove('checked','skipped');
+    row.querySelector('.skip')?.setAttribute('aria-pressed','false');
+  }
+  updateProgress();
+});
+document.getElementById('print').addEventListener('click', () => window.print());
+</script>
+</body>
+</html>
