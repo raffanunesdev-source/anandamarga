@@ -1,0 +1,2201 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sorriso Capital | Painel da Mentoria</title>
+<style>
+:root{
+  --gold-d:#B8862B; --gold:#D4A843; --gold-l:#F0D98A;
+  --champ:#FBF5E6; --cream:#F5EAD0; --line:#EADFC4;
+  --ink:#3E2C16; --mute:#7A6A52; --bg:#F4EEE1; --card:#FFFFFF;
+  --ok:#2F7D4F; --warn:#B7791F; --bad:#B3412B; --info:#2F5F8A;
+  --side:#2B1D0A; --side-ink:#EBDDB8; --side-mute:#A8987A;
+  --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --sans:'Montserrat',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+  --gold-grad:linear-gradient(135deg,#B8862B 0%,#E8C766 50%,#B8862B 100%);
+  --sw:272px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+a{color:var(--gold-d)}
+/* ===== Sidebar ===== */
+.side{position:fixed;inset:0 auto 0 0;width:var(--sw);background:var(--side);color:var(--side-ink);display:flex;flex-direction:column;z-index:40;transition:transform .25s}
+.brand{padding:20px 20px 14px;border-bottom:1px solid #4a3818}
+.brand b{display:block;font:600 22px/1.1 var(--serif);color:var(--gold-l);letter-spacing:.3px}
+.brand span{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--side-mute)}
+nav{flex:1;overflow:auto;padding:8px 10px 20px}
+.grp{font:600 10px var(--sans);letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);padding:16px 10px 6px}
+.grp.cow{color:#8FD0C0}
+nav a.it{display:flex;align-items:center;gap:10px;padding:9px 10px;margin:1px 0;border-radius:8px;color:var(--side-ink);text-decoration:none;font-size:13px;border-left:3px solid transparent}
+nav a.it:hover{background:#3a2a10}
+nav a.it.on{background:#43300f;border-left-color:var(--gold);color:#fff}
+nav a.it .n{width:20px;font-size:11px;color:var(--side-mute);text-align:right;flex:none}
+nav a.it .dot{margin-left:auto;width:8px;height:8px;border-radius:50%;background:#6b5a3a;flex:none}
+nav a.it .dot.ready{background:#6ED39A}
+.side-foot{padding:12px 20px;border-top:1px solid #4a3818;font-size:11px;color:var(--side-mute)}
+/* ===== Topbar / main ===== */
+.top{display:none;position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line);padding:10px 16px;align-items:center;gap:12px}
+.top button{border:1px solid var(--line);background:#fff;border-radius:8px;width:38px;height:38px;font-size:20px;cursor:pointer}
+.top b{font:600 18px var(--serif)}
+main{margin-left:var(--sw);padding:28px 36px 60px;max-width:1180px;min-height:100%}
+.scrim{display:none;position:fixed;inset:0;background:rgba(30,20,5,.5);z-index:35}
+/* ===== Content ===== */
+.crumb{font:500 11px var(--sans);letter-spacing:1.4px;text-transform:uppercase;color:var(--gold-d);margin-bottom:6px}
+h1{font:600 34px/1.1 var(--serif);margin:0 0 6px}
+h1 em{font-style:italic;color:var(--gold-d);font-weight:500}
+.lead{color:var(--mute);font-size:15px;max-width:760px;margin:0 0 22px}
+h2{font:600 22px var(--serif);margin:30px 0 10px}
+h3{font:600 14px var(--sans);margin:0 0 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.kpi .v{font:600 30px/1 var(--serif);color:var(--ink)}
+.kpi .l{font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--mute);margin-top:6px}
+.kpi .s{font-size:12px;color:var(--mute);margin-top:4px}
+.tag{display:inline-block;font:600 10px var(--sans);letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:20px;background:var(--cream);color:var(--gold-d)}
+.tag.ok{background:#E4F3EA;color:var(--ok)} .tag.warn{background:#FBEFD6;color:var(--warn)} .tag.bad{background:#FBE5E0;color:var(--bad)} .tag.info{background:#E3EDF6;color:var(--info)}
+.tblw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font:600 10.5px var(--sans);letter-spacing:1.1px;text-transform:uppercase;color:var(--gold-d);text-align:left;padding:10px 12px;border-bottom:1.5px solid var(--gold);background:var(--champ);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right;white-space:nowrap}
+.callout{border-left:4px solid var(--gold);background:var(--champ);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+.callout.warn{border-color:var(--warn);background:#FFF8E8}
+.callout.ok{border-color:var(--ok);background:#EFF8F2}
+.callout b{display:block;margin-bottom:2px}
+ul.clean{margin:6px 0 0;padding-left:18px} ul.clean li{margin:3px 0}
+.bar{height:10px;border-radius:6px;background:var(--cream);overflow:hidden;margin-top:6px}
+.bar>i{display:block;height:100%;background:var(--gold-grad)}
+.row{display:flex;justify-content:space-between;gap:10px;font-size:13px;margin-top:10px}
+.stub{border:1.5px dashed var(--gold);background:var(--champ);border-radius:14px;padding:26px;text-align:center}
+.stub h2{margin-top:0}
+.src{font-size:11.5px;color:var(--mute);margin-top:18px}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+.steps li{counter-increment:s;display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.steps li:before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;background:var(--gold-grad);color:#2B1D0A;font:600 12px var(--sans);display:grid;place-items:center}
+.pill-row{display:flex;gap:6px;flex-wrap:wrap}
+/* ===== Mobile ===== */
+@media (max-width:900px){
+  .g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:820px){
+  .side{transform:translateX(-100%)}
+  body.open .side{transform:none}
+  body.open .scrim{display:block}
+  .top{display:flex}
+  main{margin-left:0;padding:20px 16px 50px}
+  h1{font-size:28px}
+}
+@media (max-width:560px){
+  .g2,.g3,.g4{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<aside class="side" id="side">
+  <div class="brand"><b>Sorriso Capital</b><span>Painel da mentoria</span></div>
+  <nav id="nav" aria-label="Menu principal"></nav>
+  <div class="side-foot">Atualizado em 12/11/2026<br>Dados públicos coletados via Apify</div>
+</aside>
+<div class="scrim" id="scrim"></div>
+<header class="top"><button id="burger" aria-label="Abrir menu">☰</button><b id="topTitle">Sorriso Capital</b></header>
+<main id="view" tabindex="-1"></main>
+
+<script>
+/* ===== Menu: ready=true quando existe views/<id>.js ===== */
+const MENU = [
+  {g:'Visão geral'},
+  {id:'visao-geral', t:'Resumo e roadmap', ready:true},
+  {id:'diagnostico', t:'Diagnóstico do Instagram', ready:true},
+  {id:'concorrentes', t:'Concorrentes', ready:true},
+  {id:'conformidade', t:'Checklist RDC 1.002/2025', ready:true},
+  {g:'Clínica', cls:''},
+  {id:'cli-posicionamento', t:'Posicionamento e ofertas', ready:true},
+  {id:'cli-funil', t:'Funil de vendas', ready:true},
+  {id:'cli-crc', t:'Processo comercial e treinamento da CRC', ready:true},
+  {id:'cli-preco', t:'Precificação', ready:true},
+  {id:'cli-ads', t:'Campanhas Meta Ads (paciente)', ready:true},
+  {id:'cli-reels', t:'Reels (roteiros)', ready:true},
+  {id:'cli-carrosseis', t:'Carrosséis', ready:true},
+  {id:'cli-metricas', t:'Métricas', ready:true},
+  {g:'Coworking', cls:'cow'},
+  {id:'cow-oferta', t:'Oferta e preços', ready:true},
+  {id:'cow-funil', t:'Funil de captação de dentistas', ready:true},
+  {id:'cow-ads', t:'Campanha Meta Ads (profissionais)', ready:true},
+  {id:'cow-criativos', t:'Criativos (Reels e carrossel)', ready:true},
+  {id:'cow-regras', t:'Regras, regimento e contratos', ready:true},
+  {id:'cow-kits', t:'Kits esterilizados', ready:true},
+  {id:'cow-metricas', t:'Métricas', ready:true}
+];
+const VIEWS = {};
+window.registerView = (id, html) => { VIEWS[id] = html; };
+const VIEW_INIT = {};
+window.onView = (id, fn) => { VIEW_INIT[id] = fn; };
+
+const nav = document.getElementById('nav'), main = document.getElementById('view');
+let n = 0;
+MENU.forEach(m => {
+  if (m.g) { const h = document.createElement('div'); h.className = 'grp ' + (m.cls||''); h.textContent = m.g; nav.appendChild(h); return; }
+  n++; m.n = n;
+  const a = document.createElement('a'); a.className = 'it'; a.href = '#/' + m.id; a.dataset.id = m.id;
+  a.innerHTML = '<span class="n">'+n+'</span><span>'+m.t+'</span><span class="dot '+(m.ready?'ready':'')+'" title="'+(m.ready?'Pronto':'Em construção')+'"></span>';
+  nav.appendChild(a);
+});
+
+/* ===== Checklists: marcações salvas no navegador ===== */
+const CK = 'sorriso-capital-checklist-v1';
+function ckStore(){ try { return JSON.parse(localStorage.getItem(CK) || '{}'); } catch(e){ return {}; } }
+function ckSave(o){ try { localStorage.setItem(CK, JSON.stringify(o)); } catch(e){} }
+function ckUpdate(){
+  const all = [...main.querySelectorAll('input[data-k]')]; if (!all.length) return;
+  const done = all.filter(i => i.checked).length;
+  const t = document.getElementById('ckTotal'); if (t) t.textContent = done + ' de ' + all.length;
+  const b = document.getElementById('ckBar'); if (b) b.style.width = (all.length ? Math.round(done/all.length*100) : 0) + '%';
+  const blk = document.getElementById('ckBlock');
+  if (blk) blk.textContent = all.filter(i => !i.checked && i.parentElement.querySelector('.tag.bad')).length;
+  main.querySelectorAll('.ck-sec').forEach(s => {
+    const a = [...s.querySelectorAll('input[data-k]')], c = s.querySelector('[data-cnt]');
+    if (c) c.textContent = a.filter(i => i.checked).length + '/' + a.length;
+  });
+}
+function ckHydrate(){ const s = ckStore(); main.querySelectorAll('input[data-k]').forEach(i => { i.checked = !!s[i.dataset.k]; }); ckUpdate(); }
+window.ckReset = () => { if (!confirm('Limpar todas as marcações deste checklist?')) return; const s = ckStore(); Object.keys(s).forEach(k => { if (k.startsWith('rdc-')) delete s[k]; }); ckSave(s); ckHydrate(); };
+main.addEventListener('change', e => {
+  if (e.target.matches('input[data-k]')) { const s = ckStore(); s[e.target.dataset.k] = e.target.checked; ckSave(s); ckUpdate(); }
+});
+
+function stub(m){
+  return '<div class="crumb">'+m.t+'</div><h1>'+m.t+'</h1><p class="lead">Esta tela será entregue na próxima etapa da mentoria.</p>'+
+    '<div class="stub"><span class="tag warn">Em construção</span><h2>O que vai entrar aqui</h2><p style="max-width:620px;margin:0 auto">'+(m.d||'')+'</p></div>';
+}
+
+/* ===== view: cli-ads ===== */
+(function(){
+registerView('cli-ads', `
+<div class="crumb">Clínica</div>
+<h1>Campanhas Meta Ads para <em>pacientes</em></h1>
+<p class="lead">Estrutura de campanhas para lentes e facetas, harmonização facial e clareamento em Brasília, a partir dos anúncios que os concorrentes têm no ar (Biblioteca de Anúncios da Meta, coleta de 12/11/2026) e das regras de publicidade da odontologia.</p>
+
+<div class="grid g4">
+  <div class="card kpi"><div class="v">0</div><div class="l">Anúncios de paciente hoje</div><div class="s">O único anúncio da clínica é de coworking</div></div>
+  <div class="card kpi"><div class="v">40+</div><div class="l">Páginas anunciando estética em Brasília</div><div class="s">Inclui clínicas médicas e odontológicas</div></div>
+  <div class="card kpi"><div class="v">9.087</div><div class="l">Audiência da Dra. Rayane</div><div class="s">Perfil de harmonização facial</div></div>
+  <div class="card kpi"><div class="v">27/11</div><div class="l">Black Friday</div><div class="s">Concorrentes já estão com anúncios sazonais</div></div>
+</div>
+
+<div class="callout warn"><b>Antes de tudo: regras da odontologia</b>O Código de Ética Odontológico (CFO 118/2012) veda divulgar preços, formas de pagamento e serviços gratuitos em publicidade; a Resolução CFO 196/2019 liberou imagens de diagnóstico e resultado, com autorização expressa do paciente e caso do próprio profissional. Vários concorrentes anunciam preço e promoção; isso não torna permitido. Os rascunhos desta tela já evitam preço, desconto, parcelamento e "grátis". Confirmar com o CRO-DF ou advogado antes de rodar.</div>
+
+<h2>O que os concorrentes anunciam</h2>
+<div class="tblw"><table>
+<tr><th>Anunciante</th><th>Foco</th><th>Como anuncia</th></tr>
+<tr><td><b>Huff Life (Brasília DF)</b></td><td>Estética de preço baixo</td><td>13 anúncios desde 03/11/2026, vídeo e carrossel, com preços na copy (ex.: preenchimento 1 ml R$ 499,90; botox em 3 regiões R$ 549,90; rinomodelação R$ 899,90; harmonização 4 ml R$ 1.999,90). Os textos listam unidades de Porto Alegre e região.</td></tr>
+<tr><td><b>Bruna e Saulo Odontologia e Estética Facial</b></td><td>Harmonização com história</td><td>9 anúncios desde 09/2025, carrosséis narrativos: homem que veio de Minas Gerais, paciente que emagreceu e perdeu contorno. Foco em emoção e naturalidade.</td></tr>
+<tr><td><b>Dr. Yuri Nunes</b></td><td>Rinomodelação e reposicionamento facial</td><td>Imagens com texto de caso: "não queria mudar quem era", "não foi só preenchimento". CTA WhatsApp.</td></tr>
+<tr><td><b>Dra. Bárbara Borges</b></td><td>Rinomodelação com fios (Asa Sul)</td><td>Black Friday com pergunta de dor ("a ponta do nariz caída incomoda você?"). Atenção: pergunta sobre característica da pessoa pode esbarrar na política de atributos pessoais da Meta.</td></tr>
+<tr><td><b>Botocenter Brasília (Park Shopping)</b></td><td>Plano anual de botox</td><td>"Passe o ano inteiro renovada", 12x de R$ 159,90. Recorrência vendida como assinatura.</td></tr>
+<tr><td><b>Dra. Dafine Saraiva</b></td><td>Harmonização</td><td>1 anúncio ativo desde 29/10/2026: imagem, depoimento ("a harmonização mudou minha vida"), CTA para o perfil.</td></tr>
+<tr><td><b>Lentes: CCD, Verso, Ioog, Matheus Miranda, D'Or, Mundo Sorriso</b></td><td>Lentes de contato dental</td><td>Ver tela de Concorrentes: copy de objeção ("medo de ficar artificial"), landing page, Black Friday e âncora de preço.</td></tr>
+<tr><td><b>Clareamento</b></td><td>-</td><td>Na coleta, não apareceu anúncio ativo de clareamento em Brasília. Pode ser espaço aberto, a validar com nova coleta.</td></tr>
+</table></div>
+
+<h2>Preço de tabela x anúncios de preço baixo</h2>
+<div class="tblw"><table>
+<tr><th>Procedimento</th><th class="r">Sorriso Capital (tabela)</th><th class="r">Huff Life (anúncio)</th></tr>
+<tr><td>Botox (terço superior / 3 regiões)</td><td class="r">R$ 900</td><td class="r">R$ 549,90</td></tr>
+<tr><td>Preenchimento (ácido hialurônico)</td><td class="r">R$ 1.000</td><td class="r">R$ 499,90 (1 ml)</td></tr>
+<tr><td>Rinomodelação</td><td class="r">R$ 1.200</td><td class="r">R$ 899,90</td></tr>
+</table></div>
+<p class="src">Produtos, doses e marcas podem ser diferentes; é só referência de mercado. Sob as regras do CFO, a clínica não deve anunciar preço: a defesa do valor vem de naturalidade, indicação profissional, dentista responsável e planejamento, não de promoção.</p>
+
+<h2>Posicionamento das ofertas</h2>
+<div class="grid g3">
+  <div class="card"><h3>1. Lentes e facetas</h3><p style="margin:0;color:var(--mute)">Ticket alto. Ângulo: sorriso natural, planejado para o rosto, sem aspecto artificial. Concorrentes fortes já ocupam esse espaço com anúncios e landing page.</p></div>
+  <div class="card"><h3>2. Harmonização facial</h3><p style="margin:0;color:var(--mute)">Sob a Dra. Rayane, que tem audiência ("naturalidade, resultados elegantes e sem exageros", como diz o perfil). Mercado concorrido; o diferencial é rosto e sorriso tratados juntos por dentista.</p></div>
+  <div class="card"><h3>3. Clareamento</h3><p style="margin:0;color:var(--mute)">Porta de entrada e de upgrade para lentes. Teste pequeno e barato para medir demanda.</p></div>
+</div>
+
+<h2>Estrutura recomendada</h2>
+<div class="tblw"><table>
+<tr><th>Campanha</th><th>Objetivo</th><th>Conjuntos de anúncios</th></tr>
+<tr><td><b>C1 · Harmonização facial</b></td><td>Conversas no WhatsApp e, depois, cadastro no quiz</td><td>A) mulheres de Brasília, faixa 28 a 55, por região; B) público semelhante a quem engajou com o perfil da Dra. Rayane; C) remarketing de quem viu os Reels de transformação.</td></tr>
+<tr><td><b>C2 · Lentes e facetas</b></td><td>Conversas e avaliações agendadas</td><td>A) público amplo de Brasília, 25 a 55, com o criativo fazendo a qualificação; B) remarketing de quem assistiu o vídeo de caso.</td></tr>
+<tr><td><b>C3 · Clareamento</b></td><td>Teste de demanda</td><td>Um conjunto, orçamento mínimo, para ler o custo por conversa.</td></tr>
+<tr><td><b>C4 · Remarketing e reativação</b></td><td>Recuperar quem já falou com a clínica</td><td>Pacientes da base, quem pediu orçamento e não fechou, quem agendou e faltou.</td></tr>
+</table></div>
+<div class="callout"><b>Comece enxuto</b>Com verba limitada, rodar C1 e C2 e deixar C3 como teste pequeno. Muitos conjuntos dividem a verba e atrasam o aprendizado. O orçamento ainda precisa ser definido com você.</div>
+
+<h2>Onde o anúncio roda e para onde leva</h2>
+<div class="grid g2">
+  <div class="card"><h3>Identidade</h3><ul class="clean">
+    <li>Harmonização: usar a conta do Instagram da Dra. Rayane (9.087 seguidores)</li>
+    <li>Lentes: Sorriso Capital como marca, com a Dra. Rayane aparecendo na peça</li>
+    <li>A página do Facebook da clínica tem 31 curtidas: pouca prova social</li></ul></div>
+  <div class="card"><h3>Destino do clique</h3><ul class="clean">
+    <li><b>Agora:</b> WhatsApp com mensagem pré-preenchida, atendida pela Mari em poucos minutos</li>
+    <li><b>Em seguida:</b> quiz curto (procedimento de interesse, particular ou convênio) antes do WhatsApp, como a Dafine e a CCD</li>
+    <li>Todo contato entra no Clinicorp com a origem do anúncio</li></ul></div>
+</div>
+
+<h2>Ângulos de criativo</h2>
+<div class="tblw"><table>
+<tr><th>#</th><th>Ângulo</th><th>Para</th><th>Formato</th></tr>
+<tr><td>1</td><td>Natural e elegante, sem exageros</td><td>Harmonização</td><td>Vídeo da Dra. Rayane explicando a avaliação</td></tr>
+<tr><td>2</td><td>Caso real narrado (com autorização)</td><td>Harmonização e lentes</td><td>Carrossel e vídeo de transformação</td></tr>
+<tr><td>3</td><td>Quebra de objeção: "medo de ficar artificial"</td><td>Lentes</td><td>Vídeo curto e imagem</td></tr>
+<tr><td>4</td><td>Sorriso e rosto em harmonia</td><td>Lentes + harmonização</td><td>Vídeo explicando o planejamento conjunto</td></tr>
+<tr><td>5</td><td>Como funciona a avaliação</td><td>Todos</td><td>Carrossel de passo a passo</td></tr>
+<tr><td>6</td><td>Agenda de fim de ano</td><td>Todos</td><td>Imagem e vídeo curto, sem preço</td></tr>
+<tr><td>7</td><td>Depoimento de paciente</td><td>Todos</td><td>Vídeo (só com autorização por escrito)</td></tr>
+</table></div>
+
+<h2>Rascunhos de texto (sem preço, sem promoção)</h2>
+<div class="grid g2">
+  <div class="card"><span class="tag">Harmonização · ângulo 1</span>
+    <p style="margin:10px 0 6px"><b>Harmonização facial com naturalidade, sem exageros.</b></p>
+    <p style="margin:0;color:var(--mute)">Cada rosto tem proporções próprias, e o planejamento precisa respeitar isso. Na avaliação com a Dra. Rayane, você entende o que faz sentido para o seu rosto e o que não faz.<br><br>Atendimento em Brasília, na Sorriso Capital.<br>Toque em "Enviar mensagem" e agende sua avaliação.</p></div>
+  <div class="card"><span class="tag">Lentes · ângulo 3</span>
+    <p style="margin:10px 0 6px"><b>Medo de o sorriso ficar artificial?</b></p>
+    <p style="margin:0;color:var(--mute)">É o receio mais comum de quem pensa em lentes de contato dental, e é legítimo. Um bom resultado depende de avaliação, planejamento do formato e da cor para o seu rosto e acompanhamento do início ao fim.<br><br>Agende sua avaliação na Sorriso Capital, no Venâncio Shopping, Asa Sul.</p></div>
+  <div class="card"><span class="tag">Lentes + harmonização · ângulo 4</span>
+    <p style="margin:10px 0 6px"><b>O sorriso e o rosto precisam conversar.</b></p>
+    <p style="margin:0;color:var(--mute)">Na Sorriso Capital, odontologia e estética facial estão no mesmo lugar. Isso permite avaliar sorriso e rosto juntos, com um planejamento só.<br><br>Fale com nossa equipe e agende uma avaliação.</p></div>
+  <div class="card"><span class="tag">Fim de ano · ângulo 6</span>
+    <p style="margin:10px 0 6px"><b>Começar 2027 com o sorriso que você planejou.</b></p>
+    <p style="margin:0;color:var(--mute)">Quem agenda a avaliação agora tem tempo para planejar o tratamento com calma. As datas de dezembro e janeiro já estão sendo preenchidas.<br><br>Chame no WhatsApp e escolha o seu horário.</p>
+    <p class="src" style="margin-top:8px">Só usar "datas sendo preenchidas" se for verdade na agenda real.</p></div>
+</div>
+
+<h2>Regras para os criativos</h2>
+<div class="grid g2">
+  <div class="card"><h3>Odontologia (CFO)</h3><ul class="clean">
+    <li>Sem preço, parcelamento, desconto ou "grátis" no anúncio</li>
+    <li>Sem promessa de resultado garantido e sem "definitivo"</li>
+    <li>Imagem de paciente só com termo de autorização e caso do próprio profissional</li>
+    <li>Identificar o dentista com nome e CRO</li>
+    <li>Brinde, sorteio e promoção de fim de ano: validar antes com CRO-DF ou advogado</li></ul></div>
+  <div class="card"><h3>Meta</h3><ul class="clean">
+    <li>Anúncios de procedimento estético só para maiores de 18 anos</li>
+    <li>Não sugerir característica da pessoa que vê ("você tem o nariz caído?", "seus dentes são amarelos?")</li>
+    <li>Falar do que a clínica faz, não de problema do espectador</li>
+    <li>Conferir a política vigente em transparency.meta.com antes de publicar</li></ul></div>
+</div>
+<p class="src">Fontes: Resolução CFO 196/2019 e Código de Ética (resumos de artigos jurídicos; confirmar no texto do CFO); política de Saúde e Bem-estar e de Atributos Pessoais da Meta. Blogs de tráfego relatam mudança de fiscalização em 2026 que não confirmei na fonte oficial.</p>
+
+<h2>Medição e limite de custo</h2>
+<div class="tblw"><table>
+<tr><th>Métrica</th><th>Leitura</th></tr>
+<tr><td>Custo por conversa iniciada</td><td>Compara criativos e públicos</td></tr>
+<tr><td>Conversas qualificadas pela Mari</td><td>Separa curioso de paciente (particular ou convênio, procedimento)</td></tr>
+<tr><td>Avaliações agendadas e realizadas</td><td>Ligação com o Funil da clínica</td></tr>
+<tr><td>Tratamentos fechados e ticket</td><td>Resultado financeiro da campanha</td></tr>
+<tr><td>Custo por paciente fechado</td><td>Número que decide continuar, ajustar ou pausar</td></tr>
+</table></div>
+<div class="callout"><b>Como definir o limite</b>Escolher uma fração do ticket. Exemplo ilustrativo: uma lente a R$ 2.500 e um tratamento de 8 lentes somam R$ 20.000; aceitando gastar até 10% disso, o limite seria R$ 2.000 por paciente fechado. Para harmonização de entrada, o ticket é menor (botox R$ 900), então a conta depende de recorrência. A fração real depende da margem de cada procedimento, que ainda não temos.</div>
+
+<h2>Antes de ligar</h2>
+<div class="card"><ul class="clean">
+<li>Acesso ao Gerenciador de Anúncios e verba definida.</li>
+<li>Termos de autorização de imagem assinados para qualquer caso usado.</li>
+<li>Mari com tempo para responder em minutos, e cadência de follow-up do Funil da clínica.</li>
+<li>Decisão sobre a avaliação de R$ 180: como será apresentada sem anunciar preço (a conversa de valores acontece no atendimento, não no anúncio).</li>
+<li>Se há planejamento digital ou scanner na clínica: só então usar esse argumento na copy.</li>
+<li>Quiz de qualificação e registro de origem no Clinicorp.</li>
+<li>Revisão da copy final pelo CRO-DF ou advogado, e da conformidade sanitária (ver Checklist RDC).</li></ul></div>
+<p class="src">Fonte dos dados de anúncios: Biblioteca de Anúncios da Meta via Apify, coleta de 12/11/2026. Rascunhos de texto não foram enviados à plataforma.</p>
+`);
+
+})();
+
+/* ===== view: cli-carrosseis ===== */
+(function(){
+(function(){
+// [letra, titulo, palavra-gatilho, objetivo, slides[[titulo,texto]]]
+var C = [
+ ["A","Lentes de contato dental: 5 perguntas antes de decidir","PERGUNTAS","Educar e qualificar o interessado em lentes",
+  [["Lentes de contato dental: 5 perguntas antes de decidir","Capa. Foto de sorriso natural, luz suave. \"Deslize.\""],
+   ["1. Eu sou candidato?","Nem todo sorriso tem a mesma indicação. A avaliação da dentista é o que define se lentes, facetas ou outro tratamento fazem sentido para você."],
+   ["2. Como vai ficar no meu rosto?","Formato, cor e proporção precisam combinar com o seu rosto e o seu tom de pele. Peça para ver o planejamento antes de começar."],
+   ["3. Preciso desgastar o dente?","Depende do caso e da técnica indicada. Pergunte à dentista o que está previsto no seu tratamento."],
+   ["4. Quem vai executar?","Pergunte o nome, a formação e o CRO do profissional que conduz o seu caso."],
+   ["5. Como é o acompanhamento?","Retornos, cuidados e o que fazer se algo precisar de ajuste. Um bom tratamento não termina na instalação."],
+   ["Quer fazer sua avaliação?","CTA: \"Comenta PERGUNTAS e a nossa equipe te envia os horários.\" Sorriso Capital, Venâncio Shopping, Asa Sul."]]],
+ ["B","Harmonização facial: o que é e o que não é","ENTENDER","Desfazer mitos e posicionar naturalidade",
+  [["Harmonização facial: o que é e o que não é","Capa. Foto da Dra. Rayane."],
+   ["O que é","Conjunto de procedimentos para equilibrar proporções do rosto, com indicação individual feita em avaliação."],
+   ["O que não é","Não é padrão único de rosto, não é mudar quem você é e não deve ser feita sem avaliação."],
+   ["Natural não é acidente","Resultado natural vem de planejamento: olhar o rosto inteiro, escolher o que realçar e o que deixar como está."],
+   ["Quem executa importa","Procedimentos em harmonização devem ser feitos por profissional habilitado. Confirme o nome e o CRO."],
+   ["O que acontece na avaliação","Conversa sobre o que você quer, análise do rosto, explicação de opções e do que faz ou não faz sentido."],
+   ["Quer conversar com a Dra. Rayane?","CTA: \"Comenta ENTENDER e eu te envio como funciona a avaliação.\""]]],
+ ["C","Clareamento: caseiro, de consultório ou associado","TIPOS","Captar clareamento como porta de entrada",
+  [["Clareamento dental: qual tipo é para você?","Capa."],
+   ["Clareamento caseiro","Feito em casa, com moldeira e gel indicados pela dentista, em um período de uso orientado."],
+   ["Clareamento de consultório","Feito na clínica, em sessões conduzidas pela dentista."],
+   ["Clareamento associado","Combina os dois, conforme indicação do caso."],
+   ["Sensibilidade","Pode ocorrer em alguns casos. A dentista orienta como reduzir e se há restrição."],
+   ["Quem decide é a avaliação","Antes de clarear, é preciso examinar os dentes, tratar o que for necessário e escolher a técnica."],
+   ["Vamos avaliar o seu caso?","CTA: \"Comenta TIPOS e a nossa equipe te envia os horários.\""]]],
+ ["D","Perfil do nariz e rinomodelação: o que dá para fazer","PERFIL","Educar sobre rinomodelação com honestidade",
+  [["Perfil do nariz: o que a rinomodelação faz?","Capa."],
+   ["O que é","Procedimento com preenchimento que pode suavizar ou harmonizar o perfil do nariz, quando indicado."],
+   ["Para quem pode ser indicado","Pessoas que querem ajustes pontuais, depois de avaliação do formato do rosto e da anatomia."],
+   ["O que ela não faz","Não substitui a cirurgia em todos os casos e não resolve tudo. A avaliação diz o que é possível."],
+   ["Resultado natural","Pensar o nariz junto com o rosto inteiro, não de forma isolada."],
+   ["Cuidados","Procedimento feito por profissional habilitado, com orientação clara antes e depois."],
+   ["Tem dúvida sobre o seu perfil?","CTA: \"Comenta PERFIL e a nossa equipe te explica como é a avaliação.\""]]],
+ ["E","Como se preparar para a primeira avaliação","PREPARO","Reduzir falta e melhorar a consulta",
+  [["Primeira avaliação: como se preparar","Capa."],
+   ["1. Pense no que você quer","Anote o que mais te incomoda e o que você gostaria de melhorar."],
+   ["2. Leve seu histórico","Exames recentes, medicamentos em uso e alergias."],
+   ["3. Leve suas dúvidas","Pergunte o que quiser: como é o tratamento, quanto tempo leva, o que muda na rotina."],
+   ["4. Chegue com tempo","A avaliação merece calma. A equipe te recebe no Venâncio Shopping, Bloco B50, sala 840."],
+   ["5. Você sai com um plano","A dentista explica opções e etapas. Você decide no seu ritmo."],
+   ["Quer agendar?","CTA: \"Comenta PREPARO e eu te envio os horários.\""]]],
+ ["F","Mitos sobre sorriso e estética","MITOS","Autoridade e compartilhamento",
+  [["Mitos e verdades sobre estética do sorriso","Capa."],
+   ["Mito: toda lente fica artificial","Quando bem planejada, a lente acompanha o formato e a cor do seu rosto. Depende do planejamento e da execução."],
+   ["Mito: clareamento estraga o dente","Feito com indicação e acompanhamento, é um procedimento comum. Em alguns casos há sensibilidade."],
+   ["Mito: harmonização é para todo mundo igual","Cada rosto tem proporções próprias. O que serve para uma pessoa pode não servir para outra."],
+   ["Mito: resultado natural é sorte","É planejamento, escolha do que realçar e do que deixar como está."],
+   ["Verdade: a avaliação vem primeiro","Nenhum tratamento deveria começar sem avaliação e explicação clara."],
+   ["Ficou com dúvida?","CTA: \"Comenta MITOS e escolha o assunto que a Dra. Rayane vai explicar no próximo.\""]]]
+];
+var h = "";
+C.forEach(function(c){
+  h += '<div class="card" style="margin-bottom:14px"><span class="tag info">Carrossel '+c[0]+'</span> <b>'+c[1]+'</b> <span class="tag">Gatilho: '+c[2]+'</span>';
+  h += '<p class="src" style="margin:8px 0">Objetivo: '+c[3]+'</p>';
+  h += '<div class="tblw"><table><tr><th style="width:60px">Slide</th><th style="width:34%">Título</th><th>Texto</th></tr>';
+  c[4].forEach(function(s,i){ h += '<tr><td>'+(i+1)+'</td><td><b>'+s[0]+'</b></td><td>'+s[1]+'</td></tr>'; });
+  h += '</table></div></div>';
+});
+registerView("cli-carrosseis", `
+<div class="crumb">Clínica</div>
+<h1>Carrosséis da <em>clínica</em></h1>
+<p class="lead">6 carrosséis educativos para o paciente particular, que tiram dúvida, reduzem o medo da primeira avaliação e preparam a conversa de venda da Mari. Slide a slide, prontos para virar arte.</p>
+
+<div class="callout warn"><b>Regras</b>Conteúdo educativo, sem preço, sem desconto, sem "grátis" e sem promessa de resultado (Código de Ética Odontológico). Imagem de paciente só com autorização. Identificar o dentista com nome e CRO na legenda. Conteúdo geral que não substitui avaliação individual: revisar a redação técnica com a Dra. Rayane antes de publicar.</div>
+
+<div class="grid g3">
+  <div class="card kpi"><div class="v">6</div><div class="l">Carrosséis</div><div class="s">7 slides cada</div></div>
+  <div class="card kpi"><div class="v">6</div><div class="l">Palavras-gatilho únicas</div><div class="s">Uma por carrossel</div></div>
+  <div class="card kpi"><div class="v">3</div><div class="l">Procedimentos cobertos</div><div class="s">Lentes, harmonização, clareamento</div></div>
+</div>
+
+<h2>Estrutura-padrão</h2>
+<div class="tblw"><table>
+<tr><th>Slide</th><th>Função</th></tr>
+<tr><td>1</td><td>Capa com promessa clara de aprendizado</td></tr>
+<tr><td>2 a 6</td><td>Um ponto por slide, frases curtas, linguagem simples</td></tr>
+<tr><td>7</td><td>CTA com a palavra-gatilho e o convite para a avaliação</td></tr>
+</table></div>
+
+<h2>Carrosséis</h2>
+${h}
+
+<h2>Legenda-padrão</h2>
+<div class="card"><p style="margin:0;color:var(--mute)">[Frase de abertura do tema.] Salve este post para lembrar na hora de decidir.<br><br>Cada caso é único e só a avaliação indica o tratamento adequado. Atendimento na Sorriso Capital, Venâncio Shopping, Asa Sul, Brasília.<br><br>Comenta [PALAVRA-GATILHO] que nossa equipe te envia os horários da avaliação.<br><br>[Nome do dentista] | CRO [número]<br>#odontologia #estetica #brasilia #sorriso</p></div>
+
+<h2>Calendário (6 semanas, 1 carrossel por semana)</h2>
+<div class="tblw"><table>
+<tr><th>Semana</th><th>Carrossel</th><th>Objetivo</th></tr>
+<tr><td>1</td><td>E · Como se preparar para a avaliação</td><td>Reduzir faltas e medo da consulta</td></tr>
+<tr><td>2</td><td>A · 5 perguntas sobre lentes</td><td>Qualificar interessados em lentes</td></tr>
+<tr><td>3</td><td>B · Harmonização: o que é e o que não é</td><td>Posicionar naturalidade</td></tr>
+<tr><td>4</td><td>C · Tipos de clareamento</td><td>Testar demanda de clareamento</td></tr>
+<tr><td>5</td><td>D · Perfil do nariz e rinomodelação</td><td>Atrair interessados em rinomodelação</td></tr>
+<tr><td>6</td><td>F · Mitos e verdades</td><td>Autoridade e compartilhamento</td></tr>
+</table></div>
+
+<h2>Próximo passo</h2>
+<div class="card"><ul class="clean">
+<li>Revisão técnica do texto pela Dra. Rayane.</li>
+<li>Definir a identidade visual (dourado e champagne da clínica) e eu transformo os carrosséis em arte pronta no formato 1080x1350.</li>
+<li>Usar o carrossel mais salvo como anúncio na campanha de paciente.</li></ul></div>
+`);
+})();
+
+})();
+
+/* ===== view: cli-crc ===== */
+(function(){
+registerView('cli-crc', `
+<div class="crumb">Clínica</div>
+<h1>Processo comercial e <em>treinamento da CRC</em></h1>
+<p class="lead">Roteiros, regras e plano de treinamento para a Mari conduzir o paciente particular, do primeiro contato ao fechamento. A dentista diagnostica; a CRC organiza, orienta e vende o que foi diagnosticado.</p>
+
+<div class="callout"><b>Papel da CRC</b>A Mari é a pessoa que o paciente mais encontra. Ela qualifica o lead, agenda, recebe, apresenta o plano e o orçamento definidos pela dentista, trata dúvidas e faz o follow-up. Ela não diagnostica, não indica procedimento e não promete resultado.</div>
+
+<h2>Regras de ouro</h2>
+<div class="grid g2">
+  <div class="card"><h3>Sempre</h3><ul class="clean">
+    <li>Responder o lead em minutos, em horário comercial</li>
+    <li>Começar com uma pergunta, não com uma lista de preços</li>
+    <li>Registrar tudo no Clinicorp na hora</li>
+    <li>Apresentar o orçamento no mesmo dia da avaliação</li>
+    <li>Marcar o próximo passo antes de encerrar qualquer conversa</li></ul></div>
+  <div class="card"><h3>Nunca</h3><ul class="clean">
+    <li>Dar diagnóstico ou indicar procedimento antes da avaliação</li>
+    <li>Prometer resultado, prazo ou "garantia"</li>
+    <li>Passar valor sem entender a necessidade (valores só dentro do plano da dentista)</li>
+    <li>Dar desconto fora da alçada combinada</li>
+    <li>Deixar o paciente sem retorno</li></ul></div>
+</div>
+
+<h2>Roteiros por etapa</h2>
+<p class="src" style="margin-top:-4px">Modelos para adaptar à fala natural da Mari. Entre colchetes, o que ela preenche.</p>
+
+<div class="card" style="margin-bottom:14px"><span class="tag info">1 · Primeiro contato</span>
+<p style="margin:10px 0 4px"><b>Lead vindo do anúncio ou do quiz:</b></p>
+<p style="margin:0;color:var(--mute)">"Oi, [nome], tudo bem? Aqui é a Mari, da Sorriso Capital. Vi que você tem interesse em [procedimento]. Posso te fazer duas perguntinhas rápidas para te orientar melhor?"</p>
+<p style="margin:10px 0 4px"><b>Qualificação (uma pergunta por vez):</b></p>
+<ul class="clean" style="color:var(--mute)">
+<li>"O que mais te incomoda ou o que você gostaria de melhorar?"</li>
+<li>"Você já fez algum tratamento parecido antes?"</li>
+<li>"Pensa em fazer em quanto tempo?"</li>
+<li>"Seu atendimento seria particular ou por convênio?"</li></ul></div>
+
+<div class="card" style="margin-bottom:14px"><span class="tag info">2 · Agendamento da avaliação</span>
+<p style="margin:10px 0 0;color:var(--mute)">"Pelo que você me contou, o melhor passo é uma avaliação com a [dentista]. Nela ela examina, explica o que faz sentido para o seu caso e monta o plano com você, sem compromisso de fechar. Tenho horário na [dia] às [hora] ou na [dia] às [hora]. Qual fica melhor?"<br><br><span class="src">Se o lead perguntar o valor da avaliação ou do tratamento: informar o valor da avaliação em conversa privada, e dizer que o valor do tratamento depende do plano que a dentista indicar.</span></p></div>
+
+<div class="card" style="margin-bottom:14px"><span class="tag info">3 · Confirmação (24 horas e 2 horas antes)</span>
+<p style="margin:10px 0 0;color:var(--mute)">"Oi, [nome]! Passando para confirmar sua avaliação amanhã às [hora], com a [dentista], aqui no Venâncio Shopping, Bloco B50, sala 840 (8º andar). Posso confirmar sua presença?"<br><br>Se não responder: ligação. Se pedir remarcar: oferecer duas opções na mesma semana.</p></div>
+
+<div class="card" style="margin-bottom:14px"><span class="tag info">4 · Recepção e pós-avaliação</span>
+<p style="margin:10px 0 0;color:var(--mute)"><b>Na chegada:</b> receber pelo nome, oferecer água ou café, explicar rapidamente como será a consulta.<br><b>Depois do diagnóstico:</b> alinhar com a dentista o plano e as opções antes de falar com o paciente. Levar o paciente para uma conversa tranquila, não no balcão.<br><br>"[Nome], a [dentista] indicou [plano]. Vou te explicar cada etapa, o tempo estimado e as formas de pagamento, e a gente vê juntos o que cabe melhor para você."</p></div>
+
+<div class="card" style="margin-bottom:14px"><span class="tag info">5 · Apresentação do orçamento</span>
+<ol class="steps" style="margin-top:10px">
+<li><div><b>Resumir a necessidade</b> nas palavras do paciente ("você me disse que...").</div></li>
+<li><div><b>Apresentar o plano</b> em etapas e o resultado esperado, sem prometer.</div></li>
+<li><div><b>Falar do investimento</b> total e das condições dentro da alçada.</div></li>
+<li><div><b>Perguntar:</b> "Como você se sente em relação a isso?" e escutar.</div></li>
+<li><div><b>Propor o próximo passo:</b> agendar o início ou combinar quando voltar a falar.</div></li>
+</ol></div>
+
+<h2>Tratamento de objeções</h2>
+<div class="tblw"><table>
+<tr><th>Objeção</th><th>Resposta base</th><th>O que evitar</th></tr>
+<tr><td>"Está caro"</td><td>"Entendo. Posso perguntar o que está pesando mais: o valor total ou a forma de pagar? Dá para ver o plano em etapas ou outras condições." Voltar ao que o paciente quer e ao que está incluído.</td><td>Baixar valor sem entender, ou discutir preço sem falar de valor.</td></tr>
+<tr><td>"Vi mais barato em outro lugar"</td><td>"Faz sentido comparar. O que vale conferir é o que está incluído: avaliação, planejamento, materiais, retornos, quem executa. O nosso plano considera [pontos reais]."</td><td>Falar mal de concorrente ou comprar a briga do preço.</td></tr>
+<tr><td>"Vou pensar"</td><td>"Claro. Para eu te ajudar melhor, existe algo específico que você quer pensar? Posso te mandar um resumo do plano e te chamo na [dia] para ver como você está."</td><td>Deixar sem próximo passo marcado.</td></tr>
+<tr><td>"Preciso falar com meu marido ou esposa"</td><td>"Ótimo. Quer que eu monte um resumo para você mostrar? Se preferir, podemos agendar uma conversa com os dois."</td><td>Pressionar a decidir na hora.</td></tr>
+<tr><td>"Tenho medo de ficar artificial"</td><td>"Esse é o receio mais comum, e faz sentido. Por isso a [dentista] planeja o resultado para o seu rosto e combina com você antes. Posso te mostrar casos que ela fez, com autorização das pacientes."</td><td>Prometer que "nunca fica artificial".</td></tr>
+<tr><td>"Dói?"</td><td>"A [dentista] vai explicar o que você vai sentir e como o procedimento é conduzido. Na avaliação você tira essa dúvida direto com ela."</td><td>Responder clinicamente em nome da dentista.</td></tr>
+<tr><td>"Estou sem tempo agora"</td><td>"Sem problema. Quando seria um bom momento? Posso reservar um horário e te lembrar antes."</td><td>Desistir sem propor data.</td></tr>
+</table></div>
+
+<h2>Follow-up de orçamento</h2>
+<div class="tblw"><table>
+<tr><th>Quando</th><th>Mensagem base</th></tr>
+<tr><td>Dia 1</td><td>"Oi, [nome]! Mandei o resumo do plano. Alguma dúvida que eu possa tirar?"</td></tr>
+<tr><td>Dia 3</td><td>"Pensei em você: temos um caso parecido com o seu, que a paciente autorizou compartilhar. Quer ver?" (só com autorização)</td></tr>
+<tr><td>Dia 7</td><td>"Oi, [nome]. Queria saber como você está com a decisão. Algo travou? Posso ajudar a ver outra forma de começar."</td></tr>
+<tr><td>Dia 15</td><td>"Sua avaliação continua válida e a agenda de [mês] está aberta. Se quiser, reservo um horário para você."</td></tr>
+<tr><td>Dia 30</td><td>Último contato com tom leve; marcar no Clinicorp como "reativar em [data]".</td></tr>
+</table></div>
+
+<h2>Plano de treinamento (4 semanas)</h2>
+<div class="tblw"><table>
+<tr><th>Semana</th><th>Tema</th><th>Prática</th></tr>
+<tr><td><b>1</b></td><td>Posicionamento, ética da publicidade odontológica e conhecimento dos procedimentos (lentes, harmonização, clareamento, odontologia geral)</td><td>Sessão com a Dra. Rayane: o que cada procedimento é, para quem serve e o que não deve ser prometido</td></tr>
+<tr><td><b>2</b></td><td>Atendimento do lead: primeira resposta, qualificação e agendamento</td><td>Simulação de 10 conversas de WhatsApp com feedback</td></tr>
+<tr><td><b>3</b></td><td>Recepção, apresentação de plano e orçamento, fechamento</td><td>Role-play presencial com casos reais (sem identificar pacientes)</td></tr>
+<tr><td><b>4</b></td><td>Objeções, follow-up e uso do Clinicorp</td><td>Revisão das conversas reais da semana e ajuste de scripts</td></tr>
+</table></div>
+
+<h2>Como medir o desempenho da CRC</h2>
+<div class="tblw"><table>
+<tr><th>Indicador</th><th>Como medir</th></tr>
+<tr><td>Tempo de primeira resposta</td><td>Hora do lead x hora da resposta (Clinicorp ou WhatsApp Business)</td></tr>
+<tr><td>Leads contatados no mesmo dia</td><td>% de leads com contato no dia da entrada</td></tr>
+<tr><td>Agendamento</td><td>Avaliações marcadas ÷ leads qualificados</td></tr>
+<tr><td>Comparecimento</td><td>Avaliações realizadas ÷ marcadas</td></tr>
+<tr><td>Orçamentos apresentados</td><td>% das avaliações particulares com orçamento no mesmo dia</td></tr>
+<tr><td>Fechamento</td><td>Fechados ÷ orçamentos apresentados</td></tr>
+<tr><td>Follow-up em dia</td><td>% de orçamentos abertos com próximo contato registrado</td></tr>
+</table></div>
+<p class="src">As metas ficam em aberto até calibrar com os dados do Clinicorp. A tela de Métricas calcula tudo a partir dos números que a Mari preencher.</p>
+
+<h2>Pendências para fechar o treinamento</h2>
+<div class="card"><ul class="clean">
+<li>Alçada de desconto e condições de pagamento da Mari (quanto pode oferecer sem consultar).</li>
+<li>Quais procedimentos o convênio cobre (para qualificar corretamente).</li>
+<li>Experiência atual da Mari e como ela já conduz os atendimentos.</li>
+<li>Exportação do Clinicorp para analisar conversas, objeções reais e taxa de fechamento.</li></ul></div>
+`);
+
+})();
+
+/* ===== view: cli-funil ===== */
+(function(){
+registerView('cli-funil', `
+<div class="crumb">Clínica</div>
+<h1>Funil de <em>vendas</em></h1>
+<p class="lead">Do primeiro contato ao tratamento fechado, com dois caminhos: <b>particular</b>, conduzido pela CRC Mari, e <b>convênio</b>, conduzido pela doutora no Clinicorp. Quem dá o diagnóstico é sempre a dentista.</p>
+
+<div class="callout"><b>Princípio do processo</b>A dentista diagnostica. A CRC vende o que foi diagnosticado. O Clinicorp é o registro único: nenhum lead, orçamento ou follow-up vive só no WhatsApp pessoal de alguém.</div>
+
+<h2>Visão do funil</h2>
+<div class="card">
+  <div class="row" style="margin-top:0"><span><b>1. Atração</b> · Instagram da Dra. Rayane, Reels, Meta Ads</span><span class="tag">Marketing</span></div><div class="bar"><i style="width:100%"></i></div>
+  <div class="row"><span><b>2. Captura</b> · quiz curto, depois WhatsApp</span><span class="tag">Marketing</span></div><div class="bar"><i style="width:86%"></i></div>
+  <div class="row"><span><b>3. Qualificação</b> · particular ou convênio, procedimento de interesse</span><span class="tag info">CRC Mari</span></div><div class="bar"><i style="width:72%"></i></div>
+  <div class="row"><span><b>4. Agendamento da avaliação</b></span><span class="tag info">CRC Mari</span></div><div class="bar"><i style="width:58%"></i></div>
+  <div class="row"><span><b>5. Avaliação e diagnóstico</b> · feito pela dentista</span><span class="tag ok">Dentista</span></div><div class="bar"><i style="width:46%"></i></div>
+  <div class="row"><span><b>6. Plano e orçamento</b> · particular: Mari · convênio: doutora</span><span class="tag warn">Bifurca</span></div><div class="bar"><i style="width:34%"></i></div>
+  <div class="row"><span><b>7. Fechamento e pagamento</b></span><span class="tag warn">Bifurca</span></div><div class="bar"><i style="width:24%"></i></div>
+  <div class="row"><span><b>8. Tratamento, pós e indicação</b></span><span class="tag ok">Dentista + CRC</span></div><div class="bar"><i style="width:18%"></i></div>
+</div>
+<p class="src">As larguras das barras são ilustrativas do formato de funil, não dados reais. As taxas reais entram quando tivermos o Gerenciador de Anúncios e o Clinicorp.</p>
+
+<h2>A bifurcação: particular x convênio</h2>
+<div class="grid g2">
+  <div class="card"><h3><span class="tag info">Particular</span> &nbsp;Mari conduz</h3><ul class="clean">
+    <li>Responde o lead, qualifica e agenda a avaliação</li>
+    <li>Recebe o paciente, acompanha até a sala</li>
+    <li>Após o diagnóstico da dentista, apresenta o plano e o orçamento</li>
+    <li>Negocia condição de pagamento dentro da alçada</li>
+    <li>Faz o follow-up até o sim ou o não</li>
+    <li>Registra tudo no Clinicorp</li></ul></div>
+  <div class="card"><h3><span class="tag ok">Convênio</span> &nbsp;Doutora conduz</h3><ul class="clean">
+    <li>A doutora faz todo o atendimento dentro do Clinicorp</li>
+    <li>Agendamento e guias seguem o fluxo do convênio</li>
+    <li>Quando o diagnóstico indica procedimento fora da cobertura, o paciente passa para o fluxo particular (Mari apresenta o orçamento)</li></ul></div>
+</div>
+<div class="callout warn"><b>Precisa de decisão</b>Quais procedimentos o convênio cobre na Sorriso Capital? Lentes, facetas e harmonização são estéticos e tendem a ser particular. Confirmar a lista para a Mari saber, na qualificação, para qual lado encaminhar.</div>
+
+<h2>Etapa a etapa</h2>
+<div class="tblw"><table>
+<tr><th>Etapa</th><th>Responsável</th><th>O que acontece</th><th>Saída para a próxima</th></tr>
+<tr><td><b>1. Atração</b></td><td>Marketing</td><td>Reels de transformação no perfil da Dra. Rayane; anúncios de lentes e harmonização; @sorriso.capital reposta e marca.</td><td>Clique no link ou no anúncio</td></tr>
+<tr><td><b>2. Captura</b></td><td>Marketing</td><td>Quiz curto (procedimento de interesse, objetivo, particular ou convênio, bairro) e envio ao WhatsApp com as respostas. Hoje o link vai direto ao WhatsApp.</td><td>Lead com dados mínimos</td></tr>
+<tr><td><b>3. Qualificação</b></td><td>Mari</td><td>Primeiro contato rápido, confirma interesse, tipo de atendimento e urgência, apresenta a avaliação.</td><td>Lead qualificado, com tag no Clinicorp</td></tr>
+<tr><td><b>4. Agendamento</b></td><td>Mari</td><td>Marca a avaliação (R$ 180 no particular), explica o que acontece na consulta e confirma presença.</td><td>Consulta marcada e confirmada</td></tr>
+<tr><td><b>5. Avaliação</b></td><td>Dentista</td><td>Anamnese, exame, diagnóstico e plano clínico. Para lentes e harmonização, mostra o planejamento do resultado.</td><td>Plano clínico registrado</td></tr>
+<tr><td><b>6. Orçamento</b></td><td>Mari (particular) · Doutora (convênio)</td><td>Apresenta o plano com valores da tabela e condições de pagamento no mesmo dia, ainda na clínica.</td><td>Orçamento enviado e registrado</td></tr>
+<tr><td><b>7. Fechamento</b></td><td>Mari / Doutora</td><td>Sim: contrato, pagamento e agenda do tratamento. Não agora: entra na cadência de follow-up.</td><td>Tratamento agendado ou follow-up</td></tr>
+<tr><td><b>8. Tratamento e pós</b></td><td>Dentista + Mari</td><td>Execução, retornos, pedido de depoimento e foto autorizada, indicação, manutenção e reativação.</td><td>Paciente recorrente e indicador</td></tr>
+</table></div>
+
+<h2>Regras de velocidade e follow-up</h2>
+<div class="grid g2">
+  <div class="card"><h3>Resposta ao lead</h3><ul class="clean">
+    <li>Primeira resposta em minutos, em horário comercial; fora dele, resposta automática com horário de retorno.</li>
+    <li>Todo lead recebe uma pergunta de qualificação na primeira mensagem, não só um "olá".</li>
+    <li>Lead sem resposta: nova tentativa no mesmo dia e no dia seguinte.</li></ul></div>
+  <div class="card"><h3>Orçamento parado</h3><ul class="clean">
+    <li>Dia 1: mensagem de resumo do plano e dúvidas.</li>
+    <li>Dia 3: caso parecido (com autorização do paciente) ou condição de pagamento.</li>
+    <li>Dia 7: pergunta direta sobre o que travou.</li>
+    <li>Dia 15 e 30: última tentativa e reativação.</li></ul></div>
+</div>
+<p class="src">A cadência acima é proposta inicial para testar e ajustar com os números reais da clínica.</p>
+
+<h2>Oferta de entrada por interesse</h2>
+<div class="tblw"><table>
+<tr><th>Interesse</th><th>Porta de entrada</th><th>Ticket do plano (tabela)</th><th>Atenção</th></tr>
+<tr><td>Lentes e facetas</td><td>Avaliação com planejamento do sorriso</td><td>Lente R$ 2.500 · faceta de porcelana R$ 1.800 · faceta direta R$ 950</td><td>Concorrente ancora em R$ 990 por 10 lentes: vender planejamento e naturalidade, não preço.</td></tr>
+<tr><td>Harmonização facial</td><td>Avaliação facial com a Dra. Rayane</td><td>Botox R$ 900 a R$ 1.400 · preenchimento R$ 1.000 a R$ 1.200 · bioestimulador R$ 1.500</td><td>Perfil com mais alcance; modelo de campanha sazonal da Dafine.</td></tr>
+<tr><td>Clareamento</td><td>Avaliação + indicação do tipo</td><td>R$ 500 por sessão a R$ 1.700 (associado)</td><td>Bom para entrada e upgrade para lentes.</td></tr>
+<tr><td>Odontologia geral</td><td>Avaliação odontológica (R$ 180)</td><td>Conforme plano</td><td>Convênio ou particular, definido na qualificação.</td></tr>
+</table></div>
+
+<h2>Onde a IA entra no processo</h2>
+<div class="card"><ul class="clean">
+<li><b>Qualificação inicial</b> no WhatsApp: perguntas do quiz e classificação particular ou convênio antes de chegar à Mari.</li>
+<li><b>Resumo do lead</b> para a Mari: interesse, objeção declarada e histórico, pronto antes do contato.</li>
+<li><b>Confirmação e lembretes</b> de consulta, para reduzir falta.</li>
+<li><b>Reativação de orçamentos parados</b> seguindo a cadência acima, com a Mari revisando antes de enviar.</li></ul>
+<p style="margin:10px 0 0;color:var(--mute)">A IA acelera e organiza; a conversa de venda e o diagnóstico continuam com a equipe.</p></div>
+
+<h2>Indicadores do funil</h2>
+<div class="tblw"><table>
+<tr><th>Indicador</th><th>Como calcular</th><th>Meta</th></tr>
+<tr><td>Custo por lead</td><td>Investimento em anúncios ÷ leads</td><td>Definir com o Gerenciador de Anúncios</td></tr>
+<tr><td>Lead qualificado</td><td>Leads qualificados ÷ leads</td><td>Definir</td></tr>
+<tr><td>Agendamento</td><td>Avaliações marcadas ÷ leads qualificados</td><td>Definir</td></tr>
+<tr><td>Comparecimento</td><td>Avaliações realizadas ÷ marcadas</td><td>Definir</td></tr>
+<tr><td>Orçamentos apresentados</td><td>Orçamentos ÷ avaliações particulares</td><td>Próximo de 100%</td></tr>
+<tr><td>Fechamento</td><td>Tratamentos fechados ÷ orçamentos</td><td>Definir</td></tr>
+<tr><td>Ticket médio</td><td>Receita fechada ÷ tratamentos</td><td>Definir com o Clinicorp</td></tr>
+<tr><td>Custo de aquisição</td><td>Investimento ÷ pacientes fechados</td><td>Comparar com a margem por procedimento</td></tr>
+</table></div>
+
+<h2>O que precisamos para fechar este funil</h2>
+<div class="card"><ul class="clean">
+<li>Exportação do Clinicorp: leads, avaliações, orçamentos e fechamentos dos últimos meses, para calibrar as metas.</li>
+<li>Lista de procedimentos cobertos por convênio.</li>
+<li>Alçada de desconto e condições de pagamento da Mari.</li>
+<li>Acesso ao Gerenciador de Anúncios.</li>
+<li>Próxima entrega: o <b>Processo comercial e treinamento da CRC</b> detalha scripts de cada etapa acima.</li></ul></div>
+`);
+
+})();
+
+/* ===== view: cli-metricas ===== */
+(function(){
+(function(){
+var KEY = "sorriso-capital-metricas-cli-v1";
+var F = [
+  ["inv","Investimento em anúncios (R$)"],
+  ["leads","Leads (conversas iniciadas)"],
+  ["qual","Leads qualificados"],
+  ["agend","Avaliações agendadas"],
+  ["comp","Avaliações realizadas"],
+  ["orc","Orçamentos apresentados"],
+  ["fech","Tratamentos fechados"],
+  ["rec","Receita fechada (R$)"]
+];
+function num(v){ var n = parseFloat(String(v).replace(",",".")); return isNaN(n) ? 0 : n; }
+function brl(n){ return n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+function pct(a,b){ return b>0 ? (a/b*100).toLocaleString("pt-BR",{maximumFractionDigits:1})+"%" : "-"; }
+function div(a,b){ return b>0 ? brl(a/b) : "-"; }
+function load(){ try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){ return {}; } }
+function save(o){ try { localStorage.setItem(KEY, JSON.stringify(o)); } catch(e){} }
+window.mtCli = function(){
+  var o = {}, el = document.querySelectorAll("[data-mt='cli']");
+  el.forEach(function(i){ o[i.dataset.f] = i.value; });
+  save(o);
+  var v = {}; F.forEach(function(f){ v[f[0]] = num(o[f[0]]); });
+  var set = function(id, t){ var e = document.getElementById(id); if (e) e.textContent = t; };
+  set("m-cpl", div(v.inv, v.leads));
+  set("m-qual", pct(v.qual, v.leads));
+  set("m-agend", pct(v.agend, v.qual));
+  set("m-comp", pct(v.comp, v.agend));
+  set("m-orc", pct(v.orc, v.comp));
+  set("m-fech", pct(v.fech, v.orc));
+  set("m-ticket", div(v.rec, v.fech));
+  set("m-cac", div(v.inv, v.fech));
+  set("m-roas", v.inv>0 ? (v.rec/v.inv).toLocaleString("pt-BR",{maximumFractionDigits:2})+"x" : "-");
+  set("m-lead-fech", pct(v.fech, v.leads));
+  var max = Math.max(v.leads, 1);
+  [["leads"],["qual"],["agend"],["comp"],["orc"],["fech"]].forEach(function(k){
+    var b = document.getElementById("b-"+k[0]); if (b) b.style.width = Math.min(100, v[k[0]]/max*100)+"%";
+    set("n-"+k[0], String(v[k[0]]));
+  });
+};
+window.mtCliReset = function(){ if (!confirm("Limpar os números preenchidos?")) return; save({}); onView_cli(); };
+function onView_cli(){
+  var o = load();
+  document.querySelectorAll("[data-mt='cli']").forEach(function(i){ i.value = o[i.dataset.f] || ""; });
+  window.mtCli();
+}
+onView("cli-metricas", onView_cli);
+
+var inputs = F.map(function(f){
+  return '<label class="mt-f"><span>'+f[1]+'</span><input type="number" min="0" step="any" inputmode="decimal" data-mt="cli" data-f="'+f[0]+'" oninput="mtCli()"></label>';
+}).join("");
+var funil = [["leads","Leads"],["qual","Qualificados"],["agend","Agendados"],["comp","Avaliações realizadas"],["orc","Orçamentos"],["fech","Fechados"]].map(function(k){
+  return '<div class="row" style="margin-top:8px"><span>'+k[1]+'</span><b id="n-'+k[0]+'">0</b></div><div class="bar"><i id="b-'+k[0]+'" style="width:0"></i></div>';
+}).join("");
+
+registerView("cli-metricas", `
+<style>
+.mt-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mt-f{display:flex;flex-direction:column;gap:4px}
+.mt-f span{font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--mute)}
+.mt-f input{border:1px solid var(--line);border-radius:8px;padding:9px 10px;font:inherit;background:#FFFEFB;width:100%}
+.mt-f input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,168,67,.18)}
+@media (max-width:560px){.mt-grid{grid-template-columns:1fr}}
+</style>
+<div class="crumb">Clínica</div>
+<h1>Métricas da <em>clínica</em></h1>
+<p class="lead">Calculadora do funil do paciente particular. Preencha os números do período (semana ou mês) e o painel calcula custo por lead, taxas de cada etapa, custo por paciente fechado e retorno sobre o investimento.</p>
+
+<div class="callout"><b>Como usar</b>Pegue investimento e leads no Gerenciador de Anúncios, e o restante no Clinicorp. Os números ficam salvos neste navegador. Para um novo período, use "Limpar".</div>
+
+<div class="grid g2" style="align-items:start">
+  <div class="card"><h3>Números do período</h3><div class="mt-grid" style="margin-top:10px">${inputs}</div>
+    <div style="margin-top:12px"><button onclick="mtCliReset()" style="border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;cursor:pointer;font:inherit;font-size:12px">Limpar</button></div></div>
+  <div class="card"><h3>Funil do período</h3>${funil}</div>
+</div>
+
+<h2>Resultado</h2>
+<div class="grid g4">
+  <div class="card kpi"><div class="v" id="m-cpl">-</div><div class="l">Custo por lead</div></div>
+  <div class="card kpi"><div class="v" id="m-cac">-</div><div class="l">Custo por paciente fechado</div></div>
+  <div class="card kpi"><div class="v" id="m-ticket">-</div><div class="l">Ticket médio</div></div>
+  <div class="card kpi"><div class="v" id="m-roas">-</div><div class="l">Retorno (receita ÷ investimento)</div></div>
+</div>
+
+<h2>Taxas por etapa</h2>
+<div class="tblw"><table>
+<tr><th>Etapa</th><th class="r">Taxa</th><th>Conta</th><th>Quem acompanha</th></tr>
+<tr><td>Lead qualificado</td><td class="r" id="m-qual">-</td><td>Qualificados ÷ leads</td><td>Mari</td></tr>
+<tr><td>Agendamento</td><td class="r" id="m-agend">-</td><td>Agendadas ÷ qualificados</td><td>Mari</td></tr>
+<tr><td>Comparecimento</td><td class="r" id="m-comp">-</td><td>Realizadas ÷ agendadas</td><td>Mari</td></tr>
+<tr><td>Orçamento apresentado</td><td class="r" id="m-orc">-</td><td>Orçamentos ÷ realizadas</td><td>Mari / dentista</td></tr>
+<tr><td>Fechamento</td><td class="r" id="m-fech">-</td><td>Fechados ÷ orçamentos</td><td>Mari</td></tr>
+<tr><td>Lead para paciente</td><td class="r" id="m-lead-fech">-</td><td>Fechados ÷ leads</td><td>Gestão</td></tr>
+</table></div>
+
+<h2>Como ler os números</h2>
+<div class="tblw"><table>
+<tr><th>Se o gargalo está em...</th><th>O que investigar</th></tr>
+<tr><td>Custo por lead alto</td><td>Criativo, público, destino do clique (quiz ou WhatsApp direto)</td></tr>
+<tr><td>Qualificação baixa</td><td>Anúncio atraindo curioso; tornar a copy mais específica</td></tr>
+<tr><td>Agendamento baixo</td><td>Tempo de resposta e a abordagem da Mari</td></tr>
+<tr><td>Comparecimento baixo</td><td>Confirmações 24 horas e 2 horas antes; lembrete e remarcação</td></tr>
+<tr><td>Orçamento apresentado baixo</td><td>Dentista e Mari alinhando plano no mesmo dia</td></tr>
+<tr><td>Fechamento baixo</td><td>Objeções, alçada de pagamento, follow-up e prova social</td></tr>
+</table></div>
+
+<h2>Metas</h2>
+<div class="card"><p style="margin:0;color:var(--mute)">Ainda não defini metas: não há dados históricos. Depois de 4 semanas preenchendo a calculadora, as próprias taxas viram a linha de base, e definimos a meta de melhoria etapa por etapa. Para o limite de custo por paciente fechado, use uma fração do ticket e da margem (ver tela de Meta Ads).</p></div>
+
+<h2>Rotina de acompanhamento</h2>
+<div class="card"><ul class="clean">
+<li><b>Semanal (15 min):</b> preencher os números e olhar o gargalo.</li>
+<li><b>Mensal:</b> comparar com o mês anterior; decidir pausar, ajustar ou escalar campanhas.</li>
+<li><b>Trimestral:</b> rever preços, ofertas e posicionamento com base no que fechou.</li></ul></div>
+`);
+})();
+
+})();
+
+/* ===== view: cli-posicionamento ===== */
+(function(){
+registerView('cli-posicionamento', `
+<div class="crumb">Clínica</div>
+<h1>Posicionamento e <em>ofertas</em></h1>
+<p class="lead">Como a clínica se apresenta ao paciente particular em Brasília: o que promete, para quem, com qual rosto e com que provas. Base para funil, anúncios, Reels e carrosséis.</p>
+
+<div class="callout"><b>Ideia central</b>Odontologia e estética facial no mesmo lugar, com resultado natural e elegante, conduzido por uma dentista que aparece e responde pelo trabalho. Não é a clínica mais barata: é a que planeja o sorriso e o rosto juntos, sem exageros.</div>
+
+<h2>O que o mercado já ocupa</h2>
+<div class="tblw"><table>
+<tr><th>Território</th><th>Quem ocupa</th><th>Espaço para a Sorriso Capital</th></tr>
+<tr><td>Preço baixo em estética</td><td>Huff Life, D'Or (10 lentes por R$ 990), Mundo Sorriso (Black Friday)</td><td>Não competir. A tabela da clínica é de outro patamar e a ética odontológica veda anunciar preço.</td></tr>
+<tr><td>Lentes com planejamento e prova técnica</td><td>Ioog, CCD (3.000 sorrisos), Verso, Matheus Miranda</td><td>Entrar com um ângulo próprio: sorriso e rosto juntos.</td></tr>
+<tr><td>Harmonização com história de paciente</td><td>Bruna e Saulo, Dr. Yuri Nunes, Dafine</td><td>Forte para a Dra. Rayane, que já tem audiência.</td></tr>
+<tr><td>Clareamento como entrada</td><td>Ninguém visível na coleta</td><td>Teste de demanda barato.</td></tr>
+<tr><td>Coworking odontológico</td><td>Nenhum em Brasília</td><td>Tratado na unidade Coworking.</td></tr>
+</table></div>
+
+<h2>Proposta de valor</h2>
+<div class="grid g3">
+  <div class="card"><h3>Para quem</h3><p style="margin:0;color:var(--mute)">Adultos de Brasília que querem melhorar sorriso e/ou rosto com naturalidade, valorizam atendimento próximo e aceitam investir em tratamento planejado. Hipótese a validar com os dados do Clinicorp.</p></div>
+  <div class="card"><h3>O que entregamos</h3><p style="margin:0;color:var(--mute)">Avaliação com diagnóstico da dentista, plano claro e acompanhamento. Lentes e facetas, harmonização facial, clareamento e odontologia geral na mesma clínica.</p></div>
+  <div class="card"><h3>Por que nós</h3><p style="margin:0;color:var(--mute)">Dentista como responsável e rosto da marca, sorriso e rosto avaliados em conjunto, resultado natural "sem exageros" (promessa que já aparece no perfil da Dra. Rayane).</p></div>
+</div>
+<p class="src">As frases acima precisam ser validadas com a Dra. Rayane: a clínica só pode prometer o que entrega e comprova.</p>
+
+<h2>Promessa central e frases de apoio</h2>
+<div class="card"><ul class="clean">
+<li><b>Promessa:</b> "Resultado natural, planejado para o seu rosto."</li>
+<li><b>Apoio 1:</b> "Odontologia e estética facial no mesmo lugar."</li>
+<li><b>Apoio 2:</b> "Quem diagnostica é a dentista, do começo ao fim."</li>
+<li><b>Apoio 3:</b> "Sem exageros: a gente mostra o que faz sentido e o que não faz."</li>
+<li><b>Evitar:</b> "o melhor", "garantido", "definitivo", "transformação radical", qualquer menção a preço ou desconto em peça pública.</li></ul></div>
+
+<h2>Pilares de conteúdo</h2>
+<div class="tblw"><table>
+<tr><th>Pilar</th><th>Para quê</th><th>Exemplos</th></tr>
+<tr><td><b>Resultado natural</b></td><td>Atrair e gerar desejo</td><td>Casos reais com autorização, antes e depois dentro das regras do CFO, reveal de transformação</td></tr>
+<tr><td><b>Como funciona</b></td><td>Reduzir medo e dúvida</td><td>Passo a passo da avaliação, o que acontece em cada procedimento, tempo de recuperação</td></tr>
+<tr><td><b>Quebra de objeção</b></td><td>Destravar a decisão</td><td>"Medo de ficar artificial", "dói?", "dura quanto tempo?", "é para mim?"</td></tr>
+<tr><td><b>Autoridade</b></td><td>Dar segurança</td><td>Bastidor da clínica, estudo de caso, a Dra. Rayane explicando critério técnico</td></tr>
+<tr><td><b>Prova social</b></td><td>Confirmar a escolha</td><td>Depoimentos com autorização, resposta a comentários, inauguração e história da clínica</td></tr>
+</table></div>
+
+<h2>Escada de ofertas</h2>
+<div class="tblw"><table>
+<tr><th>Degrau</th><th>Oferta</th><th>Papel no funil</th></tr>
+<tr><td><b>1. Entrada</b></td><td>Avaliação (odontológica ou facial)</td><td>Primeiro contato pago ou agendado; momento do diagnóstico e do plano.</td></tr>
+<tr><td><b>2. Porta suave</b></td><td>Clareamento, profilaxia, botox</td><td>Baixa barreira, mostra a qualidade do atendimento.</td></tr>
+<tr><td><b>3. Principal</b></td><td>Lentes e facetas; preenchimentos e rinomodelação; bioestimulador</td><td>Maior ticket e margem. Objetivo dos anúncios.</td></tr>
+<tr><td><b>4. Complexo</b></td><td>Reabilitações, implantes, enxertos</td><td>Aparecem na avaliação; ticket alto, conversa consultiva.</td></tr>
+<tr><td><b>5. Recorrência</b></td><td>Manutenção de harmonização, clareamento de reforço, retornos</td><td>Receita previsível e indicação.</td></tr>
+</table></div>
+<p class="src">Valores de referência estão na tela de Precificação. Publicamente, nenhuma peça deve trazer esses valores.</p>
+
+<h2>Papéis das marcas</h2>
+<div class="grid g2">
+  <div class="card"><h3>Dra. Rayane</h3><ul class="clean">
+    <li>Rosto da clínica e da harmonização (9.087 seguidores)</li>
+    <li>Publica os Reels de transformação e de bastidor</li>
+    <li>Link do perfil leva a um quiz de qualificação</li></ul></div>
+  <div class="card"><h3>@sorriso.capital</h3><ul class="clean">
+    <li>Endereço, prova e catálogo de resultados (612 seguidores)</li>
+    <li>Reposta e marca o conteúdo da Dra. Rayane</li>
+    <li>Tem o coworking como vitrine para dentistas; manter separado do conteúdo ao paciente</li></ul></div>
+</div>
+
+<h2>Tom de voz</h2>
+<div class="grid g2">
+  <div class="card"><h3>Usar</h3><ul class="clean">
+    <li>Elegante, acolhedor, técnico sem jargão</li>
+    <li>Primeira pessoa quando é a Dra. Rayane falando</li>
+    <li>Explicar o porquê antes do como</li>
+    <li>"Natural", "harmônico", "planejado", "avaliação"</li></ul></div>
+  <div class="card"><h3>Evitar</h3><ul class="clean">
+    <li>Urgência falsa, promessa de resultado, "garantido"</li>
+    <li>Exagero e linguagem de vendedor</li>
+    <li>Falar de problema do espectador ("seus dentes são...")</li>
+    <li>Preço, desconto, parcelamento e "grátis" em publicidade</li></ul></div>
+</div>
+
+<h2>Provas que precisam ser produzidas</h2>
+<div class="card"><ul class="clean">
+<li>Banco de casos com termo de autorização de imagem assinado (CFO exige).</li>
+<li>Depoimentos em vídeo e texto de pacientes satisfeitos.</li>
+<li>Currículo e formação da Dra. Rayane e dos demais dentistas (nome e CRO).</li>
+<li>Fotos e vídeo da clínica, com salas e recepção.</li>
+<li>Número real de casos realizados, se a clínica quiser usar prova numérica (como a CCD faz).</li></ul></div>
+
+<h2>Decisões que dependem de você</h2>
+<div class="card"><ul class="clean">
+<li>Confirmar a promessa central e as três frases de apoio com a Dra. Rayane.</li>
+<li>Definir quais procedimentos serão o foco dos próximos 90 dias (lentes? harmonização? os dois).</li>
+<li>Decidir o papel de cada profissional da clínica além da Dra. Rayane.</li>
+<li>Autorizar a criação do quiz e do banco de casos.</li></ul></div>
+`);
+
+})();
+
+/* ===== view: cli-preco ===== */
+(function(){
+registerView('cli-preco', `
+<div class="crumb">Clínica</div>
+<h1>Precificação</h1>
+<p class="lead">Tabela de preços da clínica organizada por área, a partir do arquivo enviado. Itens marcados precisam de confirmação antes de virar material comercial.</p>
+
+<div class="callout warn"><b>Confirmar antes de publicar</b><ul class="clean">
+<li>Canal unirradicular e birradicular aparecem com o mesmo valor (R$ 1.250). Pode ser correto ou erro de digitação.</li>
+<li>Implante: a tabela traz "Implante HE D1.800", "Implante + coroa R$ 5.900" e "2.500 unidade". Não ficou claro a que se refere o R$ 2.500.</li>
+<li>Sisos e alguns itens estavam sem "R$"; assumi reais.</li>
+<li>Duas linhas têm "..." e o título "Procedimento" solto (prótese e estética): pode haver itens faltando.</li></ul></div>
+
+<h2>Consulta, prevenção e clareamento</h2>
+<div class="tblw"><table><tr><th>Procedimento</th><th class="r">Valor</th></tr>
+<tr><td>Avaliação odontológica</td><td class="r">R$ 180</td></tr>
+<tr><td>Emergência e urgência</td><td class="r">R$ 350</td></tr>
+<tr><td>Profilaxia</td><td class="r">R$ 250</td></tr>
+<tr><td>Polimento</td><td class="r">R$ 120</td></tr>
+<tr><td>Aplicação de flúor</td><td class="r">R$ 90</td></tr>
+<tr><td>Clareamento caseiro</td><td class="r">R$ 950</td></tr>
+<tr><td>Clareamento de consultório</td><td class="r">R$ 500 por sessão</td></tr>
+<tr><td>Clareamento associado</td><td class="r">R$ 1.700</td></tr></table></div>
+
+<h2>Estética (alto ticket)</h2>
+<div class="tblw"><table><tr><th>Procedimento</th><th class="r">Valor</th></tr>
+<tr><td>Faceta direta</td><td class="r">R$ 950</td></tr>
+<tr><td>Faceta de porcelana</td><td class="r">R$ 1.800</td></tr>
+<tr><td>Lente de contato</td><td class="r">R$ 2.500</td></tr>
+<tr><td>Onlay Emax</td><td class="r">R$ 1.500</td></tr>
+<tr><td>Onlay cerômero</td><td class="r">R$ 1.200</td></tr></table></div>
+<div class="callout"><b>Âncora do mercado</b>A D'Or anuncia 10 lentes por R$ 990 (R$ 99 por lente). A tabela da Sorriso Capital é R$ 2.500 por lente. A comunicação precisa sustentar a diferença com planejamento digital, naturalidade e caso real, sem entrar em guerra de preço.</div>
+
+<h2>Harmonização facial</h2>
+<div class="tblw"><table><tr><th>Procedimento</th><th class="r">Valor</th></tr>
+<tr><td>Botox (Xeomin, Botox ou Nabota), terço superior</td><td class="r">R$ 900</td></tr>
+<tr><td>Botox Dysport, full face</td><td class="r">R$ 1.400</td></tr>
+<tr><td>Ácido hialurônico</td><td class="r">R$ 1.000</td></tr>
+<tr><td>Rinomodelação</td><td class="r">R$ 1.200</td></tr>
+<tr><td>Preenchimento labial</td><td class="r">R$ 1.200</td></tr>
+<tr><td>Bioestimulador</td><td class="r">R$ 1.500</td></tr>
+<tr><td>Microagulhamento com PDRN</td><td class="r">R$ 700</td></tr></table></div>
+
+<h2>Restaurações, endodontia e cirurgias</h2>
+<div class="grid g3">
+<div class="tblw"><table><tr><th>Restaurações</th><th class="r">Valor</th></tr>
+<tr><td>Classe I</td><td class="r">R$ 320</td></tr><tr><td>Classe II</td><td class="r">R$ 390</td></tr><tr><td>Classe III</td><td class="r">R$ 420</td></tr><tr><td>Classe IV</td><td class="r">R$ 520</td></tr><tr><td>Classe V</td><td class="r">R$ 320</td></tr></table></div>
+<div class="tblw"><table><tr><th>Endodontia</th><th class="r">Valor</th></tr>
+<tr><td>Canal unirradicular</td><td class="r">R$ 1.250</td></tr><tr><td>Canal birradicular</td><td class="r">R$ 1.250</td></tr><tr><td>Canal multirradicular</td><td class="r">R$ 1.650</td></tr>
+<tr><td>Retratamento unirradicular</td><td class="r">R$ 1.450</td></tr><tr><td>Retratamento birradicular</td><td class="r">R$ 1.800</td></tr><tr><td>Retratamento multirradicular</td><td class="r">R$ 2.300</td></tr></table></div>
+<div class="tblw"><table><tr><th>Cirurgias</th><th class="r">Valor</th></tr>
+<tr><td>Exodontia simples</td><td class="r">R$ 500</td></tr><tr><td>Raiz residual</td><td class="r">R$ 450</td></tr><tr><td>Siso erupcionado</td><td class="r">R$ 600</td></tr><tr><td>Siso semi-incluso</td><td class="r">R$ 600</td></tr><tr><td>Siso incluso</td><td class="r">R$ 800</td></tr><tr><td>Gengivoplastia</td><td class="r">R$ 1.100</td></tr><tr><td>Frenectomia</td><td class="r">R$ 950</td></tr></table></div>
+</div>
+
+<h2>Prótese, implantes e placas</h2>
+<div class="grid g3">
+<div class="tblw"><table><tr><th>Prótese</th><th class="r">Valor</th></tr>
+<tr><td>Coroa provisória</td><td class="r">R$ 500</td></tr><tr><td>Coroa metalocerâmica</td><td class="r">R$ 1.900</td></tr><tr><td>Coroa Emax</td><td class="r">R$ 2.600</td></tr><tr><td>Núcleo metálico</td><td class="r">R$ 750</td></tr><tr><td>Pino de fibra</td><td class="r">R$ 500</td></tr></table></div>
+<div class="tblw"><table><tr><th>Implantes</th><th class="r">Valor</th></tr>
+<tr><td>Implante HE <span class="tag warn">confirmar</span></td><td class="r">R$ 1.800</td></tr><tr><td>Implante + coroa</td><td class="r">R$ 5.900</td></tr><tr><td>"2.500 unidade" <span class="tag warn">confirmar</span></td><td class="r">R$ 2.500</td></tr><tr><td>Osso sintético</td><td class="r">R$ 1.500</td></tr><tr><td>Enxerto</td><td class="r">R$ 2.000</td></tr><tr><td>Levantamento de seio</td><td class="r">R$ 3.800</td></tr></table></div>
+<div class="tblw"><table><tr><th>Placas</th><th class="r">Valor</th></tr>
+<tr><td>Placa miorrelaxante</td><td class="r">R$ 1.100</td></tr><tr><td>Contenção</td><td class="r">R$ 350</td></tr></table></div>
+</div>
+
+<h2>Odontopediatria e periodontia</h2>
+<div class="grid g2">
+<div class="tblw"><table><tr><th>Odontopediatria</th><th class="r">Valor</th></tr>
+<tr><td>Consulta/avaliação odontopediátrica</td><td class="r">R$ 220</td></tr><tr><td>Profilaxia + flúor</td><td class="r">R$ 280</td></tr><tr><td>Selante por dente</td><td class="r">R$ 180</td></tr><tr><td>Restauração 1 face</td><td class="r">R$ 300</td></tr><tr><td>Restauração 2 faces</td><td class="r">R$ 380</td></tr><tr><td>Restauração 3 faces</td><td class="r">R$ 450</td></tr><tr><td>Pulpotomia</td><td class="r">R$ 650</td></tr><tr><td>Pulpectomia</td><td class="r">R$ 850</td></tr><tr><td>Exodontia de dente decíduo</td><td class="r">R$ 380</td></tr><tr><td>Mantenedor de espaço</td><td class="r">R$ 900</td></tr></table></div>
+<div class="tblw"><table><tr><th>Periodontia</th><th class="r">Valor</th></tr>
+<tr><td>Profilaxia</td><td class="r">R$ 250</td></tr><tr><td>Raspagem supragengival (por arcada)</td><td class="r">R$ 250</td></tr><tr><td>Raspagem subgengival (por sextante)</td><td class="r">R$ 350</td></tr><tr><td>Tratamento periodontal completo</td><td class="r">R$ 1.800 a R$ 2.800</td></tr><tr><td>Tratamento periodontal grave</td><td class="r">R$ 2.500</td></tr><tr><td>Aumento de coroa clínica</td><td class="r">R$ 1.300</td></tr><tr><td>Frenectomia labial</td><td class="r">R$ 950</td></tr><tr><td>Enxerto gengival</td><td class="r">R$ 2.000</td></tr></table></div>
+</div>
+
+<h2>Próxima etapa da precificação</h2>
+<div class="card"><ul class="clean">
+<li>Definir custo por procedimento (material, laboratório, hora clínica) para calcular margem real. A tabela atual traz só preço de venda.</li>
+<li>Montar pacotes (ex.: avaliação + planejamento + lentes) e condições de pagamento para a CRC.</li>
+<li>Regra de desconto e quem pode autorizar.</li></ul></div>
+<p class="src">Fonte: tabela de preços enviada (tabela de preços sorriso.txt).</p>
+`);
+
+})();
+
+/* ===== view: cli-reels ===== */
+(function(){
+(function(){
+// [id, titulo, duracao, modelo, hook, cenas[[tempo,cena,fala]], cta, cuidado]
+var R = [
+ ["r1","Reveal de transformação natural","25 a 35 s","Reel da Dra. Rayane com 84.796 views (rinomodelação e preenchimento labial)",
+  "Olha essa transformação: natural, harmônica e sem exageros.",
+  [["0 a 3 s","Rosto do paciente antes, câmera parada","Texto: \"Natural, harmônica e sem exageros.\""],
+   ["3 a 12 s","Corte para o procedimento realizado (bastidor, sem exposição desnecessária)","\"Na avaliação, a gente alinhou o que fazia sentido para o rosto dela.\""],
+   ["12 a 22 s","Rosto depois, mesma luz e ângulo","\"Respeitamos a proporção e o que ela queria realçar.\""],
+   ["22 a 30 s","Dra. Rayane","\"Quer entender o que faz sentido para o seu rosto? Comenta HARMONIA.\""]],
+  "Comente HARMONIA","Autorização de imagem por escrito; caso do próprio profissional; sem prometer resultado; sem preço."],
+ ["r2","\"Ele se reconhece no espelho\"","30 a 40 s","Reel com 15.618 views (preenchimento frontal masculino)",
+  "Hoje ele se olha no espelho e se reconhece com orgulho.",
+  [["0 a 4 s","Paciente homem de costas, olhando o espelho (com autorização)","Texto: \"Muitos homens adiam por medo de exagero.\""],
+   ["4 a 20 s","Dra. Rayane explicando o planejamento personalizado","\"A gente respeita a naturalidade e a harmonia do rosto, sem perder a masculinidade.\""],
+   ["20 a 35 s","Resultado final, depoimento curto","\"[Frase do paciente, autorizada]\""],
+   ["35 a 40 s","Dra. Rayane","\"Se você tem essa dúvida, comenta NATURAL que eu te explico como funciona a avaliação.\""]],
+  "Comente NATURAL","Depoimento só com termo assinado. Falar de homens sem rotular \"problema\" no rosto."],
+ ["r3","\"A beleza já estava lá\": alinhando expectativas","35 a 45 s","Reel com 6.761 views",
+  "Antes de qualquer procedimento, a gente conversa sobre o que você espera.",
+  [["0 a 4 s","Dra. Rayane na sala de avaliação","\"Antes de qualquer procedimento, a gente alinha as expectativas.\""],
+   ["4 a 25 s","Cenas da conversa e análise facial (com autorização)","\"Eu olho o rosto inteiro, o que faz sentido realçar e o que não precisa mexer.\""],
+   ["25 a 40 s","Dra. Rayane","\"O resultado natural começa nessa conversa.\""],
+   ["40 a 45 s","Texto na tela","\"Comenta AVALIAÇÃO e eu te explico como funciona.\""]],
+  "Comente AVALIAÇÃO","Mostra método, não promete resultado."],
+ ["r4","Lentes: caso narrado com detalhe técnico","30 a 45 s","Ioog: reel com 176.729 views (paciente nomeado, cor, translucidez)",
+  "Esse sorriso foi planejado para o rosto dele, e não para um catálogo.",
+  [["0 a 4 s","Sorriso antes, close","Texto: \"Lentes de contato dental: caso real.\""],
+   ["4 a 20 s","Dentista explicando as escolhas","\"Aqui a gente trabalhou [forma], [cor] e [translucidez], para acompanhar o rosto e o tom de pele.\" (preencher com o caso real)"],
+   ["20 a 35 s","Sorriso depois, luz natural","\"A ideia é um sorriso que combine com ele.\""],
+   ["35 a 45 s","Dentista","\"Quer saber se é para o seu caso? Comenta LENTES.\""]],
+  "Comente LENTES","Autorização de imagem; se citar paciente pelo nome, ter termo específico; identificar dentista e CRO."],
+ ["r5","\"Medo de ficar artificial?\"","25 a 30 s","Ângulo mais usado nos anúncios de lentes dos concorrentes",
+  "É o maior medo de quem pensa em lentes, e faz sentido.",
+  [["0 a 3 s","Dentista de frente","\"Medo de o sorriso ficar artificial?\""],
+   ["3 a 18 s","Mostra moldagem, planejamento ou fotos de caso","\"A diferença está no planejamento: formato, cor e proporção pensados para o seu rosto, antes de começar.\""],
+   ["18 a 28 s","Dentista","\"Na avaliação, você entende o que faz sentido para o seu caso. Comenta LENTES.\""]],
+  "Comente LENTES","Só falar de planejamento digital ou scanner se a clínica realmente usar."],
+ ["r6","Como é a avaliação (passo a passo)","25 a 35 s","Dúvida comum: \"o que acontece na primeira consulta?\"",
+  "Primeira consulta: o que acontece, em 30 segundos.",
+  [["0 a 3 s","Recepção","\"Você chega e é recebida pela Mari.\""],
+   ["3 a 12 s","Sala de avaliação","\"A dentista conversa com você sobre o que você quer.\""],
+   ["12 a 22 s","Exame e fotos","\"Faz o exame e analisa o rosto ou o sorriso.\""],
+   ["22 a 35 s","Plano na mesa","\"No final, você sai com o plano explicado, sem pressa. Comenta AVALIAÇÃO e eu te mando os horários.\""]],
+  "Comente AVALIAÇÃO","Reduz medo e dúvida; bom para anúncio."],
+ ["r7","Perda de peso e rosto","35 a 45 s","Reel com 3.712 views (\"Mounjaro e a flacidez facial\"): tema de interesse",
+  "Emagreceu e sentiu o rosto diferente? Isso tem explicação.",
+  [["0 a 4 s","Dra. Rayane","\"Quem emagrece muito pode notar mudança no contorno e na pele do rosto.\""],
+   ["4 a 25 s","Ilustração ou exemplo de avaliação (sem caso identificável)","\"Perde gordura, o rosto muda, e nem sempre a pele acompanha. Cada caso precisa de avaliação.\""],
+   ["25 a 40 s","Dra. Rayane","\"Não existe um procedimento para todo mundo. Comenta ROSTO que eu explico como é a avaliação.\""]],
+  "Comente ROSTO","Não citar medicamento como causa certa; conteúdo educativo, sem promessa."],
+ ["r8","Clareamento: caseiro, consultório ou associado","30 a 40 s","Tema com pouca concorrência nos anúncios de Brasília",
+  "Existem três tipos de clareamento. Qual é o seu?",
+  [["0 a 3 s","Dentista com sorriso no espelho de mão","\"Existem três formas de clarear.\""],
+   ["3 a 25 s","Cenas de cada técnica","\"Caseiro, de consultório e associado. Cada um serve para um perfil.\""],
+   ["25 a 38 s","Dentista","\"Quem indica é a avaliação. Comenta CLAREAR e eu te explico.\""]],
+  "Comente CLAREAR","Sem preço; sem prometer \"dentes brancos garantidos\"."],
+ ["r9","Sorriso e rosto conversam","30 a 40 s","Diferencial da clínica: odontologia e estética facial no mesmo lugar",
+  "Seu sorriso combina com o seu rosto?",
+  [["0 a 4 s","Dra. Rayane e dentista lado a lado","\"Seu sorriso combina com o seu rosto?\""],
+   ["4 a 25 s","Análise do sorriso e do rosto","\"Aqui a gente avalia os dois juntos. Muitas vezes o melhor resultado vem do conjunto.\""],
+   ["25 a 38 s","Dra. Rayane","\"Se você quer uma avaliação completa, comenta COMPLETA.\""]],
+  "Comente COMPLETA","Usar só se a clínica realmente faz a avaliação conjunta."],
+ ["r10","Planejar 2027","20 a 30 s","Sazonalidade de fim de ano (Matheus Miranda, Dafine)",
+  "O fim do ano é uma boa hora para planejar.",
+  [["0 a 3 s","Calendário na tela","\"Dezembro chegando.\""],
+   ["3 a 18 s","Recepção e salas","\"Quem agenda a avaliação agora tem tempo para planejar com calma.\""],
+   ["18 a 28 s","Dra. Rayane","\"Comenta 2027 e eu te passo os horários.\""]],
+  "Comente 2027","Só dizer \"agenda preenchendo\" se for verdade; sem preço e sem brinde."]
+];
+var h = "";
+R.forEach(function(r){
+  h += '<div class="card" style="margin-bottom:14px"><span class="tag ok">'+r[0].replace("r","")+' · '+r[1]+'</span> <span class="tag">'+r[2]+'</span>';
+  h += '<p class="src" style="margin:8px 0 4px">Modelo: '+r[3]+'</p>';
+  h += '<p style="margin:6px 0"><b>Gancho:</b> '+r[4]+'</p>';
+  h += '<div class="tblw"><table><tr><th style="width:90px">Tempo</th><th>Cena</th><th>Fala / texto</th></tr>';
+  r[5].forEach(function(c){ h += '<tr><td>'+c[0]+'</td><td>'+c[1]+'</td><td>'+c[2]+'</td></tr>'; });
+  h += '</table></div><p style="margin:10px 0 0;font-size:12.5px"><b>CTA:</b> '+r[6]+' · <span style="color:var(--mute)"><b>Cuidado:</b> '+r[7]+'</span></p></div>';
+});
+registerView("cli-reels", `
+<div class="crumb">Clínica</div>
+<h1>Reels da <em>clínica</em></h1>
+<p class="lead">10 roteiros para o paciente particular, modelados no que mais performou: transformação natural, caso real narrado, bastidor da avaliação e quebra de objeção. Publicados no perfil da Dra. Rayane, que tem a audiência.</p>
+
+<div class="grid g3">
+  <div class="card kpi"><div class="v">84,8 mil</div><div class="l">Maior Reel da Dra. Rayane</div><div class="s">Transformação de rinomodelação e lábio</div></div>
+  <div class="card kpi"><div class="v">176,7 mil</div><div class="l">Maior Reel do Ioog</div><div class="s">Lentes, paciente nomeado, detalhe técnico</div></div>
+  <div class="card kpi"><div class="v">10</div><div class="l">Roteiros prontos</div><div class="s">20 a 45 segundos</div></div>
+</div>
+
+<div class="callout warn"><b>Antes de gravar</b>Casos de pacientes só com termo de autorização de imagem assinado, do profissional que fez o tratamento (CFO 196/2019). Sem preço, sem promoção, sem promessa de resultado, e com nome e CRO do dentista. Os humoristas e posts pessoais dos concorrentes ficam de fora: não vendem harmonização.</div>
+
+<h2>Fórmula dos Reels que funcionam</h2>
+<div class="tblw"><table>
+<tr><th>Elemento</th><th>Regra</th></tr>
+<tr><td>Gancho (0 a 3 s)</td><td>Pergunta, afirmação ou promessa de método ("natural, sem exageros"); texto na tela e fala juntos</td></tr>
+<tr><td>Desenvolvimento</td><td>Mostrar o processo ou o resultado; uma ideia por vídeo</td></tr>
+<tr><td>Prova</td><td>Caso real, bastidor ou depoimento autorizado</td></tr>
+<tr><td>CTA</td><td>Palavra única por post nos comentários; cada vídeo usa uma palavra diferente</td></tr>
+<tr><td>Duração</td><td>20 a 45 segundos</td></tr>
+<tr><td>Legenda</td><td>Contexto curto, nome e CRO do dentista, sem preço, até 5 hashtags</td></tr>
+</table></div>
+
+<h2>Roteiros</h2>
+${h}
+
+<h2>Calendário de 4 semanas (3 Reels por semana)</h2>
+<div class="tblw"><table>
+<tr><th>Semana</th><th>Segunda</th><th>Quarta</th><th>Sexta</th></tr>
+<tr><td><b>1</b></td><td>Reel 1 (reveal natural)</td><td>Reel 6 (avaliação)</td><td>Reel 5 (medo de artificial)</td></tr>
+<tr><td><b>2</b></td><td>Reel 4 (lentes, caso)</td><td>Reel 3 (expectativas)</td><td>Reel 8 (clareamento)</td></tr>
+<tr><td><b>3</b></td><td>Reel 2 (ele se reconhece)</td><td>Reel 9 (sorriso e rosto)</td><td>Reel 7 (perda de peso e rosto)</td></tr>
+<tr><td><b>4</b></td><td>Reel 10 (planejar 2027)</td><td>Reel com depoimento autorizado</td><td>Melhor Reel das semanas anteriores, regravado</td></tr>
+</table></div>
+<p class="src">Os melhores Reels viram anúncio na campanha da tela de Meta Ads (paciente). Cada palavra-gatilho é usada em um único vídeo.</p>
+
+<h2>Checklist de gravação</h2>
+<div class="grid g2">
+  <div class="card"><h3>Antes</h3><ul class="clean">
+    <li>Termo de autorização de imagem assinado</li>
+    <li>Luz natural ou branca, câmera na vertical</li>
+    <li>Mesma luz e ângulo no antes e no depois</li>
+    <li>Nome e CRO de quem executou, confirmados</li></ul></div>
+  <div class="card"><h3>Depois</h3><ul class="clean">
+    <li>Legenda sem preço, desconto ou promessa</li>
+    <li>CTA com a palavra-gatilho correta</li>
+    <li>Responder comentários em até 24 horas</li>
+    <li>Mari recebe a lista de quem comentou</li></ul></div>
+</div>
+
+<h2>Pendências</h2>
+<div class="card"><ul class="clean">
+<li>Banco de casos com autorização para os Reels 1, 2, 3 e 4.</li>
+<li>Confirmar se há planejamento digital ou scanner antes de gravar o Reel 5 com esse argumento.</li>
+<li>Confirmar se a avaliação conjunta de sorriso e rosto é prática da clínica antes de gravar o Reel 9.</li>
+<li>Definir quem edita os vídeos e a rotina semanal de gravação.</li></ul></div>
+`);
+})();
+
+})();
+
+/* ===== view: concorrentes ===== */
+(function(){
+registerView('concorrentes', `
+<div class="crumb">Visão geral</div>
+<h1>Concorrentes e <em>modelagem</em></h1>
+<p class="lead">Anunciantes de Brasília na Biblioteca de Anúncios da Meta e seus perfis no Instagram. A Meta não exibe gasto no Brasil, então o investimento é estimado pelo tempo no ar e pelo volume de variações.</p>
+
+<h2>Instagram</h2>
+<div class="tblw"><table>
+<tr><th>Perfil</th><th class="r">Seguidores</th><th class="r">Mediana</th><th class="r">Pico</th><th>O que funciona</th></tr>
+<tr><td><b>@institutoioog</b><br>Ioog, Águas Claras</td><td class="r">10.661</td><td class="r">3.828</td><td class="r">176.729</td><td>Caso de lentes com paciente nomeado e detalhe técnico (cor, translucidez); série "20 lentes em 20 horas" (10.234); depoimento de paciente (13.525); antes/depois com gengivoplastia.</td></tr>
+<tr><td><b>@draclaudiadanna</b><br>CCD, Asa Sul</td><td class="r">5.705</td><td class="r">1.951</td><td class="r">19.969</td><td>Prova numérica na bio ("+3.000 sorrisos"); cupom com influenciadora (13.477 views em perfil de terceira).</td></tr>
+<tr><td><b>@drhigorverso</b><br>Verso</td><td class="r">1.714</td><td class="r">605</td><td class="r">1.859</td><td>Educativo, orgânico fraco. Compensa com volume de anúncios.</td></tr>
+<tr><td><b>@oralsinasanorte</b></td><td class="r">n/d</td><td class="r">671</td><td class="r">5.269</td><td>Implantes de rede, orgânico fraco.</td></tr>
+<tr><td><b>@mundosrrisoo</b><br>Mundo Sorriso</td><td class="r">n/d</td><td class="r">n/d</td><td class="r">n/d</td><td>Perfil não retornou Reels.</td></tr>
+<tr><td><b>Dr. Matheus Miranda</b></td><td class="r" colspan="3">@ não localizado</td><td>Anuncia lentes "sorriso 2027" no fim de ano. Precisa do @.</td></tr>
+</table></div>
+
+<h2>Meta Ads</h2>
+<div class="tblw"><table>
+<tr><th>Anunciante</th><th>Foco</th><th>Sinais</th></tr>
+<tr><td><b>Odontologia CCD</b></td><td>Lentes de resina, Asa Sul</td><td>49 anúncios; um no ar desde 14/07/2025 (16 meses, provável vencedor); DCO e vídeo, WhatsApp. Em 10 e 11/11/2026 subiu 12+ anúncios para uma <b>landing page</b>: testando funil com página.</td></tr>
+<tr><td><b>Verso</b></td><td>Lentes, planejamento digital</td><td>8+ anúncios novos em 4 dias (imagem e vídeo, mesma copy): teste de criativo.</td></tr>
+<tr><td><b>Ioog Dental</b></td><td>Lentes "alfaiataria"</td><td>Copy de objeção: "medo de ficar artificial", "erro que não tem conserto", ver o projeto digital antes da instalação.</td></tr>
+<tr><td><b>Mundo Sorriso</b></td><td>Popular, Itapoã</td><td>Black Friday, 12x sem juros.</td></tr>
+<tr><td><b>D'Or Clínica Brasília</b></td><td>Lentes por preço</td><td>10 lentes por R$ 990 (março/2026): âncora agressiva que o paciente vai comparar.</td></tr>
+<tr><td><b>Oral Sin Asa Norte</b></td><td>Implantes</td><td>"Número 1 do Brasil", vídeo.</td></tr>
+<tr><td><b>Sorriso Capital</b></td><td>Coworking</td><td>1 anúncio, 6 palavras de texto. Nenhum para paciente.</td></tr>
+</table></div>
+<div class="callout ok"><b>Coworking é espaço livre</b>Nenhum concorrente anuncia coworking odontológico em Brasília. A Sorriso Capital pode ocupar a categoria.</div>
+
+<h2>O que modelar</h2>
+<div class="grid g2">
+  <div class="card"><h3>Orgânico (Reels)</h3><ul class="clean">
+    <li>Caso real com paciente nomeado e detalhe técnico (Ioog)</li>
+    <li>Série com número e prazo, como "20 lentes em 20 horas"</li>
+    <li>Prova social de terceiros marcando a clínica</li>
+    <li>Reveal de transformação e campanha com mecânica (Dafine)</li></ul></div>
+  <div class="card"><h3>Anúncio</h3><ul class="clean">
+    <li>Copy que quebra objeção ("medo de ficar artificial")</li>
+    <li>Volume de variações do mesmo criativo (Verso, CCD)</li>
+    <li>Landing page em vez de WhatsApp direto (CCD está testando)</li>
+    <li>Cupom e parceria com criadora local (CCD)</li></ul></div>
+</div>
+<p class="src">Fontes: Apify (Facebook Ad Library, Facebook Pages Scraper, Instagram Reel Scraper). Coleta de 12/11/2026.</p>
+`);
+
+})();
+
+/* ===== view: conformidade ===== */
+(function(){
+(function(){
+// p: 1 = bloqueante (sem isso não pode funcionar ou há risco direto), 2 = alta, 3 = organizar
+// Cada item: [chave, texto, artigo, responsável, prioridade]
+var SEC = [
+ {id:"a", t:"1. Enquadramento e licenciamento", d:"Define se a clínica já está obrigada a cumprir tudo desde o início.", it:[
+  ["a1","Confirmar com a Vigilância Sanitária do DF se a clínica é \"estabelecimento novo\". Pelo texto, quem não estava regularizado até a publicação (16/12/2025) é novo, independentemente do tempo de funcionamento. A clínica abriu em 23/05/2026.","Art. 13, parágrafo único; art. 182, §1º","Dona + VISA",1],
+  ["a2","Licença sanitária inicial emitida e dentro da validade. O serviço só pode funcionar depois dela.","Art. 8º","Dona",1],
+  ["a3","Projeto Básico de Arquitetura (PBA) aprovado pela Vigilância Sanitária, incluindo as 3 salas e o espaço de processamento.","Art. 13","Dona / arquiteto",1],
+  ["a4","Classificação do serviço definida (consultórios individuais classe I, complexidade A, se não houver sedação) e organização como clínica com ambientes de apoio compartilhados.","Arts. 11 e 12","RT",2],
+  ["a5","Anotar o prazo de adequação (360 dias, até cerca de 11/12/2026) para o que ainda estiver pendente.","Art. 182","RT",3]
+ ]},
+ {id:"b", t:"2. Responsabilidade técnica", d:"A norma chama o coworking de consultório compartilhado e exige um Responsável Técnico.", it:[
+  ["b1","Responsável Legal designou um cirurgião-dentista como Responsável Técnico (RT), por escrito.","Art. 5º","Dona",1],
+  ["b2","RT substituto designado, pois há mais de um cirurgião-dentista atuando.","Art. 5º, §1º","Dona",1],
+  ["b3","RT e substituto cientes de que são corresponsáveis por todas as atividades do estabelecimento (inclusive as dos dentistas locatários).","Art. 5º, §2º","RT",1],
+  ["b4","Rotina para comunicar a Vigilância Sanitária sempre que o RT ou o substituto mudarem.","Art. 7º","RT",3],
+  ["b5","Todos os profissionais que atuam no espaço, inclusive locatários do coworking, assinam ciência e compromisso de cumprir a documentação de boas práticas.","Art. 6º, parágrafo único","RT + Recepção",1]
+ ]},
+ {id:"c", t:"3. Série de Documentos de Boas Práticas (SDBPF)", d:"Conjunto de documentos elaborado pelo RT, aprovado e assinado pela dona.", it:[
+  ["c1","SDBPF elaborada pelo RT, aprovada e assinada pelo Responsável Legal.","Arts. 6º, 110 e 111","RT + Dona",1],
+  ["c2","SDBPF acessível a todos os profissionais e às autoridades sanitárias quando solicitada.","Art. 111, I","RT",2],
+  ["c3","Calendário de revisão: no mínimo a cada 2 anos, ou quando mudar o perfil do serviço ou os procedimentos.","Art. 111, IV","RT",3],
+  ["c4","Projeto Básico de Arquitetura aprovado (anexado).","Art. 113, I","RT",2],
+  ["c5","Gestão de recursos humanos: cargos e funções, fichas funcionais, comprovação de formação, saúde ocupacional e capacitações obrigatórias.","Art. 113, II","RT + Dona",2],
+  ["c6","Plano anual de educação permanente, com registro das capacitações.","Art. 113, III","RT",2],
+  ["c7","Contratos com licenças e qualificações dos serviços terceirizados.","Art. 113, IV","Dona",2],
+  ["c8","Plano de monitoramento e controle da água, com registros.","Art. 113, V","RT",2],
+  ["c9","Controle de vetores e pragas urbanas.","Art. 113, VI","RT",3],
+  ["c10","Plano anual de manutenção preventiva e corretiva da edificação e das instalações, com registros.","Art. 113, VII","Dona",3],
+  ["c11","Plano de Gerenciamento de Tecnologias em Saúde (PGTS).","Art. 113, VIII; arts. 131 e 132","RT",2],
+  ["c12","Plano de Gerenciamento de Resíduos de Serviços de Saúde (PGRSS).","Art. 113, IX; art. 122","RT",1],
+  ["c13","Protocolo e POP de processamento de dispositivos médicos, com rastreabilidade.","Art. 113, X","RT",1],
+  ["c14","Protocolo de limpeza de ambiente e desinfecção de superfícies e equipamentos.","Art. 113, XI","RT",2],
+  ["c15","Plano de Segurança do Paciente (PSP).","Art. 113, XII","RT / NSP",1],
+  ["c16","Protocolo de higiene das mãos, precauções e isolamento.","Art. 113, XIII","RT",2],
+  ["c17","Protocolo de encaminhamento do profissional em acidente com perfurocortantes ou material biológico.","Art. 113, XIV; art. 115","RT",2],
+  ["c18","Protocolo de atendimento e encaminhamento de pacientes em urgências e emergências, com assistência até a chegada da ambulância.","Art. 113, XV; art. 116","RT",1],
+  ["c19","Plano de prevenção e controle de infecções relacionadas à assistência (PP-IRAS).","Art. 113, XVI","RT",2],
+  ["c20","Boas Práticas de Funcionamento conforme a RDC 63/2011 implementadas.","Art. 109","RT",3]
+ ]},
+ {id:"d", t:"4. Segurança do paciente e pessoas", d:"Duas ou mais salas individuais exigem Núcleo de Segurança do Paciente.", it:[
+  ["d1","Núcleo de Segurança do Paciente (NSP) constituído, pois a clínica tem dois ou mais consultórios individuais.","Art. 117, §1º","RT + Dona",1],
+  ["d2","Plano de Segurança do Paciente cobrindo identificação do paciente, higiene das mãos, segurança no uso de equipamentos, prevenção de quedas, ambiente seguro e comunicação.","Art. 118","NSP",2],
+  ["d3","Vigilância e monitoramento de incidentes e eventos adversos em rotina.","Art. 119","NSP",2],
+  ["d4","Notificação mensal de eventos adversos até o 15º dia útil do mês seguinte; óbito ou surto em até 24 horas.","Art. 120","NSP",2],
+  ["d5","Equipamentos de proteção individual disponíveis a toda a equipe, conforme a NR-32.","Art. 108, parágrafo único","RT",1],
+  ["d6","Capacitação admissional e periódica de todos que atuam no serviço, com registro.","Art. 114","RT",2]
+ ]},
+ {id:"e", t:"5. Estrutura física e equipamentos", d:"Verificar nas 2 salas odontológicas, na sala de estética e nas áreas de apoio.", it:[
+  ["e1","Ambientes separados: recepção e espera, sanitário e depósito de material de limpeza (DML).","Art. 17","Dona",1],
+  ["e2","Sanitário adaptado para pessoa com deficiência (NBR 9050) no espaço da clínica ou no mesmo andar. Com 3 ou mais consultórios, sanitários distintos para usuários e funcionários.","Arts. 18 a 21","Dona",2],
+  ["e3","Pisos, paredes, teto e bancadas lisos, impermeáveis e laváveis nas áreas de assistência; instalações embutidas ou protegidas.","Art. 22","Dona",2],
+  ["e4","Cada consultório com o mínimo: equipo completo, sucção de fluidos, mocho e compressor de ar.","Art. 35","RT",1],
+  ["e5","Equipamentos e instrumentais em bom estado, sem ferrugem, avaria ou oxidação, sem aglomeração nas áreas de trabalho.","Arts. 38, 39 e 135","RT",2],
+  ["e6","Água do equipo potável; mangueiras íntegras e sem sujidade; reservatórios e mangueiras drenados e higienizados conforme o fabricante.","Arts. 40 a 42","RT",2],
+  ["e7","Se houver equipamento de radiografia: cadastro, proteção radiológica, responsável designado e demais exigências do capítulo de radiação.","Arts. 138 a 152","RT",3]
+ ]},
+ {id:"f", t:"6. Processamento e esterilização de instrumental", d:"É aqui que entram a esterilização do coworking e o aluguel de kits.", it:[
+  ["f1","Estrutura de processamento definida: bancada setorizada (área suja e limpa, barreira de pelo menos 50 cm) ou sala exclusiva. A bancada só pode ser usada se o processamento não ocorrer durante as atividades clínicas.","Arts. 25 e 44","RT + Dona",1],
+  ["f2","Fluxo unidirecional da área suja para a limpa; cuba com afastamento mínimo de 30 cm; lavatório de mãos não usado no processamento; dispensador de álcool na área limpa.","Arts. 25 e 29","RT",1],
+  ["f3","Recipientes de resíduos comum, infectante e perfurocortante identificados na área de limpeza.","Art. 31","RT",2],
+  ["f4","Instrumentais classificados por criticidade (crítico, semicrítico, não crítico) e por conformação.","Art. 43","RT",2],
+  ["f5","POP de processamento detalhado por etapa, elaborado pelo RT.","Art. 57","RT",1],
+  ["f6","Pré-limpeza imediata, limpeza manual ou automatizada, saneantes regularizados na Anvisa, secagem e avaliação da integridade.","Arts. 59 a 72","Auxiliar",1],
+  ["f7","Embalagens específicas para esterilização, com indicador químico tipo 1; embalagem descartável nunca reutilizada.","Arts. 73 a 78","Auxiliar",1],
+  ["f8","Etiqueta em todo pacote: data da esterilização, responsável pelo preparo, lote da carga e itens (se a embalagem não for transparente).","Arts. 79 a 81","Auxiliar",1],
+  ["f9","Prazo de validade da esterilidade definido e registrado no POP (sem validação científica, vale 6 meses com embalagem íntegra, seca e bem guardada).","Art. 82","RT",1],
+  ["f10","Autoclave com bomba de vácuo: teste Bowie &amp; Dick no primeiro ciclo do dia.","Art. 88","Auxiliar",1],
+  ["f11","Teste semanal com pacote contendo indicador biológico e integrador químico tipo 5 ou 6 no primeiro ciclo; integrador nos demais ciclos.","Arts. 89 e 90","Auxiliar",1],
+  ["f12","Registro de cada carga: data, lote único, equipamento, resultado, lista de pacotes, operador, tempo, temperatura e pressão.","Art. 91","Auxiliar",1],
+  ["f13","Registros arquivados por no mínimo 5 anos, organizados por lote.","Art. 92","RT",2],
+  ["f14","Armazenamento em local exclusivo para instrumental esterilizado; transporte em recipiente fechado.","Arts. 102 a 104","Auxiliar",2],
+  ["f15","Incubadora de indicador biológico com manutenção preventiva ao menos anual.","Art. 136","RT",3],
+  ["f16","Proibições observadas: nada de imersão em líquido para \"esterilizar\", de aldeídos, de desinfecção de tubete anestésico ou de reprocessar produto de uso único.","Arts. 48 e 54 a 56","RT",1],
+  ["f17","Equipamentos e acessórios em quantidade suficiente para o número de pacientes e para o tempo de processamento (relevante para dimensionar kits).","Art. 46","RT",2],
+  ["f18","Se o volume da câmara da autoclave for maior que 60 litros: seguir a RDC 15/2012 para esterilização e qualificação.","Art. 93","RT",3],
+  ["f19","Se terceirizar o processamento: empresa licenciada, contrato formal, POP de preparo prévio e bancada para limpeza prévia na clínica.","Arts. 32 e 105 a 107","Dona + RT",3]
+ ]},
+ {id:"g", t:"7. Resíduos, tecnologia e manutenção", d:"Registros que a Vigilância costuma pedir na inspeção.", it:[
+  ["g1","PGRSS implantado e operacionalizado no local; contrato com empresa de coleta, quando houver.","Art. 122","RT",1],
+  ["g2","Plano de Gerenciamento de Tecnologias implantado e atualizado a cada nova tecnologia adquirida.","Arts. 131 a 133","RT",2],
+  ["g3","Registros de assistência técnica, manutenção e calibração dos equipamentos, com assinatura do executor.","Art. 134","RT",2],
+  ["g4","Contratos formais com serviços terceirizados (resíduos, manutenção, processamento).","Arts. 122 e 133","Dona",2]
+ ]},
+ {id:"h", t:"8. Ajustes específicos do coworking", d:"O que muda no contrato, no cadastro e na rotina para conversar com a norma.", it:[
+  ["h1","Advogado revisa as cláusulas 2.3 a 2.5 do contrato de coworking (a clínica só cede a estrutura e se isenta) frente à corresponsabilidade do RT.","Contrato; art. 5º, §2º","Advogado",1],
+  ["h2","Cadastro do profissional passa a exigir CRO ativo, ciência e compromisso com as boas práticas e registro da capacitação.","Arts. 6º e 114","Recepção",1],
+  ["h3","Regimento (jaleco, calçado fechado, propé, paramentação) incorporado à documentação de boas práticas.","Tela de Regras","RT + Advogado",2],
+  ["h4","Definir quem esteriliza o instrumental do profissional e o que é cobrado (hoje R$ 50 por período) e se o kit alugado entra no processo.","Tela de Kits","RT + Dona",2],
+  ["h5","Registrar profissional, sala, horário e lote do kit de cada atendimento, para rastrear a utilização.","Art. 3º, XLV","Recepção",2],
+  ["h6","Atualizar o termo de ciência do paciente e o flyer com as novas regras.","Documentos","Dona",3],
+  ["h7","Só locar salas e horários que constem na licença e no projeto aprovados.","Arts. 8º e 13","Dona",1]
+ ]}
+];
+var PR = {1:["Bloqueante","bad"],2:["Alta","warn"],3:["Organizar","info"]};
+var total = 0, h = "";
+SEC.forEach(function(s){
+  total += s.it.length;
+  h += '<section class="ck-sec" data-sec="'+s.id+'"><h2>'+s.t+' <span class="tag ck-cnt" data-cnt="'+s.id+'">0/'+s.it.length+'</span></h2>';
+  h += '<p class="src" style="margin:-4px 0 10px">'+s.d+'</p><div class="card ck-list">';
+  s.it.forEach(function(i){
+    h += '<label class="ck"><input type="checkbox" data-k="rdc-'+i[0]+'"><span class="ckt">'+i[1]+
+         '<small><span class="tag '+PR[i[4]][1]+'">'+PR[i[4]][0]+'</span> '+i[2]+' · Responsável: '+i[3]+'</small></span></label>';
+  });
+  h += '</div></section>';
+});
+registerView("conformidade", `
+<style>
+.ck{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.ck:last-child{border-bottom:0}
+.ck input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:#B8862B}
+.ck .ckt{display:block;font-size:13.5px}
+.ck .ckt small{display:block;margin-top:4px;font-size:11.5px;color:var(--mute)}
+.ck input:checked + .ckt{color:var(--mute);text-decoration:line-through}
+.ck input:checked + .ckt small{text-decoration:none}
+.ck-list{padding:4px 18px}
+.prog{height:12px;border-radius:8px;background:var(--cream);overflow:hidden}
+.prog>i{display:block;height:100%;background:var(--gold-grad);width:0;transition:width .3s}
+</style>
+<div class="crumb">Visão geral</div>
+<h1>Checklist <em>RDC 1.002/2025</em></h1>
+<p class="lead">Boas Práticas de Funcionamento para serviços de assistência odontológica (Anvisa, DOU 16/12/2025). Marque o que já está pronto; o painel guarda suas marcações neste navegador.</p>
+
+<div class="callout warn"><b>Ponto central: a clínica provavelmente é "estabelecimento novo"</b>O art. 13 diz que o serviço não regularizado na Vigilância até a publicação da norma é considerado novo, independentemente do tempo de funcionamento. A Sorriso Capital abriu em 23/05/2026. Novos estabelecimentos devem cumprir a norma na íntegra desde o início, com licença sanitária inicial e projeto de arquitetura aprovado. Confirmar com a Vigilância Sanitária do DF, e tratar os itens bloqueantes primeiro.</div>
+
+<div class="card">
+  <div class="row" style="margin-top:0"><b>Progresso geral</b><span id="ckTotal">0 de ${total}</span></div>
+  <div class="prog" style="margin-top:8px"><i id="ckBar"></i></div>
+  <div class="row" style="margin-top:12px;align-items:center"><span class="src" style="margin:0">As marcações ficam salvas só neste navegador.</span><button class="btn" onclick="ckReset()" style="border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;cursor:pointer;font:inherit;font-size:12px">Limpar marcações</button></div>
+</div>
+
+<div class="grid g3" style="margin-top:14px">
+  <div class="card kpi"><div class="v">${total}</div><div class="l">Itens no checklist</div></div>
+  <div class="card kpi"><div class="v" id="ckBlock">0</div><div class="l">Bloqueantes pendentes</div></div>
+  <div class="card kpi"><div class="v">11/12/2026</div><div class="l">Fim do prazo de adequação</div><div class="s">Para quem já estava regularizado</div></div>
+</div>
+
+${h}
+
+<h2>Como usar</h2>
+<div class="card"><ul class="clean">
+<li>Comece pelas etiquetas <span class="tag bad">Bloqueante</span>: licença, projeto aprovado, Responsável Técnico, documentação de boas práticas e esterilização.</li>
+<li>O RT precisa ser definido antes de qualquer outra coisa: quase todos os documentos dependem dele.</li>
+<li>Leve este checklist à Vigilância Sanitária e ao advogado para confirmar o enquadramento da clínica.</li>
+<li>Itens condicionais (radiografia, sedação, terceirização) só se aplicam se a clínica fizer uso deles.</li></ul></div>
+<p class="src">Fonte: texto da RDC Anvisa nº 1.002, de 15/12/2025, publicada no DOU de 16/12/2025. Este checklist resume a norma e não substitui a leitura do texto oficial, o parecer do Responsável Técnico, da Vigilância Sanitária e do advogado. A norma remete a outras resoluções (RDC 63/2011, 222/2018, 36/2013, 509/2021, 15/2012, entre outras) que também precisam ser atendidas.</p>
+`);
+})();
+
+})();
+
+/* ===== view: cow-ads ===== */
+(function(){
+registerView('cow-ads', `
+<div class="crumb">Coworking</div>
+<h1>Campanha Meta Ads para <em>profissionais</em></h1>
+<p class="lead">Estrutura de campanhas para captar dentistas e profissionais da estética para o coworking, modelada nos anúncios de coworking odontológico que estão no ar no Brasil (Biblioteca de Anúncios da Meta, 12/11/2026).</p>
+
+<div class="grid g3">
+  <div class="card kpi"><div class="v">0</div><div class="l">Concorrentes em Brasília</div><div class="s">Nenhum anuncia coworking odontológico no DF</div></div>
+  <div class="card kpi"><div class="v">1</div><div class="l">Anúncio da clínica hoje</div><div class="s">Texto de 6 palavras, no ar desde 29/10</div></div>
+  <div class="card kpi"><div class="v">27/11</div><div class="l">Black Friday</div><div class="s">Concorrentes de outras cidades já anunciam bônus de hora</div></div>
+</div>
+
+<h2>O que os anúncios de fora estão fazendo</h2>
+<div class="tblw"><table>
+<tr><th>Anunciante</th><th>Ângulo</th><th>O que modelar</th></tr>
+<tr><td><b>Ravel</b> (locação odontológica)</td><td>Custo fixo e ociosidade</td><td>Muitas variações do mesmo anúncio (DCO). Títulos como "Quanto custa manter o seu consultório vazio?" e "Quem disse que você precisa de uma clínica própria?". Divulga preço de entrada ("a partir de R$ 150 por hora", outras versões R$ 185).</td></tr>
+<tr><td><b>Alvora</b> (São Luís)</td><td>Qualificação no anúncio</td><td>Lista as especialidades (ortodontista, implantodontista, endodontista, estética, clínico). Exige CRO ativo e carteira própria. Pede mensagem pré-pronta ("SOU DENTISTA E QUERO SABER MAIS") e avisa que o anúncio não é para paciente. Cita diferencial (scanner iTero).</td></tr>
+<tr><td><b>Hanel</b> (Maringá)</td><td>Sazonal com bônus</td><td>Black Friday: 1 hora bônus por período contratado, com regras claras no texto. Mais de 10 variações rodando.</td></tr>
+<tr><td><b>Dra. Karen Lopes</b> (Bauru)</td><td>Dor do consultório próprio</td><td>"Seu consultório próprio está virando um custo?", "Sem aluguel fixo, sem contratos longos, sem preocupação com estrutura".</td></tr>
+<tr><td><b>Le Doc</b></td><td>Lista do que está incluído</td><td>Composição da sala (material de consumo, instrumental, esterilização, raio X, TV no teto), carrossel e CTA "agende sua visita".</td></tr>
+<tr><td><b>Smart</b> (São Paulo)</td><td>Estética além da odontologia</td><td>Fala com HOF, biomedicina e enfermagem estética; oferta de inauguração (10% para os 5 primeiros que fecharem plano mensal).</td></tr>
+<tr><td><b>Allevare</b> (Campinas)</td><td>Segurança sanitária</td><td>Destaca estrutura regularizada pela Vigilância Sanitária e central de biossegurança.</td></tr>
+</table></div>
+<p class="src">Fora de Brasília, são referências de copy e estrutura, não concorrentes diretos. O preço da Ravel ("a partir de R$ 150 por hora") é maior que os R$ 80 da Sorriso Capital; vale testar mensagens de valor antes de mexer em preço.</p>
+
+<h2>Estrutura recomendada</h2>
+<div class="grid g3">
+  <div class="card"><h3>Campanha 1 · Captação</h3><p style="margin:0 0 8px;color:var(--mute)">Objetivo: conversas no WhatsApp com profissionais.</p><ul class="clean">
+    <li><b>Conjunto A:</b> dentistas em Brasília (cargo e interesses em odontologia)</li>
+    <li><b>Conjunto B:</b> estética e saúde (biomedicina, enfermagem estética, HOF, fisioterapia), para a sala de estética</li>
+    <li><b>Conjunto C:</b> público semelhante a quem engajou com os Reels do coworking no perfil da Dra. Rayane</li></ul></div>
+  <div class="card"><h3>Campanha 2 · Remarketing</h3><p style="margin:0 0 8px;color:var(--mute)">Objetivo: trazer para a visita.</p><ul class="clean">
+    <li>Quem assistiu o vídeo do espaço até a metade</li>
+    <li>Quem visitou o perfil ou iniciou conversa e não respondeu</li>
+    <li>Oferta: primeira locação a R$ 50 e convite para visita</li></ul></div>
+  <div class="card"><h3>Campanha 3 · Sazonal</h3><p style="margin:0 0 8px;color:var(--mute)">Objetivo: pico de captação em datas fortes.</p><ul class="clean">
+    <li><b>Black Friday (27/11):</b> mecânica a decidir, ex.: hora bônus por período</li>
+    <li><b>Início de 2027:</b> "agenda do ano" para quem quer começar o ano atendendo</li></ul></div>
+</div>
+<div class="callout warn"><b>Com orçamento pequeno, comece enxuto</b>Dois ou três conjuntos no máximo e pouca variação de público; o teste maior deve estar nos criativos, que é onde os concorrentes mais variam. O orçamento ainda precisa ser definido com você.</div>
+
+<h2>Públicos</h2>
+<div class="tblw"><table>
+<tr><th>Público</th><th>Como montar</th></tr>
+<tr><td>Frio, dentistas</td><td>Brasília e entorno próximo; cargo "dentista" e interesses de odontologia, implantodontia, ortodontia, harmonização orofacial. Confirmar no Gerenciador quais opções existem e o tamanho do público.</td></tr>
+<tr><td>Frio, estética e saúde</td><td>Profissionais de biomedicina, enfermagem, fisioterapia e HOF, para a sala de estética. Hipótese a testar: o contrato atual é de profissional de saúde em geral, mas a oferta forte é odontológica.</td></tr>
+<tr><td>Quente, perfil da Dra. Rayane</td><td>Engajados com o perfil e os Reels (o Reel do coworking tem 13.928 views). Base para público semelhante.</td></tr>
+<tr><td>Quente, base própria</td><td>Contatos de profissionais que já usaram o espaço ou fizeram visita.</td></tr>
+<tr><td>Remarketing</td><td>Visualizações de vídeo, conversas iniciadas sem resposta, visitantes da página de captação (quando existir).</td></tr>
+</table></div>
+
+<h2>Ângulos de criativo para testar</h2>
+<div class="tblw"><table>
+<tr><th>#</th><th>Ângulo</th><th>Gancho</th><th>Formato</th></tr>
+<tr><td>1</td><td>Custo fixo</td><td>"Quanto custa manter um consultório que você não usa todos os dias?"</td><td>Imagem e vídeo curto</td></tr>
+<tr><td>2</td><td>Sem investimento</td><td>"Atenda no coração de Brasília sem montar clínica."</td><td>Vídeo tour (30 a 45 s)</td></tr>
+<tr><td>3</td><td>Paciente de alto ticket</td><td>"Receba lentes, harmonização e estética em um ambiente à altura do seu trabalho."</td><td>Carrossel</td></tr>
+<tr><td>4</td><td>Entrada fácil</td><td>"Primeira locação por R$ 50."</td><td>Imagem com preço</td></tr>
+<tr><td>5</td><td>Especialista</td><td>"Ortodontista, implantodontista, endodontista, dentista da estética: sua sala está aqui."</td><td>Carrossel por especialidade</td></tr>
+<tr><td>6</td><td>Tudo incluído</td><td>"Secretária, esterilização, recepção e sala equipada. Você traz seus materiais."</td><td>Carrossel de checklist</td></tr>
+<tr><td>7</td><td>Prova</td><td>Depoimento e bastidor de quem usa; Dra. Rayane mostrando o espaço.</td><td>Vídeo com pessoa</td></tr>
+</table></div>
+
+<h2>Textos de anúncio (rascunhos)</h2>
+<div class="grid g2">
+  <div class="card"><span class="tag">Ângulo 2 · Sem investimento</span>
+    <p style="margin:10px 0 6px"><b>Dentista, você precisa mesmo montar uma clínica para atender?</b></p>
+    <p style="margin:0;color:var(--mute)">No Coworking Sorriso Capital, no Venâncio Shopping, Asa Sul, você atende em consultório pronto: sala equipada, secretária das 8h às 18h, recepção para seus pacientes e estrutura de esterilização.<br>Você traz seus materiais e sua agenda.<br><br>Hora avulsa R$ 80. Período de 5 horas R$ 350.<br>Primeira locação R$ 50.<br><br>Toque em "Enviar mensagem" e escreva: SOU DENTISTA E QUERO CONHECER.<br>Anúncio para profissionais com CRO ativo.</p></div>
+  <div class="card"><span class="tag">Ângulo 1 · Custo fixo</span>
+    <p style="margin:10px 0 6px"><b>Quanto custa manter um consultório que não está sempre cheio?</b></p>
+    <p style="margin:0;color:var(--mute)">Aluguel, equipe, manutenção e equipamento pesam todo mês, com ou sem paciente na agenda.<br><br>No Coworking Sorriso Capital você paga só pelo horário que usar, em uma clínica pronta no coração de Brasília.<br><br>Conheça o espaço e agende uma visita pelo WhatsApp. Primeira locação por R$ 50.</p></div>
+  <div class="card"><span class="tag">Ângulo 5 · Especialista</span>
+    <p style="margin:10px 0 6px"><b>Implantodontista, ortodontista, endodontista, dentista da estética.</b></p>
+    <p style="margin:0;color:var(--mute)">Duas salas odontológicas e uma sala de estética para você atender por hora ou período, sem montar clínica.<br>Funciona para quem já tem CRO ativo e carteira própria de pacientes.<br><br>Escreva "SOU DENTISTA" e a gente agenda a sua visita.</p></div>
+  <div class="card"><span class="tag warn">Black Friday · a decidir</span>
+    <p style="margin:10px 0 6px"><b>Contrate seu período e ganhe uma hora bônus.</b></p>
+    <p style="margin:0;color:var(--mute)">Modelo usado por concorrente de outra cidade. Só entra se a clínica topar o custo da hora bônus e definir as regras (validade, disponibilidade, não prorroga o período). A decisão é sua e da dona.</p></div>
+</div>
+<div class="callout"><b>Cuidado com a promessa</b>Um concorrente anuncia "sem contratos longos". O contrato de coworking da Sorriso Capital vale por 2 anos, com rescisão por aviso de 30 dias. Não prometer "sem contrato" no anúncio; falar em "sem aluguel fixo" e "sem montar clínica", que é verdade.</div>
+
+<h2>Ajustes no anúncio que já existe</h2>
+<div class="card"><ul class="clean">
+<li>Texto principal hoje: "Coworking - Atenda seus pacientes em Brasília!". Trocar por texto completo com localização, o que está incluído, preço de entrada e CTA.</li>
+<li>Título atual ("Odontologia ou estética? Seu espaço está aqui!") funciona para as duas áreas, mas misture menos: separar dentista e estética em conjuntos distintos.</li>
+<li>Página do Facebook tem 31 curtidas: sem prova social. Avaliar rodar o anúncio com a identidade do Instagram da Dra. Rayane (9.087 seguidores), que é onde há audiência.</li>
+<li>Usar mensagem pré-preenchida para identificar o profissional logo na primeira mensagem.</li></ul></div>
+
+<h2>Medição e decisão</h2>
+<div class="tblw"><table>
+<tr><th>Métrica</th><th>Para que serve</th></tr>
+<tr><td>Conversas iniciadas e custo por conversa</td><td>Comparar criativos e públicos</td></tr>
+<tr><td>Conversas qualificadas (CRO ativo)</td><td>Separar curioso de profissional</td></tr>
+<tr><td>Visitas agendadas e realizadas</td><td>Medir a qualidade do lead</td></tr>
+<tr><td>Contratos assinados e primeira locação</td><td>Resultado real da campanha</td></tr>
+<tr><td>Custo por profissional ativo</td><td>Número que decide continuar ou ajustar</td></tr>
+</table></div>
+<div class="callout"><b>Como definir o limite de custo</b>Escolher uma fração da receita dos primeiros meses de um profissional. Exemplo ilustrativo: um dentista que loca 1 período por semana gera R$ 1.400 por mês (R$ 4.200 em 3 meses); se aceitarmos gastar até 1/5 disso, o limite seria R$ 840 por profissional ativo. A fração real depende da margem do coworking.</div>
+
+<h2>Antes de ligar a campanha</h2>
+<div class="card"><ul class="clean">
+<li>Acesso ao Gerenciador de Anúncios e definição de verba.</li>
+<li>Identidade do anúncio (página ou Instagram da Dra. Rayane) e WhatsApp Business com respostas rápidas.</li>
+<li>Vídeo tour do espaço (30 a 45 segundos) e fotos das salas.</li>
+<li>Quem atende e visita o lead, e em quanto tempo (tela do Funil do coworking).</li>
+<li>Decisão sobre Black Friday e sobre a primeira locação a R$ 50 (por hora ou por período).</li>
+<li>Rastreamento: parâmetros nos links e registro de origem de cada lead.</li></ul></div>
+<p class="src">Fonte: Biblioteca de Anúncios da Meta via Apify, coleta de 12/11/2026. Os anúncios citados são de outras cidades, exceto a própria Sorriso Capital. Rascunhos de texto não foram enviados à plataforma.</p>
+`);
+
+})();
+
+/* ===== view: cow-criativos ===== */
+(function(){
+registerView('cow-criativos', `
+<div class="crumb">Coworking</div>
+<h1>Criativos: Reels e <em>carrosséis</em></h1>
+<p class="lead">Roteiros e copy prontos para gravar e publicar, a partir do que já funcionou: o Reel do coworking fez 13.928 views no perfil da Dra. Rayane e 39 no da clínica. A copy abaixo serve para orgânico e para os anúncios da tela de Meta Ads.</p>
+
+<div class="callout"><b>Regra de distribuição</b>Os vídeos saem pelo perfil da <b>Dra. Rayane</b> (9.087 seguidores). A @sorriso.capital reposta e marca. Os mesmos vídeos viram anúncio.</div>
+
+<div class="grid g3">
+  <div class="card kpi"><div class="v">6</div><div class="l">Roteiros de Reels</div><div class="s">30 a 45 segundos</div></div>
+  <div class="card kpi"><div class="v">3</div><div class="l">Carrosséis</div><div class="s">Slide a slide, com copy</div></div>
+  <div class="card kpi"><div class="v">1</div><div class="l">Sequência de Stories</div><div class="s">Convite para a visita</div></div>
+</div>
+
+<h2>O que já provou funcionar (perfil da Dra. Rayane)</h2>
+<div class="tblw"><table>
+<tr><th>Conteúdo</th><th class="r">Views</th><th>Lição</th></tr>
+<tr><td>Reel "Você é profissional da saúde e procura um espaço para atender seus pacientes?" (45 s)</td><td class="r">13.928</td><td>Pergunta direta ao profissional + lista do que tem + convite. Base do roteiro 1.</td></tr>
+<tr><td>Inauguração da clínica, 23/05/2026</td><td class="r">6.170 a 6.343</td><td>110 comentários: o público acompanha a dona. Prova de que há interesse na história.</td></tr>
+<tr><td>"Conheça a Sorriso Capital" (locação por hora, período ou diária)</td><td class="r">4.427</td><td>Funciona, mas menos que a pergunta direta.</td></tr>
+<tr><td>Mesmo conteúdo no @sorriso.capital</td><td class="r">39</td><td>O alcance está no perfil pessoal, não no da clínica.</td></tr>
+</table></div>
+
+<h2>Roteiros de Reels</h2>
+<p class="lead" style="margin-bottom:12px">Fala em primeira pessoa, tom de dona de clínica que conhece a rotina do dentista. Onde há colchetes, preencher com a informação real antes de gravar.</p>
+
+<div class="card" style="margin-bottom:14px"><span class="tag ok">1 · Tour pelo espaço</span> <span class="tag">35 a 45 s</span>
+<div class="tblw" style="margin-top:10px"><table>
+<tr><th style="width:90px">Tempo</th><th>Cena</th><th>Fala / texto na tela</th></tr>
+<tr><td>0 a 3 s</td><td>Dra. Rayane na porta da sala 840, de frente</td><td><b>"Dentista, você precisa montar uma clínica para atender?"</b></td></tr>
+<tr><td>3 a 10 s</td><td>Recepção e secretária</td><td>"Aqui no Venâncio, na Asa Sul, seu paciente chega e já é recebido por uma secretária, das 8h às 18h."</td></tr>
+<tr><td>10 a 22 s</td><td>As duas salas odontológicas, sala de estética</td><td>"Duas salas odontológicas equipadas e uma sala de estética. Você traz seus materiais e sua agenda."</td></tr>
+<tr><td>22 a 30 s</td><td>Esterilização</td><td>"Temos estrutura de esterilização para você usar."</td></tr>
+<tr><td>30 a 38 s</td><td>Tela com preço</td><td>"Hora avulsa R$ 80. Período de 5 horas R$ 350. Primeira locação R$ 50."</td></tr>
+<tr><td>38 a 45 s</td><td>Dra. Rayane</td><td><b>CTA:</b> "Comenta COWORKING que eu te mando os horários e agendo sua visita."</td></tr>
+</table></div></div>
+
+<div class="card" style="margin-bottom:14px"><span class="tag ok">2 · O custo do consultório vazio</span> <span class="tag">25 a 30 s</span>
+<div class="tblw" style="margin-top:10px"><table>
+<tr><th style="width:90px">Tempo</th><th>Cena</th><th>Fala / texto na tela</th></tr>
+<tr><td>0 a 3 s</td><td>Close, cadeira vazia ao fundo</td><td><b>"Quanto custa manter um consultório que não está cheio todos os dias?"</b></td></tr>
+<tr><td>3 a 12 s</td><td>Texto aparecendo, lista</td><td>"Aluguel, equipe, manutenção, equipamento. Tudo isso, com ou sem paciente na agenda."</td></tr>
+<tr><td>12 a 22 s</td><td>Mostrando a sala pronta</td><td>"Aqui você paga só pelo horário que usa. A sala já está equipada e tem secretária."</td></tr>
+<tr><td>22 a 30 s</td><td>Dra. Rayane</td><td><b>CTA:</b> "Primeira locação por R$ 50. Comenta COWORKING."</td></tr>
+</table></div></div>
+
+<div class="card" style="margin-bottom:14px"><span class="tag ok">3 · Por que eu criei o coworking</span> <span class="tag">40 a 50 s</span>
+<div class="tblw" style="margin-top:10px"><table>
+<tr><th style="width:90px">Tempo</th><th>Cena</th><th>Fala / texto na tela</th></tr>
+<tr><td>0 a 4 s</td><td>Dra. Rayane sentada na sala</td><td><b>"Eu criei esse espaço pensando no colega que ainda não pode ter a própria clínica."</b></td></tr>
+<tr><td>4 a 25 s</td><td>Cenas de bastidor</td><td>[A história real dela: de onde veio a ideia, o que ela via de dificuldade para dentistas em início ou em transição. Preencher.]</td></tr>
+<tr><td>25 a 40 s</td><td>Mostrando o espaço</td><td>"Aqui tem sala equipada, secretária e esterilização. Você chega e atende."</td></tr>
+<tr><td>40 a 50 s</td><td>Dra. Rayane</td><td><b>CTA:</b> "Se você é dentista e quer conhecer, comenta COWORKING."</td></tr>
+</table></div>
+<p class="src" style="margin-top:8px">Mesma linha da inauguração, que gerou 110 comentários. Precisa da história real: não inventei.</p></div>
+
+<div class="card" style="margin-bottom:14px"><span class="tag ok">4 · O que está incluído</span> <span class="tag">20 a 25 s</span>
+<div class="tblw" style="margin-top:10px"><table>
+<tr><th style="width:90px">Tempo</th><th>Cena</th><th>Fala / texto na tela</th></tr>
+<tr><td>0 a 3 s</td><td>Corte rápido de portas e salas</td><td><b>"O que você leva quando aluga uma sala aqui:"</b></td></tr>
+<tr><td>3 a 18 s</td><td>Um item por corte, texto na tela</td><td>"Sala equipada. Secretária das 8h às 18h. Recepção para o seu paciente. Estrutura de esterilização. Acesso por código fora do horário da secretária."</td></tr>
+<tr><td>18 a 25 s</td><td>Sala com cadeira</td><td>"Você só traz seus materiais. <b>Comenta COWORKING.</b>"</td></tr>
+</table></div></div>
+
+<div class="card" style="margin-bottom:14px"><span class="tag ok">5 · As regras da casa</span> <span class="tag">25 a 30 s</span>
+<div class="tblw" style="margin-top:10px"><table>
+<tr><th style="width:90px">Tempo</th><th>Cena</th><th>Fala / texto na tela</th></tr>
+<tr><td>0 a 3 s</td><td>Propé nos pés, em close</td><td><b>"Por que aqui todo mundo entra de propé?"</b></td></tr>
+<tr><td>3 a 15 s</td><td>Dra. Rayane explicando</td><td>"Porque o ambiente é de saúde e a gente cuida da biossegurança do seu paciente e do seu trabalho. Jaleco, calçado fechado e propé fazem parte da rotina."</td></tr>
+<tr><td>15 a 30 s</td><td>Sala impecável</td><td>"Quem aluga aqui entra em um ambiente que já é organizado e padronizado. É o seu nome também que está na sala. <b>Comenta COWORKING.</b>"</td></tr>
+</table></div>
+<p class="src" style="margin-top:8px">Transforma a dúvida da dona sobre exigir jaleco e vestimenta em argumento de qualidade. Só gravar depois que o regimento estiver redigido (tela de Regras).</p></div>
+
+<div class="card" style="margin-bottom:14px"><span class="tag ok">6 · Primeira locação por R$ 50</span> <span class="tag">20 a 25 s</span>
+<div class="tblw" style="margin-top:10px"><table>
+<tr><th style="width:90px">Tempo</th><th>Cena</th><th>Fala / texto na tela</th></tr>
+<tr><td>0 a 3 s</td><td>Texto grande "R$ 50"</td><td><b>"Quanto custa testar uma sala de clínica pronta? R$ 50."</b></td></tr>
+<tr><td>3 a 16 s</td><td>Dra. Rayane + sala</td><td>"A primeira locação é R$ 50, para você conhecer a estrutura, a secretária e o ambiente antes de decidir. Depois, hora avulsa R$ 80 ou período de 5 horas por R$ 350."</td></tr>
+<tr><td>16 a 25 s</td><td>Dra. Rayane</td><td><b>CTA:</b> "Comenta COWORKING e eu te passo os horários."</td></tr>
+</table></div>
+<p class="src" style="margin-top:8px">Só publicar depois de confirmar se os R$ 50 valem por hora ou por período.</p></div>
+
+<h2>Carrosséis</h2>
+
+<div class="card" style="margin-bottom:14px"><span class="tag info">Carrossel A</span> <b>Atender sem montar clínica: o que muda</b>
+<div class="tblw" style="margin-top:10px"><table>
+<tr><th style="width:60px">Slide</th><th>Título</th><th>Texto</th></tr>
+<tr><td>1</td><td><b>Dentista, você precisa mesmo montar uma clínica?</b></td><td>Capa. Foto da recepção. "Deslize."</td></tr>
+<tr><td>2</td><td>O que pesa na clínica própria</td><td>Aluguel, equipe, equipamentos, recepção e manutenção. Todo mês, com agenda cheia ou não.</td></tr>
+<tr><td>3</td><td>E se você pagasse só pelo que usa?</td><td>Hora avulsa R$ 80. Período de 5 horas R$ 350. Noite R$ 300.</td></tr>
+<tr><td>4</td><td>Sala pronta</td><td>Duas salas odontológicas equipadas e uma sala de estética.</td></tr>
+<tr><td>5</td><td>Quem recebe o seu paciente</td><td>Secretária das 8h às 18h e recepção confortável.</td></tr>
+<tr><td>6</td><td>Esterilização</td><td>Estrutura de esterilização disponível por R$ 50 por período.</td></tr>
+<tr><td>7</td><td>O que você traz</td><td>Seus materiais, instrumental e a sua agenda.</td></tr>
+<tr><td>8</td><td><b>Primeira locação: R$ 50</b></td><td>CTA: "Comenta COWORKING para conhecer a sala 840 no Venâncio."</td></tr>
+</table></div></div>
+
+<div class="card" style="margin-bottom:14px"><span class="tag info">Carrossel B</span> <b>Como funciona em 4 passos</b>
+<div class="tblw" style="margin-top:10px"><table>
+<tr><th style="width:60px">Slide</th><th>Título</th><th>Texto</th></tr>
+<tr><td>1</td><td><b>Como alugar uma sala de clínica em Brasília</b></td><td>Capa com foto da sala.</td></tr>
+<tr><td>2</td><td>1. Conheça o espaço</td><td>Agende uma visita e veja as salas e a recepção.</td></tr>
+<tr><td>3</td><td>2. Faça o cadastro</td><td>Envie os documentos solicitados. É preciso ter CRO ativo.</td></tr>
+<tr><td>4</td><td>3. Assine o contrato</td><td>Locação sem vínculo, rescisão com aviso de 30 dias. Seu paciente assina o termo de ciência.</td></tr>
+<tr><td>5</td><td>4. Reserve e atenda</td><td>Primeira locação R$ 50. Pagamento de 50% para confirmar o horário, o restante no dia.</td></tr>
+<tr><td>6</td><td>Regras da casa</td><td>Materiais próprios, propé na entrada, sala devolvida organizada. Hora excedente é cobrada como hora cheia.</td></tr>
+<tr><td>7</td><td>Pronto para atender</td><td>CTA: "Comenta COWORKING e eu envio os horários disponíveis."</td></tr>
+</table></div></div>
+
+<div class="card" style="margin-bottom:14px"><span class="tag info">Carrossel C</span> <b>Sua especialidade tem sala aqui</b>
+<div class="tblw" style="margin-top:10px"><table>
+<tr><th style="width:60px">Slide</th><th>Título</th><th>Texto</th></tr>
+<tr><td>1</td><td><b>Para qual dentista essa sala serve?</b></td><td>Capa.</td></tr>
+<tr><td>2</td><td>Dentista em início de carreira</td><td>Comece a atender sem investir em uma clínica inteira.</td></tr>
+<tr><td>3</td><td>Especialista que atende em vários lugares</td><td>Reserve por período, no dia em que você tiver agenda em Brasília.</td></tr>
+<tr><td>4</td><td>Estética e harmonização</td><td>Sala de estética e ambiente de alto padrão para atendimentos de maior ticket.</td></tr>
+<tr><td>5</td><td>Quem precisa de uma sala extra</td><td>Para dias em que a sua agenda passou do limite do seu consultório.</td></tr>
+<tr><td>6</td><td>O que todos precisam ter</td><td>CRO ativo e carteira própria de pacientes.</td></tr>
+<tr><td>7</td><td><b>Comenta COWORKING</b></td><td>Envio dos horários e agendamento da visita.</td></tr>
+</table></div></div>
+
+<h2>Stories: sequência de convite</h2>
+<div class="card"><ol class="steps">
+<li><div><b>Frame 1:</b> Dra. Rayane na recepção. "Dentista, vem conhecer a sala 840?"</div></li>
+<li><div><b>Frame 2:</b> Vídeo rápido das salas. "Duas odontológicas e uma de estética."</div></li>
+<li><div><b>Frame 3:</b> Enquete: "Você já pensou em atender sem montar clínica?" (Sim / Quero saber mais)</div></li>
+<li><div><b>Frame 4:</b> Tabela de preços simples e "Primeira locação R$ 50".</div></li>
+<li><div><b>Frame 5:</b> Botão ou caixinha de perguntas: "Escreva COWORKING e eu te mando os horários."</div></li>
+</ol></div>
+
+<h2>Legenda padrão e CTA</h2>
+<div class="card">
+<p style="margin-top:0"><b>Legenda (para Reels e carrosséis):</b></p>
+<p style="color:var(--mute)">Atender seus pacientes em uma sala pronta, em Brasília, sem montar uma clínica inteira. No coworking da Sorriso Capital, no Venâncio Shopping, na Asa Sul, você encontra sala equipada, secretária das 8h às 18h, recepção para o seu paciente e estrutura de esterilização. Você traz seus materiais e sua agenda.<br><br>Hora avulsa R$ 80. Período de 5 horas R$ 350. Primeira locação R$ 50.<br><br>Comenta COWORKING que eu te envio os horários disponíveis. Para profissionais com CRO ativo.</p>
+<p style="margin-bottom:0"><b>Hashtags (3 a 5):</b> #coworkingodontologico #dentistabrasilia #consultorioporhora #odontologia #brasilia</p>
+</div>
+<div class="callout warn"><b>Palavra-gatilho</b>Usar COWORKING só neste tema. Quem comentar recebe os horários e o convite para visita (DM com resposta pronta ou atendimento da recepção).</div>
+
+<h2>Calendário sugerido (2 semanas)</h2>
+<div class="tblw"><table>
+<tr><th>Dia</th><th>Perfil da Dra. Rayane</th><th>Reforço</th></tr>
+<tr><td>Semana 1 · seg</td><td>Reel 1 (tour)</td><td>Reposta na @sorriso.capital; vira anúncio</td></tr>
+<tr><td>Semana 1 · qua</td><td>Carrossel A</td><td>Stories: sequência de convite</td></tr>
+<tr><td>Semana 1 · sex</td><td>Reel 2 (custo do consultório vazio)</td><td>Anúncio com ângulo de custo fixo</td></tr>
+<tr><td>Semana 2 · seg</td><td>Reel 4 (o que está incluído)</td><td>Anúncio de remarketing</td></tr>
+<tr><td>Semana 2 · qua</td><td>Carrossel B (4 passos)</td><td>Stories com depoimento, quando houver</td></tr>
+<tr><td>Semana 2 · sex</td><td>Reel 6 (primeira locação R$ 50)</td><td>Chamada de Black Friday, se aprovada (27/11)</td></tr>
+</table></div>
+<p class="src">Os Reels 3 (história da dona) e 5 (regras da casa) entram quando o conteúdo real e o regimento estiverem prontos. Carrossel C é bom para anúncio por especialidade.</p>
+
+<h2>Checklist de gravação</h2>
+<div class="grid g2">
+  <div class="card"><h3>Antes</h3><ul class="clean">
+    <li>Salas limpas, sem pertences de pacientes à vista</li>
+    <li>Luz natural ou luz branca; câmera na vertical (9:16)</li>
+    <li>Preços e horários confirmados com a dona</li>
+    <li>Texto na tela curto, legível no celular</li></ul></div>
+  <div class="card"><h3>Cuidados</h3><ul class="clean">
+    <li>Nada de paciente, prontuário ou rosto sem autorização (LGPD)</li>
+    <li>Não prometer "sem contrato": falar em "sem aluguel fixo" e "sem montar clínica"</li>
+    <li>Depoimentos só de quem autorizar por escrito</li>
+    <li>Legendas com o CTA e o aviso "para profissionais com CRO ativo"</li></ul></div>
+</div>
+
+<h2>Próximos passos</h2>
+<div class="card"><ul class="clean">
+<li>Você escolhe quais roteiros gravar primeiro; recomendo começar pelo 1 (tour), 2 (custo) e 4 (incluído).</li>
+<li>Preciso da história real da Dra. Rayane para o roteiro 3.</li>
+<li>Posso transformar os carrosséis em arte pronta (PNG 1080x1350) com a identidade da clínica.</li>
+<li>Os criativos de paciente (lentes e harmonização) saem na tela de Reels da Clínica.</li></ul></div>
+`);
+
+})();
+
+/* ===== view: cow-funil ===== */
+(function(){
+registerView('cow-funil', `
+<div class="crumb">Coworking</div>
+<h1>Funil de captação de <em>dentistas</em></h1>
+<p class="lead">Do anúncio ao contrato assinado e à recorrência. O objetivo não é a primeira locação: é transformar o profissional em usuário recorrente, e depois em indicador.</p>
+
+<div class="callout"><b>Como o coworking vende</b>Remover o investimento e o risco. O dentista atende em consultório pronto, no Venâncio, por hora ou período, com secretária, esterilização e sem montar clínica. A primeira locação a R$ 50 reduz a barreira de entrada.</div>
+
+<h2>Visão do funil</h2>
+<div class="card">
+  <div class="row" style="margin-top:0"><span><b>1. Atração</b> · Meta Ads para profissionais, Reels da Dra. Rayane, indicação, contato direto</span><span class="tag">Marketing</span></div><div class="bar"><i style="width:100%"></i></div>
+  <div class="row"><span><b>2. Captura</b> · formulário curto e WhatsApp</span><span class="tag">Marketing</span></div><div class="bar"><i style="width:80%"></i></div>
+  <div class="row"><span><b>3. Qualificação</b> · especialidade, frequência, horários</span><span class="tag info">Recepção</span></div><div class="bar"><i style="width:64%"></i></div>
+  <div class="row"><span><b>4. Visita ao espaço</b> · tour das salas</span><span class="tag info">Recepção / Dra. Rayane</span></div><div class="bar"><i style="width:48%"></i></div>
+  <div class="row"><span><b>5. Cadastro e contrato</b> · documentos e assinatura</span><span class="tag warn">Administrativo</span></div><div class="bar"><i style="width:38%"></i></div>
+  <div class="row"><span><b>6. Primeira locação</b> · R$ 50</span><span class="tag ok">Ativação</span></div><div class="bar"><i style="width:30%"></i></div>
+  <div class="row"><span><b>7. Recorrência</b> · período fixo ou reservas frequentes</span><span class="tag ok">Retenção</span></div><div class="bar"><i style="width:20%"></i></div>
+  <div class="row"><span><b>8. Expansão</b> · parceria 35/65 e indicação</span><span class="tag ok">Crescimento</span></div><div class="bar"><i style="width:12%"></i></div>
+</div>
+<p class="src">As larguras são ilustrativas do formato de funil, não dados reais.</p>
+
+<h2>Etapa a etapa</h2>
+<div class="tblw"><table>
+<tr><th>Etapa</th><th>O que acontece</th><th>Regra</th></tr>
+<tr><td><b>1. Atração</b></td><td>Anúncio para dentistas e profissionais da saúde de Brasília; Reels no perfil da Dra. Rayane (o de coworking fez 13.928 views lá e 39 na clínica); indicação de quem já usa; contato direto com dentistas da região.</td><td>Publicar onde há alcance: o perfil da Dra. Rayane.</td></tr>
+<tr><td><b>2. Captura</b></td><td>Formulário com nome, especialidade, CRO, frequência desejada e período preferido; resposta cai no WhatsApp.</td><td>O dado da especialidade já define o que mostrar na visita.</td></tr>
+<tr><td><b>3. Qualificação</b></td><td>Confirma que é profissional habilitado, o tipo de atendimento, quantas vezes por semana ou mês e em que horário.</td><td>Sem CRO regular, não avança (o contrato exige habilitação).</td></tr>
+<tr><td><b>4. Visita</b></td><td>Tour das 2 salas odontológicas e da sala de estética, recepção, esterilização e regras da casa. Mostrar as regras antes: propé, jaleco, materiais próprios, câmeras.</td><td>Visita agendada em até alguns dias do contato.</td></tr>
+<tr><td><b>5. Cadastro e contrato</b></td><td>Envio dos documentos solicitados e assinatura do contrato de locação. O paciente do profissional assina o termo de ciência.</td><td>Contrato válido por 2 anos, rescisão com 30 dias, preços podem mudar (ver tela de regras).</td></tr>
+<tr><td><b>6. Primeira locação</b></td><td>R$ 50. Sala pronta, secretária no horário, checklist de entrada e saída.</td><td>Pagamento antecipado de 50% para confirmar a reserva.</td></tr>
+<tr><td><b>7. Recorrência</b></td><td>Pós-uso: feedback no mesmo dia, oferta do período (R$ 350 ou R$ 300) e proposta de dia fixo na semana.</td><td>Período sai mais barato por hora do que a hora avulsa.</td></tr>
+<tr><td><b>8. Expansão</b></td><td>Profissional que traz volume pode migrar para parceria 35% (profissional) e 65% (clínica), com materiais fornecidos pela clínica. Pede indicação de colegas.</td><td>Parceria só após validação jurídica do modelo.</td></tr>
+</table></div>
+
+<h2>Quem compra: perfis a testar</h2>
+<div class="grid g3">
+  <div class="card"><h3>Dentista sem consultório</h3><p style="margin:0;color:var(--mute)">Recém-formado ou em início de carreira que ainda não pode investir em uma clínica.</p></div>
+  <div class="card"><h3>Especialista itinerante</h3><p style="margin:0;color:var(--mute)">Implante, cirurgia, endodontia, ortodontia ou harmonização, que atende em vários locais e precisa de sala por período.</p></div>
+  <div class="card"><h3>Clínica sem sala livre</h3><p style="margin:0;color:var(--mute)">Profissional com agenda cheia que precisa de uma sala extra em dia ou horário pontual.</p></div>
+</div>
+<p class="src">Os três perfis são hipóteses a validar com os primeiros contatos. Ainda não há dados de quem já locou.</p>
+
+<h2>O que o espaço vale para o dentista</h2>
+<div class="tblw"><table>
+<tr><th>Uso do profissional</th><th class="r">Por mês</th><th>Conta</th></tr>
+<tr><td>2 períodos por mês</td><td class="r">R$ 700</td><td>2 x R$ 350</td></tr>
+<tr><td>1 período por semana</td><td class="r">R$ 1.400</td><td>4 x R$ 350</td></tr>
+<tr><td>2 períodos por semana</td><td class="r">R$ 2.800</td><td>8 x R$ 350</td></tr>
+</table></div>
+<div class="callout warn"><b>Cenários ilustrativos</b>Contas simples sobre o preço de R$ 350 por período, sem esterilização (R$ 50 por período) nem limpeza. Não são previsão de ocupação.</div>
+<div class="callout"><b>Teto de receita por dia de funcionamento</b>2 salas odontológicas x (R$ 350 + R$ 350 + R$ 300) = R$ 2.000 por dia com todos os períodos ocupados. A ocupação real depende de quantos dias por semana a clínica abre os períodos ao coworking: definir.</div>
+
+<h2>Objeções e respostas</h2>
+<div class="tblw"><table>
+<tr><th>Objeção</th><th>Resposta baseada na oferta</th></tr>
+<tr><td>"Ainda não tenho pacientes suficientes para alugar"</td><td>Por isso o modelo é por hora ou período, sem mensalidade fixa. A primeira locação custa R$ 50.</td></tr>
+<tr><td>"Tenho que montar e comprar tudo"</td><td>Sala com equipamentos novos, recepção e secretária. Você traz só seus materiais e instrumental.</td></tr>
+<tr><td>"E a esterilização?"</td><td>A clínica tem estrutura de esterilização (R$ 50 por período). Kit esterilizado para locação está em estudo.</td></tr>
+<tr><td>"Vou ficar preso a contrato?"</td><td>Contrato de locação não exclusivo, sem vínculo, rescisão com aviso de 30 dias.</td></tr>
+<tr><td>"E se eu tiver problema com paciente?"</td><td>A responsabilidade técnica é sua, e o paciente assina o termo de ciência. Explicar com transparência antes de assinar.</td></tr>
+<tr><td>"O preço está alto"</td><td>Comparar com o custo de montar e manter consultório próprio; mostrar que o período fica R$ 10 por hora mais barato que a hora avulsa.</td></tr>
+</table></div>
+
+<h2>Onboarding do profissional (checklist)</h2>
+<div class="card"><ul class="clean">
+<li>CRO regular confirmado e documentos de cadastro recebidos</li>
+<li>Contrato de locação assinado e termo de ciência do paciente entregue</li>
+<li>Regras apresentadas: propé, jaleco e vestimenta, materiais próprios, câmeras, hora cheia excedente, fechamento da sala</li>
+<li>Código de acesso fora do horário da secretária (8h às 18h)</li>
+<li>Pagamento de 50% antecipado e reserva confirmada</li>
+<li>Pós-uso: checklist de devolução da sala e pedido de feedback</li></ul></div>
+
+<h2>Cadência de nutrição</h2>
+<div class="grid g2">
+  <div class="card"><h3>Lead que não visitou</h3><ul class="clean">
+    <li>Dia 1: convite para a visita, com foto e vídeo do espaço</li>
+    <li>Dia 3: valores e o que está incluído</li>
+    <li>Dia 7: depoimento de quem usa, quando houver</li>
+    <li>Dia 15: nova oferta de primeira locação a R$ 50</li></ul></div>
+  <div class="card"><h3>Quem locou uma vez</h3><ul class="clean">
+    <li>No mesmo dia: agradecimento e pedido de feedback</li>
+    <li>Dia 2: proposta de período recorrente</li>
+    <li>Dia 14: lembrete de disponibilidade da agenda</li>
+    <li>Dia 30: reativação e pedido de indicação</li></ul></div>
+</div>
+
+<h2>Indicadores</h2>
+<div class="tblw"><table>
+<tr><th>Indicador</th><th>Como calcular</th></tr>
+<tr><td>Custo por profissional captado</td><td>Investimento em anúncios ÷ profissionais cadastrados</td></tr>
+<tr><td>Lead para visita</td><td>Visitas realizadas ÷ leads qualificados</td></tr>
+<tr><td>Visita para contrato</td><td>Contratos assinados ÷ visitas</td></tr>
+<tr><td>Ativação</td><td>Profissionais que fizeram a primeira locação ÷ contratos</td></tr>
+<tr><td>Recorrência</td><td>Profissionais com 2+ locações no mês ÷ ativos</td></tr>
+<tr><td>Ocupação</td><td>Períodos vendidos ÷ períodos disponíveis</td></tr>
+<tr><td>Receita por profissional</td><td>Receita do coworking ÷ profissionais ativos</td></tr>
+</table></div>
+<p class="src">Metas ficam em aberto até termos os primeiros dados de captação e ocupação.</p>
+
+<h2>Para fechar este funil</h2>
+<div class="card"><ul class="clean">
+<li>Em quais dias e períodos as salas ficam abertas ao coworking, e quanto a clínica usa para si.</li>
+<li>Quem faz a visita e o atendimento comercial: recepção, a Dra. Rayane ou outra pessoa.</li>
+<li>Quantos profissionais já usam o espaço e o que eles contratam (base para depoimento e nutrição).</li>
+<li>Esclarecer a primeira locação a R$ 50: vale por hora ou por período?</li>
+<li>Próximas entregas: campanha Meta Ads para profissionais e criativos do coworking.</li></ul></div>
+`);
+
+})();
+
+/* ===== view: cow-kits ===== */
+(function(){
+registerView('cow-kits', `
+<div class="crumb">Coworking</div>
+<h1>Kits <em>esterilizados</em></h1>
+<p class="lead">Aluguel de kits de instrumental já esterilizados pela clínica para o dentista que usa o coworking. Resolve o maior atrito da primeira locação: chegar sem instrumental e sem estrutura de esterilização própria.</p>
+
+<div class="callout warn"><b>Descoberta importante da pesquisa</b>Em 15/12/2025 a Anvisa publicou a <b>RDC 1.002/2025</b>, que regula os serviços de assistência odontológica e <b>cita o Coworking Odontológico</b> como modalidade de consultório compartilhado, com um cirurgião-dentista como <b>Responsável Técnico</b>. Isso afeta o kit e também o contrato do coworking. Leia o bloco "O que a norma diz" antes de lançar.</div>
+
+<h2>O que a norma diz (RDC Anvisa 1.002/2025, DOU 16/12/2025)</h2>
+<div class="tblw"><table>
+<tr><th style="width:150px">Tema</th><th>Texto da norma (resumo)</th><th>Impacto na Sorriso Capital</th></tr>
+<tr><td><b>Coworking</b> (art. 3º, XIV)</td><td>Consultório odontológico compartilhado: ambientes de apoio em comum (recepção, sanitário, CME), vários dentistas atendendo em rotatividade, <b>com um cirurgião-dentista como Responsável Técnico</b>. Inclui a modalidade coworking odontológico.</td><td>A clínica precisa ter RT e seguir a norma para todo o espaço, não só para o kit.</td></tr>
+<tr><td><b>Responsabilidade técnica</b> (arts. 5º a 7º)</td><td>O responsável legal designa o RT (e um substituto se houver mais de um dentista). RT e substituto são <b>corresponsáveis por todas as atividades</b> do estabelecimento. Todos os profissionais assinam ciência da Série de Documentos de Boas Práticas e se comprometem a cumpri-la.</td><td>O contrato atual diz que a clínica só cede a estrutura e que o profissional responde por tudo (cláusulas 2.3 a 2.5). Rever com advogado. Incluir a ciência da norma interna no onboarding.</td></tr>
+<tr><td><b>Etiqueta do pacote</b> (art. 81)</td><td>Data da esterilização, nome do responsável pelo preparo, lote da carga, e identificação dos itens se a embalagem não for transparente.</td><td>Todo kit sai etiquetado com esses quatro campos.</td></tr>
+<tr><td><b>Validade da esterilização</b> (art. 82)</td><td>Prazo definido pelo serviço, com validação científica. Sem validação, vale <b>6 meses</b> desde o processamento, com embalagem íntegra, seca e bem armazenada. Se houver violação, umidade ou sujidade, reprocessar antes do uso.</td><td>Definir o prazo no procedimento da clínica. Kits em rotação rápida reduzem o risco.</td></tr>
+<tr><td><b>Monitoramento</b> (arts. 88 a 91)</td><td>Autoclave com bomba de vácuo: teste Bowie &amp; Dick no primeiro ciclo do dia. Semanalmente, pacote teste com indicador biológico e integrador químico tipo 5 ou 6, no primeiro ciclo. Nos demais ciclos, integrador químico. Registro de cada carga com data, lote, equipamento, resultado, lista de pacotes, operador e parâmetros (tempo, temperatura, pressão).</td><td>Esse registro é a prova que sustenta o kit alugado.</td></tr>
+<tr><td><b>Guarda de registros</b> (art. 92)</td><td>Mínimo de 5 anos.</td><td>Arquivo organizado por lote.</td></tr>
+<tr><td><b>Terceirizar o processamento</b> (arts. 32 e 105)</td><td>Permitido, em empresa licenciada pela Vigilância Sanitária, com contrato e procedimento de preparo prévio.</td><td>Alternativa se a clínica não quiser operar esterilização em volume.</td></tr>
+<tr><td><b>Prazo de adequação</b> (art. 182)</td><td>360 dias da publicação: até cerca de <b>11/12/2026</b>. Novos estabelecimentos e quem reinicia atividade devem atender na íntegra desde o início.</td><td>O art. 13 diz que quem não estava regularizado na Vigilância até a publicação é "estabelecimento novo", independentemente do tempo de funcionamento. A clínica abriu em 23/05/2026: provavelmente exigência imediata. Ver o Checklist RDC.</td></tr>
+</table></div>
+<p class="src">Li o texto oficial publicado no Diário Oficial da União (versão disponível no site da Vigilância Sanitária do Rio de Janeiro). Esta tela resume o que importa para o kit e para o contrato; não é parecer jurídico nem sanitário. Validar com a Vigilância Sanitária do DF e com o advogado.</p>
+
+<h2>Por que oferecer kits</h2>
+<div class="grid g3">
+  <div class="card"><h3>Remove atrito da 1ª locação</h3><p style="margin:0;color:var(--mute)">O dentista chega só com a agenda. Combina com a oferta de primeira locação a R$ 50.</p></div>
+  <div class="card"><h3>Receita adicional</h3><p style="margin:0;color:var(--mute)">Cobrança por uso, além da hora ou do período e da taxa de esterilização (R$ 50 por período, hoje).</p></div>
+  <div class="card"><h3>Diferencial na Meta</h3><p style="margin:0;color:var(--mute)">Um anunciante de coworking (Le Doc) já lista instrumental e esterilização como parte da sala. Na minha busca não achei serviço de aluguel de kit esterilizado separado: espaço para diferenciar.</p></div>
+</div>
+
+<h2>Como ficaria a oferta (3 formatos)</h2>
+<div class="tblw"><table>
+<tr><th>Formato</th><th>Como funciona</th><th>Quando usar</th><th class="r">Preço</th></tr>
+<tr><td><b>A. Kit incluído</b></td><td>Kit básico já vem na taxa de esterilização; o profissional não paga à parte.</td><td>Campanha de aquisição; reduz a barreira na primeira locação.</td><td class="r">Definir</td></tr>
+<tr><td><b>B. Kit por uso</b></td><td>Cobrança por kit usado no período (básico, dentística, cirúrgico etc.).</td><td>Modelo principal; paga quem usa.</td><td class="r">Definir</td></tr>
+<tr><td><b>C. Pacote mensal</b></td><td>Número fixo de kits por mês com preço menor por unidade.</td><td>Profissional recorrente.</td><td class="r">Definir</td></tr>
+</table></div>
+<p class="src">Não coloquei valores: dependem do custo real por ciclo (modelo abaixo). A taxa de esterilização atual é R$ 50 por período.</p>
+
+<h2>Tipos de kit para definir</h2>
+<div class="card"><p style="margin-top:0;color:var(--mute)">A lista de itens e as quantidades devem ser definidas pelo Responsável Técnico e pela dona, com base nos procedimentos que o coworking recebe. Categorias para começar:</p>
+<ul class="clean">
+<li><b>Kit clínico básico:</b> exame e atendimento de rotina</li>
+<li><b>Kit dentística:</b> restaurações e estética</li>
+<li><b>Kit periodontia:</b> raspagem e cirurgias gengivais</li>
+<li><b>Kit cirúrgico:</b> exodontia e procedimentos cirúrgicos</li>
+<li><b>Kit endodontia:</b> tratamento de canal</li>
+<li><b>Kit harmonização / estética:</b> só se a clínica quiser atender a sala de estética</li></ul>
+<p style="margin:10px 0 0;color:var(--mute)">Itens críticos esterilizados sem embalagem só podem ser usados em necessidade de uso imediato (art. 83). Os kits devem sair lacrados.</p></div>
+
+<h2>Ciclo do kit</h2>
+<div class="card"><ol class="steps">
+<li><div><b>Entrega.</b> Kit sai lacrado da área de guarda, com etiqueta (data, preparador, lote, itens). A recepção registra quem recebeu e para qual período.</div></li>
+<li><div><b>Uso.</b> O profissional abre o pacote na cadeira. O lote do kit é anotado no prontuário do paciente, para rastrear a utilização.</div></li>
+<li><div><b>Devolução.</b> O profissional devolve o kit usado, ou o lacrado não usado, na área suja, sem lavar.</div></li>
+<li><div><b>Limpeza e preparo.</b> Escovação ou ultrassom, secagem, conferência de itens, embalagem e etiquetagem.</div></li>
+<li><div><b>Esterilização.</b> Autoclave com monitoramento da carga e registro (lote, parâmetros, integrador e, na semana, teste biológico).</div></li>
+<li><div><b>Guarda.</b> Armazenamento em armário fechado e exclusivo, com validade conferida na saída.</div></li>
+</ol></div>
+
+<h2>Registros obrigatórios por carga</h2>
+<div class="grid g2">
+  <div class="card"><h3>Registro da carga</h3><ul class="clean">
+    <li>Data da esterilização e lote único da carga</li>
+    <li>Identificação do equipamento, se houver mais de um</li>
+    <li>Resultado do pacote teste</li>
+    <li>Relação de pacotes esterilizados</li>
+    <li>Nome do operador</li>
+    <li>Tempo, temperatura e pressão</li></ul></div>
+  <div class="card"><h3>Registro do kit alugado</h3><ul class="clean">
+    <li>Lote e tipo do kit entregue</li>
+    <li>Profissional e período da locação</li>
+    <li>Data e condição da devolução</li>
+    <li>Itens faltando ou danificados</li>
+    <li>Guardar por pelo menos 5 anos, junto com os registros da carga</li></ul></div>
+</div>
+
+<h2>Quantos kits comprar</h2>
+<div class="card"><p style="margin-top:0">Regra para dimensionar o estoque:</p>
+<p><b>Kits necessários = kits usados por dia x dias do ciclo completo + reserva</b></p>
+<p style="color:var(--mute);margin-bottom:0">O ciclo completo inclui uso, devolução, limpeza, embalagem, esterilização e liberação. Exemplo ilustrativo: se o coworking usa 4 kits por dia e o ciclo leva 2 dias, são 8 kits em giro, mais uma reserva de segurança. A reserva e o ciclo real devem ser medidos com a operação da clínica.</p></div>
+
+<h2>Custo e preço</h2>
+<div class="tblw"><table>
+<tr><th>Componente do custo por ciclo</th><th>Como medir</th><th class="r">Valor</th></tr>
+<tr><td>Embalagem e etiqueta</td><td>Preço por pacote</td><td class="r">Definir</td></tr>
+<tr><td>Indicadores (integrador, teste biológico semanal rateado)</td><td>Custo mensal ÷ ciclos</td><td class="r">Definir</td></tr>
+<tr><td>Água, energia e insumos de limpeza</td><td>Custo mensal ÷ ciclos</td><td class="r">Definir</td></tr>
+<tr><td>Tempo do auxiliar (limpeza, preparo, registro)</td><td>Minutos por kit x custo da hora</td><td class="r">Definir</td></tr>
+<tr><td>Desgaste e reposição de instrumental</td><td>Custo do kit ÷ número de ciclos de vida útil</td><td class="r">Definir</td></tr>
+<tr><td>Manutenção e qualificação da autoclave</td><td>Custo anual ÷ ciclos</td><td class="r">Definir</td></tr>
+</table></div>
+<div class="callout"><b>Preço</b>Preço do kit = custo por ciclo + margem. A taxa de esterilização de R$ 50 por período já cobre o uso da estrutura do profissional com instrumental próprio; o kit é um serviço diferente (instrumental da clínica) e deve ser precificado à parte.</div>
+
+<h2>Cláusulas para o contrato do kit</h2>
+<div class="card"><ul class="clean">
+<li>O instrumental é da clínica; uso exclusivo durante o período contratado.</li>
+<li>Kit lacrado só deve ser aberto na cadeira, no momento do atendimento.</li>
+<li>Devolução no fim do período, sem lavagem, conferida em checklist.</li>
+<li>Perda ou dano: reposição a preço de tabela e perda do direito ao kit.</li>
+<li>Anotar o lote do kit no prontuário de cada paciente atendido.</li>
+<li>Ciência da norma interna de boas práticas (exigida de todo profissional).</li></ul></div>
+
+<h2>Checklist de entrega e devolução</h2>
+<div class="grid g2">
+  <div class="card"><h3>Entrega</h3><ul class="clean">
+    <li>Embalagem íntegra, seca e lacrada</li>
+    <li>Etiqueta com data, preparador, lote e itens</li>
+    <li>Validade conferida</li>
+    <li>Indicador químico virado (quando aplicável)</li>
+    <li>Registro de quem recebeu</li></ul></div>
+  <div class="card"><h3>Devolução</h3><ul class="clean">
+    <li>Todos os itens presentes</li>
+    <li>Sem sinais de dano</li>
+    <li>Lote anotado no prontuário</li>
+    <li>Kit encaminhado para a área suja</li>
+    <li>Registro de condição de devolução</li></ul></div>
+</div>
+
+<h2>Riscos e decisões pendentes</h2>
+<div class="tblw"><table>
+<tr><th>Risco ou dúvida</th><th>Ação</th></tr>
+<tr><td>A clínica é "estabelecimento novo" (art. 13: exigência imediata e licença sanitária inicial)?</td><td>Confirmar com a Vigilância Sanitária do DF; usar o Checklist RDC.</td></tr>
+<tr><td>Quem é o Responsável Técnico e há substituto?</td><td>Conferir licença e documentos; incluir na SDBPF.</td></tr>
+<tr><td>Cláusulas de isenção do contrato conflitam com a corresponsabilidade do RT?</td><td>Advogado revisa contrato de coworking e termo do paciente.</td></tr>
+<tr><td>A autoclave tem bomba de vácuo? Qual o volume da câmara?</td><td>Define Bowie &amp; Dick e a norma aplicável (acima de 60 litros segue outra RDC).</td></tr>
+<tr><td>Operar esterilização em volume ou terceirizar?</td><td>Comparar custo e capacidade; terceirizar exige empresa licenciada e contrato.</td></tr>
+<tr><td>Quem opera o processamento no dia a dia?</td><td>Treinar e registrar; a norma exige operador identificado.</td></tr>
+</table></div>
+
+<h2>Próximos passos</h2>
+<div class="card"><ul class="clean">
+<li>Confirmar com o Responsável Técnico e com a Vigilância Sanitária os pontos acima.</li>
+<li>Inventariar instrumental e esterilização atual (autoclave, embalagem, rotina).</li>
+<li>Definir composição de 2 ou 3 kits iniciais e medir o custo por ciclo.</li>
+<li>Só depois fechar o preço, revisar o contrato e anunciar o kit no coworking.</li>
+<li>Antes de anunciar, atualizar o flyer e o contrato com a esterilização e a ciência da norma.</li></ul></div>
+`);
+
+})();
+
+/* ===== view: cow-metricas ===== */
+(function(){
+(function(){
+var KEY = "sorriso-capital-metricas-cow-v1";
+var F = [
+  ["inv","Investimento em anúncios (R$)"],
+  ["leads","Leads (conversas de profissionais)"],
+  ["visit","Visitas realizadas"],
+  ["contr","Contratos assinados"],
+  ["prim","Primeiras locações feitas"],
+  ["rec","Profissionais com 2 ou mais locações"],
+  ["ativ","Profissionais ativos no período"],
+  ["vend","Períodos vendidos"],
+  ["disp","Períodos disponíveis para o coworking"],
+  ["rcw","Receita do coworking (R$)"]
+];
+function num(v){ var n = parseFloat(String(v).replace(",",".")); return isNaN(n) ? 0 : n; }
+function brl(n){ return n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+function pct(a,b){ return b>0 ? (a/b*100).toLocaleString("pt-BR",{maximumFractionDigits:1})+"%" : "-"; }
+function div(a,b){ return b>0 ? brl(a/b) : "-"; }
+function load(){ try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){ return {}; } }
+function save(o){ try { localStorage.setItem(KEY, JSON.stringify(o)); } catch(e){} }
+window.mtCow = function(){
+  var o = {};
+  document.querySelectorAll("[data-mt='cow']").forEach(function(i){ o[i.dataset.f] = i.value; });
+  save(o);
+  var v = {}; F.forEach(function(f){ v[f[0]] = num(o[f[0]]); });
+  var set = function(id, t){ var e = document.getElementById(id); if (e) e.textContent = t; };
+  set("w-cpl", div(v.inv, v.leads));
+  set("w-custoativo", div(v.inv, v.ativ));
+  set("w-recativo", div(v.rcw, v.ativ));
+  set("w-ocup", pct(v.vend, v.disp));
+  set("w-l2v", pct(v.visit, v.leads));
+  set("w-v2c", pct(v.contr, v.visit));
+  set("w-c2p", pct(v.prim, v.contr));
+  set("w-recorr", pct(v.rec, v.ativ));
+  set("w-recper", div(v.rcw, v.vend));
+  set("w-roas", v.inv>0 ? (v.rcw/v.inv).toLocaleString("pt-BR",{maximumFractionDigits:2})+"x" : "-");
+  var max = Math.max(v.leads, 1);
+  ["leads","visit","contr","prim","rec"].forEach(function(k){
+    var b = document.getElementById("wb-"+k); if (b) b.style.width = Math.min(100, v[k]/max*100)+"%";
+    set("wn-"+k, String(v[k]));
+  });
+};
+window.mtCowReset = function(){ if (!confirm("Limpar os números preenchidos?")) return; save({}); initCow(); };
+function initCow(){
+  var o = load();
+  document.querySelectorAll("[data-mt='cow']").forEach(function(i){ i.value = o[i.dataset.f] || ""; });
+  window.mtCow();
+}
+onView("cow-metricas", initCow);
+
+var inputs = F.map(function(f){
+  return '<label class="mt-f"><span>'+f[1]+'</span><input type="number" min="0" step="any" inputmode="decimal" data-mt="cow" data-f="'+f[0]+'" oninput="mtCow()"></label>';
+}).join("");
+var funil = [["leads","Leads"],["visit","Visitas"],["contr","Contratos"],["prim","Primeiras locações"],["rec","Recorrentes (2+ locações)"]].map(function(k){
+  return '<div class="row" style="margin-top:8px"><span>'+k[1]+'</span><b id="wn-'+k[0]+'">0</b></div><div class="bar"><i id="wb-'+k[0]+'" style="width:0"></i></div>';
+}).join("");
+
+registerView("cow-metricas", `
+<style>
+.mt-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mt-f{display:flex;flex-direction:column;gap:4px}
+.mt-f span{font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--mute)}
+.mt-f input{border:1px solid var(--line);border-radius:8px;padding:9px 10px;font:inherit;background:#FFFEFB;width:100%}
+.mt-f input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,168,67,.18)}
+@media (max-width:560px){.mt-grid{grid-template-columns:1fr}}
+</style>
+<div class="crumb">Coworking</div>
+<h1>Métricas do <em>coworking</em></h1>
+<p class="lead">Calculadora da captação de dentistas e da ocupação das salas. Preencha os números do período e veja custo por profissional ativo, ocupação, recorrência e receita por profissional.</p>
+
+<div class="callout"><b>Como usar</b>Investimento e leads vêm do Gerenciador de Anúncios; visitas, contratos e locações vêm da agenda e do cadastro do coworking. Os números ficam salvos neste navegador.</div>
+
+<div class="grid g2" style="align-items:start">
+  <div class="card"><h3>Números do período</h3><div class="mt-grid" style="margin-top:10px">${inputs}</div>
+    <div style="margin-top:12px"><button onclick="mtCowReset()" style="border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;cursor:pointer;font:inherit;font-size:12px">Limpar</button></div></div>
+  <div class="card"><h3>Funil do período</h3>${funil}</div>
+</div>
+
+<h2>Resultado</h2>
+<div class="grid g4">
+  <div class="card kpi"><div class="v" id="w-custoativo">-</div><div class="l">Custo por profissional ativo</div></div>
+  <div class="card kpi"><div class="v" id="w-ocup">-</div><div class="l">Ocupação</div><div class="s">Vendidos ÷ disponíveis</div></div>
+  <div class="card kpi"><div class="v" id="w-recativo">-</div><div class="l">Receita por profissional</div></div>
+  <div class="card kpi"><div class="v" id="w-roas">-</div><div class="l">Retorno (receita ÷ investimento)</div></div>
+</div>
+
+<h2>Taxas e custos</h2>
+<div class="tblw"><table>
+<tr><th>Indicador</th><th class="r">Valor</th><th>Conta</th></tr>
+<tr><td>Custo por lead</td><td class="r" id="w-cpl">-</td><td>Investimento ÷ leads</td></tr>
+<tr><td>Lead para visita</td><td class="r" id="w-l2v">-</td><td>Visitas ÷ leads</td></tr>
+<tr><td>Visita para contrato</td><td class="r" id="w-v2c">-</td><td>Contratos ÷ visitas</td></tr>
+<tr><td>Ativação</td><td class="r" id="w-c2p">-</td><td>Primeiras locações ÷ contratos</td></tr>
+<tr><td>Recorrência</td><td class="r" id="w-recorr">-</td><td>Com 2+ locações ÷ ativos</td></tr>
+<tr><td>Receita por período vendido</td><td class="r" id="w-recper">-</td><td>Receita ÷ períodos vendidos</td></tr>
+</table></div>
+
+<h2>Referências de preço do coworking</h2>
+<div class="tblw"><table>
+<tr><th>Item</th><th class="r">Valor</th></tr>
+<tr><td>Primeira locação</td><td class="r">R$ 50</td></tr>
+<tr><td>Hora avulsa</td><td class="r">R$ 80</td></tr>
+<tr><td>Período manhã ou tarde (5 horas)</td><td class="r">R$ 350</td></tr>
+<tr><td>Período noite (4 horas)</td><td class="r">R$ 300</td></tr>
+<tr><td>Taxa de esterilização</td><td class="r">R$ 50 por período</td></tr>
+</table></div>
+<p class="src">Teto de receita: com as 2 salas odontológicas ocupadas nos 3 períodos, são R$ 2.000 por dia de funcionamento (sem taxas). A ocupação real depende de quantos dias e períodos a clínica abre ao coworking.</p>
+
+<h2>Como ler os números</h2>
+<div class="tblw"><table>
+<tr><th>Se o gargalo está em...</th><th>O que investigar</th></tr>
+<tr><td>Custo por profissional alto</td><td>Criativo, público e oferta de entrada (R$ 50)</td></tr>
+<tr><td>Lead para visita baixo</td><td>Tempo de resposta e convite para visitar, vídeo tour</td></tr>
+<tr><td>Visita para contrato baixo</td><td>Regras da casa, contrato e objeções na visita</td></tr>
+<tr><td>Ativação baixa</td><td>Facilidade de reservar e kit/instrumental (tela de Kits)</td></tr>
+<tr><td>Recorrência baixa</td><td>Experiência da primeira locação, oferta de dia fixo e pós-uso</td></tr>
+<tr><td>Ocupação baixa</td><td>Mais anúncios, horário de menor procura, preço por período</td></tr>
+</table></div>
+
+<h2>Rotina</h2>
+<div class="card"><ul class="clean">
+<li><b>Semanal:</b> preencher os números e checar quais horários ficaram vazios.</li>
+<li><b>Mensal:</b> comparar com o mês anterior; decidir sobre anúncios e promoções.</li>
+<li><b>Trimestral:</b> rever preços, regras e a possibilidade de parceria 35/65 com os profissionais mais ativos.</li></ul></div>
+<p class="src">Metas ficam em aberto até as primeiras 4 semanas de dados. Atenção: ao medir "receita do coworking", considerar a conformidade sanitária e contratual (ver Checklist RDC).</p>
+`);
+})();
+
+})();
+
+/* ===== view: cow-oferta ===== */
+(function(){
+registerView('cow-oferta', `
+<div class="crumb">Coworking</div>
+<h1>Oferta e <em>preços</em></h1>
+<p class="lead">Espaço profissional no Venâncio Shopping (Bloco B50, sala 840, Asa Sul) para dentistas e profissionais da saúde atenderem sem montar clínica própria.</p>
+
+<div class="grid g4">
+  <div class="card kpi"><div class="v">R$ 50</div><div class="l">Primeira locação</div><div class="s">Oferta de entrada</div></div>
+  <div class="card kpi"><div class="v">R$ 80</div><div class="l">Hora avulsa</div><div class="s">Pagamento antecipado</div></div>
+  <div class="card kpi"><div class="v">R$ 70</div><div class="l">Hora no período de 5h</div><div class="s">R$ 350 por período</div></div>
+  <div class="card kpi"><div class="v">3</div><div class="l">Salas</div><div class="s">2 odontológicas + 1 estética</div></div>
+</div>
+
+<h2>Tabela de valores</h2>
+<div class="tblw"><table>
+<tr><th>Modalidade</th><th>Horário</th><th class="r">Valor</th><th class="r">Por hora</th><th class="r">Economia vs avulso</th></tr>
+<tr><td>Primeira locação</td><td>A combinar</td><td class="r">R$ 50</td><td class="r">-</td><td class="r">-</td></tr>
+<tr><td>Hora avulsa</td><td>Livre</td><td class="r">R$ 80</td><td class="r">R$ 80</td><td class="r">-</td></tr>
+<tr><td>Período manhã</td><td>07h às 12h</td><td class="r">R$ 350</td><td class="r">R$ 70</td><td class="r">R$ 50 (12,5%)</td></tr>
+<tr><td>Período tarde</td><td>12h30 às 17h30</td><td class="r">R$ 350</td><td class="r">R$ 70</td><td class="r">R$ 50 (12,5%)</td></tr>
+<tr><td>Período noite</td><td>18h às 22h</td><td class="r">R$ 300</td><td class="r">R$ 75</td><td class="r">R$ 20 (6,3%)</td></tr>
+</table></div>
+<p class="src">A primeira locação a R$ 50 veio da sua mensagem e não consta no flyer nem no contrato. Horário estendido mediante combinação prévia.</p>
+
+<h2>Taxas</h2>
+<div class="tblw"><table>
+<tr><th>Item</th><th class="r">Valor</th><th>Regra</th></tr>
+<tr><td>Esterilização</td><td class="r">R$ 50 por período</td><td>Cobrada quando o profissional usa a estrutura da clínica (contrato, cláusula 6).</td></tr>
+<tr><td>Limpeza da sala (opcional)</td><td class="r">R$ 50</td><td>Se o profissional não limpar, a taxa é cobrada.</td></tr>
+<tr><td>Equipamento ligado após o expediente</td><td class="r">R$ 50</td><td>Taxa compensatória (cláusula 9).</td></tr>
+<tr><td>Hora excedente</td><td class="r">1 hora cheia</td><td>Sem cálculo por minuto; só se o horário seguinte estiver livre (cláusula 12).</td></tr>
+</table></div>
+
+<h2>O que está incluído</h2>
+<div class="grid g2">
+  <div class="card"><h3>Estrutura</h3><ul class="clean">
+    <li>Sala limpa e organizada, equipamentos novos</li>
+    <li>Secretária das 8h às 18h; fora disso, código de acesso</li>
+    <li>Recepção e sala de espera para os pacientes</li>
+    <li>Estrutura de esterilização</li>
+    <li>Monitoramento por câmeras</li></ul></div>
+  <div class="card"><h3>Não incluído</h3><ul class="clean">
+    <li>Materiais de consumo, instrumental, medicamentos e insumos: cada profissional traz os seus</li>
+    <li>Café e biscoitos da recepção são só para pacientes</li>
+    <li>Nenhum item da clínica pode sair do local</li></ul></div>
+</div>
+
+<h2>Mensagem central para a campanha</h2>
+<div class="callout"><b>Ideia-base</b>"Atenda seus pacientes em um consultório pronto no coração de Brasília, sem investir na montagem de uma clínica. Por hora, período ou diária."<br>Prova: a estrutura é da Dra. Rayane, que atende no mesmo espaço.</div>
+<div class="callout ok"><b>Posição de mercado</b>Nenhum concorrente de Brasília anuncia coworking odontológico na Biblioteca de Anúncios da Meta (coleta de 12/11/2026).</div>
+`);
+
+})();
+
+/* ===== view: cow-regras ===== */
+(function(){
+registerView('cow-regras', `
+<div class="crumb">Coworking</div>
+<h1>Regras, regimento e <em>contratos</em></h1>
+<p class="lead">Consolidação do flyer, do contrato de coworking, do termo de ciência do paciente e do contrato de parceria. Mostra o que já está coberto e o que falta.</p>
+
+<h2>Flyer x contrato</h2>
+<div class="tblw"><table>
+<tr><th>Tema</th><th>Flyer</th><th>Contrato</th><th>Situação</th></tr>
+<tr><td>Hora avulsa</td><td>R$ 80</td><td>Valor em branco</td><td><span class="tag warn">Padronizar</span></td></tr>
+<tr><td>Períodos</td><td>R$ 350 (manhã e tarde), R$ 300 (noite)</td><td>Em branco</td><td><span class="tag warn">Padronizar</span></td></tr>
+<tr><td>Primeira locação R$ 50</td><td>Não consta</td><td>Não consta</td><td><span class="tag bad">Incluir</span></td></tr>
+<tr><td>Pagamento</td><td>Antecipado</td><td>50% antecipado, 50% no dia</td><td><span class="tag warn">Padronizar</span></td></tr>
+<tr><td>Esterilização R$ 50</td><td>Não consta</td><td>Cláusula 6</td><td><span class="tag bad">Incluir no flyer</span></td></tr>
+<tr><td>Limpeza R$ 50</td><td>Opcional; taxa se suja</td><td>Cláusula 5</td><td><span class="tag ok">Consistente</span></td></tr>
+<tr><td>Propé obrigatório</td><td>Sim</td><td>Não consta</td><td><span class="tag bad">Incluir cláusula</span></td></tr>
+<tr><td>Jaleco e vestimenta</td><td>Não consta</td><td>Não consta</td><td><span class="tag bad">Incluir cláusula</span></td></tr>
+<tr><td>Câmeras</td><td>Sim</td><td>Cláusula 10</td><td><span class="tag ok">Consistente</span></td></tr>
+<tr><td>Materiais próprios</td><td>Sim</td><td>Cláusula 7</td><td><span class="tag ok">Consistente</span></td></tr>
+<tr><td>Hora excedente (hora cheia)</td><td>Não consta</td><td>Cláusula 12.6</td><td><span class="tag warn">Incluir no flyer</span></td></tr>
+<tr><td>Secretária 8h às 18h</td><td>Sim; fora, código</td><td>Não consta</td><td><span class="tag warn">Incluir</span></td></tr>
+<tr><td>Reajuste de preços</td><td>Não consta</td><td>A qualquer momento (cláusula 14.2)</td><td><span class="tag warn">Rever com advogado</span></td></tr>
+</table></div>
+
+<h2>Regimento de vestimenta e biossegurança (proposta)</h2>
+<div class="callout warn"><b>Dúvida da dona</b>"Isso pode ser exigido?" O contrato é de cessão de espaço privado, então regras de biossegurança e apresentação cabem como cláusula ou regimento interno aceito na assinatura. A redação final deve ser validada por advogado.</div>
+<div class="card"><ul class="clean">
+<li>Jaleco ou avental limpo obrigatório durante o atendimento; roupa de academia e vestimenta inadequada não são aceitas em atendimento.</li>
+<li>Calçado fechado e propé obrigatório na entrada, para o profissional e para o paciente.</li>
+<li>Paramentação completa (gorro, máscara, luvas) conforme o procedimento.</li>
+<li>Jalecos de reserva: possibilidade de a clínica oferecer jaleco descartável ou locar, cobrado à parte.</li>
+<li>Descumprimento: aviso, depois rescisão imediata (a cláusula 13.2 do contrato já prevê rescisão por descumprimento).</li></ul></div>
+
+<h2>Documentos existentes</h2>
+<div class="grid g3">
+  <div class="card"><h3>Contrato de coworking</h3><p style="margin:0;color:var(--mute)">Locação não exclusiva por hora ou período; 15 cláusulas; validade de 2 anos; rescisão com 30 dias; foro de Brasília. Responsabilidade técnica integral do profissional.</p></div>
+  <div class="card"><h3>Termo de ciência do paciente</h3><p style="margin:0;color:var(--mute)">Paciente declara que o profissional é autônomo e responsável pelo tratamento; a clínica só cede a estrutura. Inclui aviso de câmeras e autorização LGPD.</p></div>
+  <div class="card"><h3>Contrato de parceria</h3><p style="margin:0;color:var(--mute)">Dentista parceiro: 35% do recebido para o profissional, 65% para a clínica, com materiais de consumo fornecidos pela clínica. Prazo indeterminado, rescisão com 30 dias.</p></div>
+</div>
+
+<h2>Nova norma sanitária que cita o coworking</h2>
+<div class="callout warn"><b>RDC Anvisa 1.002/2025 (DOU 16/12/2025)</b>Define o coworking odontológico como consultório compartilhado com um cirurgião-dentista como <b>Responsável Técnico</b>, corresponsável por todas as atividades do estabelecimento. Todo profissional que atua no espaço assina ciência das boas práticas internas. Prazo de adequação: 360 dias (até cerca de 11/12/2026); estabelecimentos novos devem cumprir desde o início. Detalhes na tela de Kits esterilizados.</div>
+
+<h2>Pontos a levar ao advogado</h2>
+<div class="card"><ul class="clean">
+<li>O termo do paciente isenta a clínica, mas o contrato de parceria (cl. 6.4) diz que a isenção não vale quando a lei atribuir responsabilidade à clínica. Alinhar os dois textos.</li>
+<li>Percentual de repasse na parceria odontológica e adequação às normas do CRO-DF.</li>
+<li>Cláusula de reajuste livre de preços no contrato de coworking.</li>
+<li>Regimento de vestimenta e biossegurança, como proposto acima.</li>
+<li>Kits esterilizados para locação: rastreabilidade (registro de ciclo, validade, indicador) e responsabilidade sanitária.</li>
+<li>Cláusulas 2.3 a 2.5 do contrato de coworking (a clínica "só cede a estrutura" e isenta-se de tudo) frente à corresponsabilidade do Responsável Técnico prevista na RDC 1.002/2025.</li>
+<li>Incluir no cadastro do profissional a ciência da norma interna de boas práticas, exigida pela RDC.</li></ul></div>
+<p class="src">Esta tela organiza os documentos enviados; não é parecer jurídico. Dados pessoais dos contratos (CPF, endereços) não foram reproduzidos.</p>
+`);
+
+})();
+
+/* ===== view: diagnostico ===== */
+(function(){
+registerView('diagnostico', `
+<div class="crumb">Visão geral</div>
+<h1>Diagnóstico do <em>Instagram</em></h1>
+<p class="lead">Dados públicos coletados em 12/11/2026. O achado central: a audiência está no perfil da Dra. Rayane, não no da clínica.</p>
+
+<div class="grid g4">
+  <div class="card kpi"><div class="v">612</div><div class="l">@sorriso.capital</div><div class="s">97 posts · Reels típicos 200 a 600 views</div></div>
+  <div class="card kpi"><div class="v">9.087</div><div class="l">@dra.rayane.padilha</div><div class="s">1.039 posts · mediana 3.078 views/Reel</div></div>
+  <div class="card kpi"><div class="v">350x</div><div class="l">Mesmo Reel, perfis diferentes</div><div class="s">39 views na clínica x 13.928 no perfil dela</div></div>
+  <div class="card kpi"><div class="v">84,8 mil</div><div class="l">Maior Reel da Rayane</div><div class="s">Transformação de rinomodelação e lábio</div></div>
+</div>
+
+<h2>Seguidores: clínica x referências</h2>
+<div class="card">
+  <div class="row"><span>@sorriso.capital</span><b>612</b></div><div class="bar"><i style="width:6.5%"></i></div>
+  <div class="row"><span>@dra.rayane.padilha</span><b>9.087</b></div><div class="bar"><i style="width:97%"></i></div>
+  <div class="row"><span>@dradafinesaraivahof (referência)</span><b>9.381</b></div><div class="bar"><i style="width:100%"></i></div>
+</div>
+
+<h2>O que está funcionando e o que não está</h2>
+<div class="grid g2">
+  <div class="card"><h3><span class="tag ok">Funciona</span> &nbsp;Perfil da Dra. Rayane</h3><ul class="clean">
+    <li>Transformação de rinomodelação e preenchimento labial: 84.796 views</li>
+    <li>Preenchimento frontal masculino: 15.618 views, 43 comentários</li>
+    <li>Reel do coworking: 13.928 views</li>
+    <li>Inauguração da clínica (23/05/2026): 6,3 mil views e 110 comentários</li></ul></div>
+  <div class="card"><h3><span class="tag bad">Não funciona</span> &nbsp;Perfil @sorriso.capital</h3><ul class="clean">
+    <li>Bio mistura coworking, estética e odontologia: dois públicos no mesmo perfil</li>
+    <li>Link direto para o WhatsApp, sem quiz ou página que qualifique</li>
+    <li>Reels recentes com 39 a 309 views</li>
+    <li>Sem linha editorial por oferta</li></ul></div>
+</div>
+
+<h2>Campanhas ativas da clínica</h2>
+<div class="card">
+  <p style="margin-top:0"><b>1 anúncio ativo</b> desde 29/10/2026: vídeo de coworking, CTA WhatsApp, texto de 6 palavras ("Coworking - Atenda seus pacientes em Brasília!"). A página do Facebook tem 31 curtidas.</p>
+  <p style="margin-bottom:0"><span class="tag bad">Lacuna</span> Nenhum anúncio para paciente (lentes, harmonização, clareamento), que é onde está o ticket alto.</p>
+</div>
+
+<h2>Referência de harmonização: Dra. Dafine</h2>
+<div class="tblw"><table>
+<tr><th>Perfil</th><th class="r">Seguidores</th><th class="r">Mediana</th><th class="r">Pico</th><th>Para modelar</th></tr>
+<tr><td>@dradafinesaraivahof</td><td class="r">9.381</td><td class="r">2.563</td><td class="r">62.034</td><td>Campanha sazonal com mecânica (Black com caixa-presente), reveal de transformação, depoimento de paciente de longa data (15.404). Link para quiz próprio, método com nome (NATURALFACE).</td></tr>
+<tr><td>@institutoharmoniqueee</td><td class="r">6.684</td><td class="r">n/d</td><td class="r">n/d</td><td>Segundo perfil, instituto. Dafine como CEO.</td></tr>
+</table></div>
+<div class="callout warn"><b>Não modelar</b>Humor e conteúdo pessoal da Dafine concentram o volume de postagens (3 a 6 mil views), mas não vendem harmonização. Ficam de fora.</div>
+
+<h2>Recomendações imediatas</h2>
+<div class="card"><ol class="steps">
+  <li><div><b>Separar os públicos.</b> Perfil da Dra. Rayane vende paciente; @sorriso.capital vende o espaço (coworking) e serve de prova.</div></li>
+  <li><div><b>Trocar o link por caminho qualificado.</b> Quiz curto (como o da Dafine) antes do WhatsApp, nos dois perfis.</div></li>
+  <li><div><b>Publicar no perfil que tem alcance.</b> Os Reels de transformação saem do perfil da Dra. Rayane; a clínica reposta e marca.</div></li>
+  <li><div><b>Abrir campanha para paciente.</b> Hoje só existe anúncio de coworking.</div></li>
+</ol></div>
+<p class="src">Fontes: Apify (Instagram Profile Scraper, Reel Scraper, Facebook Ad Library). Os números de views são de Reels públicos coletados e podem variar.</p>
+`);
+
+})();
+
+/* ===== view: visao-geral ===== */
+(function(){
+registerView('visao-geral', `
+<div class="crumb">Visão geral</div>
+<h1>Painel da <em>mentoria</em></h1>
+<p class="lead">Processo de vendas estruturado para a Sorriso Capital, separado em duas unidades de negócio: a <b>Clínica</b> (paciente final) e o <b>Coworking</b> (dentista locatário).</p>
+
+<div class="grid g4">
+  <div class="card kpi"><div class="v">2</div><div class="l">Unidades de negócio</div><div class="s">Clínica e Coworking</div></div>
+  <div class="card kpi"><div class="v">3</div><div class="l">Modelos de receita</div><div class="s">Coworking, parceria 35/65, paciente próprio</div></div>
+  <div class="card kpi"><div class="v">9.087</div><div class="l">Seguidores da Dra. Rayane</div><div class="s">15x o perfil da clínica (612)</div></div>
+  <div class="card kpi"><div class="v">0</div><div class="l">Concorrentes anunciando coworking</div><div class="s">Espaço livre no Meta Ads</div></div>
+</div>
+
+<h2>Roadmap de entregas</h2>
+<div class="card"><ol class="steps">
+  <li><div><b>Diagnóstico e concorrentes</b> <span class="tag ok">Pronto</span><br><span style="color:var(--mute)">Instagram da clínica, da Dra. Rayane, da Dra. Dafine e de 4 concorrentes de Brasília; anúncios na Biblioteca da Meta.</span></div></li>
+  <li><div><b>Precificação e oferta do coworking</b> <span class="tag ok">Pronto</span><br><span style="color:var(--mute)">Tabela da clínica organizada; preços e regras do coworking consolidados, com divergências entre flyer e contrato.</span></div></li>
+  <li><div><b>Funil da clínica</b> <span class="tag ok">Pronto</span><br><span style="color:var(--mute)">Particular (Mari) e convênio (doutora no Clinicorp), com etapas, follow-up e indicadores.</span></div></li>
+  <li><div><b>Funil do coworking</b> <span class="tag ok">Pronto</span><br><span style="color:var(--mute)">Captação de dentistas, da campanha ao contrato assinado e à recorrência.</span></div></li>
+  <li><div><b>Posicionamento e processo comercial da CRC</b> <span class="tag ok">Pronto</span><br><span style="color:var(--mute)">Proposta de valor, escada de ofertas, roteiros por etapa, objeções e plano de treinamento de 4 semanas.</span></div></li>
+  <li><div><b>Campanhas Meta Ads</b> <span class="tag ok">Pronto</span><br><span style="color:var(--mute)">Profissionais da saúde (coworking) e paciente (lentes, harmonização, clareamento), com regras de publicidade da odontologia.</span></div></li>
+  <li><div><b>Criativos</b> <span class="tag ok">Pronto</span><br><span style="color:var(--mute)">Coworking: 6 Reels e 3 carrosséis. Clínica: 10 Reels e 6 carrosséis, modelados no que funcionou no perfil da Dra. Rayane, Dafine, Ioog e CCD.</span></div></li>
+  <li><div><b>Métricas e rotina de acompanhamento</b> <span class="tag ok">Pronto</span><br><span style="color:var(--mute)">Calculadoras do funil da clínica e do coworking, com salvamento no navegador.</span></div></li>
+  <li><div><b>Checklist de conformidade (RDC 1.002/2025)</b> <span class="tag warn">Em andamento</span><br><span style="color:var(--mute)">73 itens para marcar; depende de licença, projeto aprovado e Responsável Técnico.</span></div></li>
+</ol></div>
+
+<h2>Pendências para avançar</h2>
+<div class="grid g2">
+  <div class="card"><h3>Dados da clínica</h3><ul class="clean">
+    <li>Acesso ao Gerenciador de Anúncios (investimento, leads, custo por lead)</li>
+    <li>Faturamento, ticket médio e % convênio x particular</li>
+    <li>Procedimentos mais lucrativos</li>
+    <li>Exportação do Clinicorp (agenda e orçamentos)</li></ul></div>
+  <div class="card"><h3>Validações</h3><ul class="clean">
+    <li>Advogado: regimento de vestimenta, reajuste de preço, isenção de responsabilidade</li>
+    <li>Vigilância Sanitária: a clínica é "estabelecimento novo" na RDC 1.002/2025? Quem é o Responsável Técnico? Prazo de adequação até cerca de 11/12/2026</li>
+    <li>@ do Dr. Matheus Miranda e do Mundo Sorriso</li>
+    <li>Confirmar itens da tabela de preços marcados na tela de Precificação</li></ul></div>
+</div>
+`);
+
+})();
+
+function load(id){
+  return new Promise(res => {
+    if (VIEWS[id]) return res();
+    const s = document.createElement('script'); s.src = 'views/' + id + '.js'; /* offline: telas embutidas */
+    s.onload = res; s.onerror = () => { VIEWS[id] = '<h1>Tela indisponível</h1><p class="lead">Não consegui carregar views/'+id+'.js.</p>'; res(); };
+    document.head.appendChild(s);
+  });
+}
+async function route(){
+  const id = (location.hash.replace('#/','') || 'visao-geral');
+  const m = MENU.find(x => x.id === id) || MENU.find(x => x.id === 'visao-geral');
+  document.querySelectorAll('nav a.it').forEach(a => a.classList.toggle('on', a.dataset.id === m.id));
+  document.getElementById('topTitle').textContent = m.t;
+  document.title = m.t + ' | Sorriso Capital';
+  if (m.ready) { main.innerHTML = '<p class="lead">Carregando…</p>'; await load(m.id); main.innerHTML = VIEWS[m.id]; ckHydrate(); if (VIEW_INIT[m.id]) { try { VIEW_INIT[m.id](); } catch(e){ console.error(e); } } }
+  else main.innerHTML = stub(m);
+  document.body.classList.remove('open');
+  window.scrollTo(0,0); main.focus({preventScroll:true});
+}
+window.addEventListener('hashchange', route);
+document.getElementById('burger').onclick = () => document.body.classList.toggle('open');
+document.getElementById('scrim').onclick = () => document.body.classList.remove('open');
+route();
+</script>
+</body>
+</html>
