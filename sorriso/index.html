@@ -125,7 +125,9 @@ const MENU = [
   {id:'cli-metricas', t:'Métricas', ready:true},
   {g:'Coworking', cls:'cow'},
   {id:'cow-oferta', t:'Oferta e preços', ready:true},
+  {id:'cow-concorrentes', t:'Concorrentes do coworking', ready:true},
   {id:'cow-funil', t:'Funil de captação de dentistas', ready:true},
+  {id:'cow-indicacao', t:'Programa de indicação', ready:true},
   {id:'cow-ads', t:'Campanha Meta Ads (profissionais)', ready:true},
   {id:'cow-criativos', t:'Criativos (Reels e carrossel)', ready:true},
   {id:'cow-regras', t:'Regras, regimento e contratos', ready:true},
@@ -860,83 +862,200 @@ registerView('cli-posicionamento', `
 
 /* ===== view: cli-preco ===== */
 (function(){
-registerView('cli-preco', `
+(function(){
+var KEY = "sorriso-capital-preco-v1";
+var ROWS = [["Avaliação", "Avaliação odontológica", 180, ""], ["Avaliação", "Emergência e urgência", 350, ""], ["Prevenção", "Profilaxia", 250, ""], ["Prevenção", "Polimento", 120, ""], ["Prevenção", "Aplicação de flúor", 90, ""], ["Clareamento", "Clareamento caseiro", 950, ""], ["Clareamento", "Clareamento consultório (sessão)", 500, "Por sessão"], ["Clareamento", "Clareamento associado", 1700, "Confirmar número de sessões"], ["Restaurações", "Classe I", 320, ""], ["Restaurações", "Classe II", 390, ""], ["Restaurações", "Classe III", 420, ""], ["Restaurações", "Classe IV", 520, ""], ["Restaurações", "Classe V", 320, ""], ["Endodontia", "Canal unirradicular", 1250, ""], ["Endodontia", "Canal birradicular", 1250, ""], ["Endodontia", "Canal multirradicular", 1650, ""], ["Endodontia", "Retratamento unirradicular", 1450, ""], ["Endodontia", "Retratamento birradicular", 1800, ""], ["Endodontia", "Retratamento multirradicular", 2300, ""], ["Cirurgias", "Exodontia simples", 500, ""], ["Cirurgias", "Raiz residual", 450, ""], ["Cirurgias", "Siso erupcionado", 600, ""], ["Cirurgias", "Siso semi-incluso", 600, ""], ["Cirurgias", "Siso incluso", 800, ""], ["Cirurgias", "Gengivoplastia", 1100, ""], ["Cirurgias", "Frenectomia", 950, ""], ["Prótese", "Coroa provisória", 500, ""], ["Prótese", "Coroa metalocerâmica", 1900, ""], ["Prótese", "Coroa Emax", 2600, ""], ["Prótese", "Núcleo metálico", 750, ""], ["Prótese", "Pino de fibra", 500, ""], ["Estética", "Faceta direta", 950, ""], ["Estética", "Faceta porcelana", 1800, ""], ["Estética", "Lente de contato", 2500, ""], ["Estética", "Onlay Emax", 1500, ""], ["Estética", "Onlay cerômero", 1200, ""], ["Implantes", "Implante HE", null, "PENDENTE: texto recebido «D1.800». Confirmar preço."], ["Implantes", "Implante + coroa", 5900, "Confirmar escopo. Texto adicional recebido: «2.500 unidade»."], ["Implantes", "Osso sintético", 1500, "Confirmar se unidade/procedimento."], ["Implantes", "Enxerto", 2000, ""], ["Implantes", "Levantamento de seio", 3800, ""], ["Placas", "Placa miorrelaxante", 1100, ""], ["Placas", "Contenção", 350, ""], ["Harmonização", "Botox Xeomin/Botox/Nabota (terço superior)", 900, "Confirmar apresentação, unidades e produto."], ["Harmonização", "Botox Dysport (full face)", 1400, "Confirmar unidades e produto."], ["Harmonização", "Ácido hialurônico", 1000, "Confirmar volume por unidade."], ["Harmonização", "Rinomodelação", 1200, ""], ["Harmonização", "Preenchimento labial", 1200, ""], ["Harmonização", "Bioestimulador", 1500, ""], ["Harmonização", "Microagulhamento PDRN", 700, ""], ["Odontopediatria", "Consulta/avaliação odontopediátrica", 220, ""], ["Odontopediatria", "Profilaxia + flúor", 280, ""], ["Odontopediatria", "Selante por dente", 180, "Por dente"], ["Odontopediatria", "Restauração 1 face", 300, ""], ["Odontopediatria", "Restauração 2 faces", 380, ""], ["Odontopediatria", "Restauração 3 faces", 450, ""], ["Odontopediatria", "Pulpotomia", 650, ""], ["Odontopediatria", "Pulpectomia", 850, ""], ["Odontopediatria", "Exodontia de dente decíduo", 380, ""], ["Odontopediatria", "Mantenedor de espaço", 900, ""], ["Periodontia", "Profilaxia", 250, "Duplicada de prevenção; conferir cadastro"], ["Periodontia", "Raspagem supragengival (por arcada)", 250, "Por arcada"], ["Periodontia", "Raspagem subgengival (por sextante)", 350, "Por sextante"], ["Periodontia", "Tratamento periodontal completo", 1800, "Faixa informada R$ 1.800 a R$ 2.800; valor atual adotado como referência inferior, confirmar"], ["Periodontia", "Tratamento periodontal grave", 2500, ""], ["Periodontia", "Aumento de coroa clínica", 1300, ""], ["Periodontia", "Frenectomia labial", 950, ""], ["Periodontia", "Enxerto gengival", 2000, ""]];
+var CFG = [
+ ["fixo","Quanto a clínica gasta por mês para funcionar? (R$)","R$","Some aluguel, funcionários fixos, condomínio, energia, sistemas etc. Não inclua laboratório, insumos por paciente nem repasse percentual ao dentista."],
+ ["horas","Quantas horas por mês as cadeiras ficam disponíveis para atender?","h","Some as horas realmente disponíveis de TODAS as cadeiras, descontando pausas e bloqueios planejados. Não use só as horas ocupadas."],
+ ["imp","Qual percentual médio de impostos sobre as vendas?","%","Peça o percentual efetivo ao contador. Escreva 8% como 8, sem o símbolo."],
+ ["cartao","Qual o percentual médio de cartão e recebimento?","%","Média real de cartão e antecipação por venda, conforme a forma de pagamento; não inclua juros duas vezes."],
+ ["rep","Qual o percentual que vai para o dentista?","%","Preencha só se o repasse é uma % do valor vendido. Se a remuneração já está nas despesas fixas, use 0 e evite duplicar."],
+ ["margem","Qual margem mínima você quer reservar sobre a venda?","%","É uma meta que a proprietária define. Para uma prévia, pode ficar em branco até a decisão."]
+];
+function blank(v){ return v === undefined || v === null || String(v).trim() === ""; }
+function numPlain(v){
+  if (blank(v)) return null;
+  var s = String(v).trim();
+  s = s.indexOf(",") >= 0 ? s.replace(/\./g,"").replace(",",".") : s;
+  var n = parseFloat(s);
+  return isNaN(n) ? null : n;
+}
+function brl(n){ return n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+function load(){ try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){ return {}; } }
+function save(o){ try { localStorage.setItem(KEY, JSON.stringify(o)); } catch(e){} }
+var S = {cfg:{}, rows:{}};
+function esc(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+function calc(){
+  var c = S.cfg, fixo = numPlain(c.fixo), horas = numPlain(c.horas);
+  var cm = (fixo !== null && horas !== null && horas > 0) ? fixo/(horas*60) : null;
+  var pct = ["imp","cartao","rep","margem"].map(function(k){ return numPlain(c[k]); });
+  var pctOk = pct.every(function(v){ return v !== null; });
+  var soma = pctOk ? pct.reduce(function(a,b){ return a+b; },0)/100 : null;
+  return {cm:cm, soma:soma, ok: pctOk && soma < 1};
+}
+function rowCalc(i, K){
+  var r = S.rows[i] || {}, pr = ROWS[i][2];
+  var preco = (r.p !== undefined) ? numPlain(r.p) : pr;
+  var t = numPlain(r.t), m = numPlain(r.m), l = numPlain(r.l);
+  var custo = (t !== null && m !== null && l !== null && K.cm !== null) ? t*K.cm + m + l : null;
+  var piso = (custo !== null && K.ok) ? custo/(1-K.soma) : null;
+  var dif = (piso !== null && preco !== null) ? preco - piso : null;
+  var sit = preco === null ? "CONFIRMAR PREÇO" : (piso === null ? "FALTAM DADOS" : (dif < 0 ? "ABAIXO DO PISO" : "ACIMA DO PISO"));
+  return {preco:preco, custo:custo, piso:piso, dif:dif, sit:sit};
+}
+var TAG = {"CONFIRMAR PREÇO":"warn","FALTAM DADOS":"","ABAIXO DO PISO":"bad","ACIMA DO PISO":"ok"};
+window.prUpdate = function(el){
+  if (el){
+    var k = el.dataset.k;
+    if (el.dataset.cfg) S.cfg[el.dataset.cfg] = el.value;
+    else { var i = el.dataset.i; S.rows[i] = S.rows[i] || {}; S.rows[i][k] = el.value; }
+    save(S);
+  }
+  var K = calc();
+  var set = function(id, t){ var e = document.getElementById(id); if (e) e.textContent = t; };
+  set("pr-cm", K.cm !== null ? brl(K.cm) : "-");
+  set("pr-cmh", K.cm !== null ? brl(K.cm*60) : "-");
+  set("pr-soma", K.soma === null ? "Preencha os 4 percentuais (use 0 quando não houver) para calcular o preço-piso." : (K.soma >= 1 ? "A soma dos percentuais é 100% ou mais: não existe preço-piso possível. Revise os números." : "Soma dos percentuais sobre a venda: " + (K.soma*100).toLocaleString("pt-BR",{maximumFractionDigits:2}) + "%."));
+  var tot = {abaixo:0, acima:0, falta:0, conf:0};
+  for (var i = 0; i < ROWS.length; i++){
+    var x = rowCalc(i, K);
+    set("pr-c"+i, x.custo !== null ? brl(x.custo) : "");
+    set("pr-h"+i, x.piso !== null ? brl(x.piso) : "");
+    set("pr-i"+i, x.dif !== null ? brl(x.dif) : "");
+    var e = document.getElementById("pr-j"+i);
+    if (e){ e.textContent = x.sit; e.className = "tag " + TAG[x.sit]; }
+    if (x.sit === "ABAIXO DO PISO") tot.abaixo++; else if (x.sit === "ACIMA DO PISO") tot.acima++; else if (x.sit === "FALTAM DADOS") tot.falta++; else tot.conf++;
+  }
+  set("pr-k-abaixo", tot.abaixo); set("pr-k-acima", tot.acima); set("pr-k-falta", tot.falta); set("pr-k-conf", tot.conf);
+  if (el) window.prFiltro();
+};
+window.prFiltro = function(){
+  var esp = (document.getElementById("pr-esp") || {}).value || "";
+  var q = ((document.getElementById("pr-q") || {}).value || "").toLowerCase();
+  var apenas = (document.getElementById("pr-sit") || {}).value || "";
+  var K = calc();
+  for (var i = 0; i < ROWS.length; i++){
+    var tr = document.getElementById("pr-r"+i); if (!tr) continue;
+    var ok = (!esp || ROWS[i][0] === esp) && (!q || (ROWS[i][1] + " " + ROWS[i][0]).toLowerCase().indexOf(q) >= 0) && (!apenas || rowCalc(i,K).sit === apenas);
+    tr.style.display = ok ? "" : "none";
+  }
+};
+window.prReset = function(){
+  if (!confirm("Limpar as 6 respostas, tempos, materiais e laboratório? Os preços voltam aos da tabela enviada.")) return;
+  S = {cfg:{}, rows:{}}; save(S); init();
+};
+window.prCsv = function(){
+  var K = calc(), L = [["Especialidade","Procedimento","Preço atual (R$)","Tempo (min)","Materiais (R$)","Lab/terceiros (R$)","Custo estimado (R$)","Preço-piso (R$)","Diferença (R$)","Situação","Observações"]];
+  function f(n){ return n === null ? "" : n.toFixed(2).replace(".",","); }
+  for (var i = 0; i < ROWS.length; i++){
+    var r = S.rows[i] || {}, x = rowCalc(i,K);
+    L.push([ROWS[i][0],ROWS[i][1],f(x.preco),r.t||"",r.m||"",r.l||"",f(x.custo),f(x.piso),f(x.dif),x.sit,ROWS[i][3]]);
+  }
+  var csv = "﻿" + L.map(function(a){ return a.map(function(v){ return '"' + String(v).replace(/"/g,'""') + '"'; }).join(";"); }).join("\r\n");
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  a.download = "precificacao-clinica-sorriso.csv";
+  document.body.appendChild(a); a.click(); a.remove();
+};
+function init(){
+  S = load(); if (!S.cfg) S.cfg = {}; if (!S.rows) S.rows = {};
+  document.querySelectorAll("[data-cfg]").forEach(function(i){ i.value = S.cfg[i.dataset.cfg] || ""; });
+  document.querySelectorAll("[data-i]").forEach(function(i){
+    var r = S.rows[i.dataset.i], k = i.dataset.k;
+    if (r && r[k] !== undefined) i.value = r[k];
+    else i.value = (k === "p" && ROWS[i.dataset.i][2] !== null) ? ROWS[i.dataset.i][2] : "";
+  });
+  window.prUpdate(); window.prFiltro();
+}
+onView("cli-preco", init);
+
+var cfgHtml = CFG.map(function(c){
+  return '<tr><td>' + esc(c[1]) + '</td><td style="width:150px"><div class="pr-in"><input type="text" inputmode="decimal" data-cfg="' + c[0] + '" oninput="prUpdate(this)"><i>' + c[2] + '</i></div></td><td class="pr-help">' + esc(c[3]) + '</td></tr>';
+}).join("");
+var esps = []; ROWS.forEach(function(r){ if (esps.indexOf(r[0]) < 0) esps.push(r[0]); });
+var espOpts = '<option value="">Todas as especialidades</option>' + esps.map(function(e){ return '<option>' + esc(e) + '</option>'; }).join("");
+var body = ROWS.map(function(r,i){
+  var f = function(k,ph){ return '<td><input class="pr-n" type="text" inputmode="decimal" data-i="' + i + '" data-k="' + k + '" placeholder="' + ph + '" oninput="prUpdate(this)"></td>'; };
+  var nota = r[3] ? '<span class="pr-nota">' + esc(r[3]) + '</span>' : '';
+  return '<tr id="pr-r' + i + '"><td>' + esc(r[0]) + '</td><td><b>' + esc(r[1]) + '</b>' + nota + '</td>' +
+    f("p", r[2] === null ? "confirmar" : "") + f("t","min") + f("m","R$") + f("l","R$") +
+    '<td class="r" id="pr-c' + i + '"></td><td class="r"><b id="pr-h' + i + '"></b></td><td class="r" id="pr-i' + i + '"></td><td><span class="tag" id="pr-j' + i + '"></span></td></tr>';
+}).join("");
+
+registerView("cli-preco", `
+<style>
+.pr-in{display:flex;align-items:center;gap:6px}
+.pr-in input,.pr-n{border:1px solid var(--line);border-radius:8px;padding:7px 8px;font:inherit;background:#FFF9E3;width:100%;min-width:0}
+.pr-n{width:84px}
+.pr-in input:focus,.pr-n:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,168,67,.18)}
+.pr-in i{font-style:normal;color:var(--mute);font-size:12px}
+.pr-help{font-size:12px;color:var(--mute);min-width:240px}
+.pr-nota{display:block;font-size:11px;color:var(--warn);font-weight:400;margin-top:2px;max-width:280px}
+.pr-bar{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.pr-bar input,.pr-bar select,.pr-bar button{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit;background:#fff}
+.pr-bar button{cursor:pointer}
+#pr-tab th{white-space:nowrap}
+</style>
 <div class="crumb">Clínica</div>
-<h1>Precificação</h1>
-<p class="lead">Tabela de preços da clínica organizada por área, a partir do arquivo enviado. Itens marcados precisam de confirmação antes de virar material comercial.</p>
+<h1>Precificação e <em>preço-piso</em></h1>
+<p class="lead">Calculadora da prévia de precificação da Clínica Sorriso, com a tabela de preços atual. Preencha as 6 respostas, depois tempo, materiais e laboratório de cada procedimento. O painel calcula o custo, o preço-piso e compara com o preço atual.</p>
 
-<div class="callout warn"><b>Confirmar antes de publicar</b><ul class="clean">
-<li>Canal unirradicular e birradicular aparecem com o mesmo valor (R$ 1.250). Pode ser correto ou erro de digitação.</li>
-<li>Implante: a tabela traz "Implante HE D1.800", "Implante + coroa R$ 5.900" e "2.500 unidade". Não ficou claro a que se refere o R$ 2.500.</li>
-<li>Sisos e alguns itens estavam sem "R$"; assumi reais.</li>
-<li>Duas linhas têm "..." e o título "Procedimento" solto (prótese e estética): pode haver itens faltando.</li></ul></div>
+<div class="callout warn"><b>Prévia preliminar</b>O preço-piso é um cálculo preliminar, não preço definitivo nem lucro. A margem informada é uma meta depois dos custos modelados aqui. Casos com equipes, etapas múltiplas, aparelhos caros, retrabalho ou percentuais diferentes por especialista pedem o modelo completo antes de aprovar a tabela. Preços atuais fornecidos pela responsável em 16/11/2026, ainda não conferidos em documentos. Metodologia PRECIFICACAO-ODONTO-SOT-001 v1.0.</div>
 
-<h2>Consulta, prevenção e clareamento</h2>
-<div class="tblw"><table><tr><th>Procedimento</th><th class="r">Valor</th></tr>
-<tr><td>Avaliação odontológica</td><td class="r">R$ 180</td></tr>
-<tr><td>Emergência e urgência</td><td class="r">R$ 350</td></tr>
-<tr><td>Profilaxia</td><td class="r">R$ 250</td></tr>
-<tr><td>Polimento</td><td class="r">R$ 120</td></tr>
-<tr><td>Aplicação de flúor</td><td class="r">R$ 90</td></tr>
-<tr><td>Clareamento caseiro</td><td class="r">R$ 950</td></tr>
-<tr><td>Clareamento de consultório</td><td class="r">R$ 500 por sessão</td></tr>
-<tr><td>Clareamento associado</td><td class="r">R$ 1.700</td></tr></table></div>
-
-<h2>Estética (alto ticket)</h2>
-<div class="tblw"><table><tr><th>Procedimento</th><th class="r">Valor</th></tr>
-<tr><td>Faceta direta</td><td class="r">R$ 950</td></tr>
-<tr><td>Faceta de porcelana</td><td class="r">R$ 1.800</td></tr>
-<tr><td>Lente de contato</td><td class="r">R$ 2.500</td></tr>
-<tr><td>Onlay Emax</td><td class="r">R$ 1.500</td></tr>
-<tr><td>Onlay cerômero</td><td class="r">R$ 1.200</td></tr></table></div>
-<div class="callout"><b>Âncora do mercado</b>A D'Or anuncia 10 lentes por R$ 990 (R$ 99 por lente). A tabela da Sorriso Capital é R$ 2.500 por lente. A comunicação precisa sustentar a diferença com planejamento digital, naturalidade e caso real, sem entrar em guerra de preço.</div>
-
-<h2>Harmonização facial</h2>
-<div class="tblw"><table><tr><th>Procedimento</th><th class="r">Valor</th></tr>
-<tr><td>Botox (Xeomin, Botox ou Nabota), terço superior</td><td class="r">R$ 900</td></tr>
-<tr><td>Botox Dysport, full face</td><td class="r">R$ 1.400</td></tr>
-<tr><td>Ácido hialurônico</td><td class="r">R$ 1.000</td></tr>
-<tr><td>Rinomodelação</td><td class="r">R$ 1.200</td></tr>
-<tr><td>Preenchimento labial</td><td class="r">R$ 1.200</td></tr>
-<tr><td>Bioestimulador</td><td class="r">R$ 1.500</td></tr>
-<tr><td>Microagulhamento com PDRN</td><td class="r">R$ 700</td></tr></table></div>
-
-<h2>Restaurações, endodontia e cirurgias</h2>
-<div class="grid g3">
-<div class="tblw"><table><tr><th>Restaurações</th><th class="r">Valor</th></tr>
-<tr><td>Classe I</td><td class="r">R$ 320</td></tr><tr><td>Classe II</td><td class="r">R$ 390</td></tr><tr><td>Classe III</td><td class="r">R$ 420</td></tr><tr><td>Classe IV</td><td class="r">R$ 520</td></tr><tr><td>Classe V</td><td class="r">R$ 320</td></tr></table></div>
-<div class="tblw"><table><tr><th>Endodontia</th><th class="r">Valor</th></tr>
-<tr><td>Canal unirradicular</td><td class="r">R$ 1.250</td></tr><tr><td>Canal birradicular</td><td class="r">R$ 1.250</td></tr><tr><td>Canal multirradicular</td><td class="r">R$ 1.650</td></tr>
-<tr><td>Retratamento unirradicular</td><td class="r">R$ 1.450</td></tr><tr><td>Retratamento birradicular</td><td class="r">R$ 1.800</td></tr><tr><td>Retratamento multirradicular</td><td class="r">R$ 2.300</td></tr></table></div>
-<div class="tblw"><table><tr><th>Cirurgias</th><th class="r">Valor</th></tr>
-<tr><td>Exodontia simples</td><td class="r">R$ 500</td></tr><tr><td>Raiz residual</td><td class="r">R$ 450</td></tr><tr><td>Siso erupcionado</td><td class="r">R$ 600</td></tr><tr><td>Siso semi-incluso</td><td class="r">R$ 600</td></tr><tr><td>Siso incluso</td><td class="r">R$ 800</td></tr><tr><td>Gengivoplastia</td><td class="r">R$ 1.100</td></tr><tr><td>Frenectomia</td><td class="r">R$ 950</td></tr></table></div>
+<h2>1. As 6 respostas</h2>
+<div class="tblw"><table>
+<tr><th>Pergunta da reunião</th><th>Resposta</th><th>Explicação simples</th></tr>
+${cfgHtml}
+</table></div>
+<p class="src" id="pr-soma" style="margin-top:8px"></p>
+<div class="grid g3" style="margin-top:12px">
+  <div class="card kpi"><div class="v" id="pr-cm">-</div><div class="l">Custo da estrutura por minuto</div><div class="s">Despesa mensal ÷ minutos disponíveis</div></div>
+  <div class="card kpi"><div class="v" id="pr-cmh">-</div><div class="l">Custo da estrutura por hora</div><div class="s">Cadeira disponível</div></div>
+  <div class="card"><b>Como usar (3 passos)</b><ol style="margin:6px 0 0;padding-left:18px;font-size:13px"><li>Preencha as 6 respostas acima.</li><li>Na tabela, informe minutos, materiais e laboratório de cada procedimento.</li><li>Veja o preço-piso e compare com o preço atual.</li></ol></div>
 </div>
 
-<h2>Prótese, implantes e placas</h2>
-<div class="grid g3">
-<div class="tblw"><table><tr><th>Prótese</th><th class="r">Valor</th></tr>
-<tr><td>Coroa provisória</td><td class="r">R$ 500</td></tr><tr><td>Coroa metalocerâmica</td><td class="r">R$ 1.900</td></tr><tr><td>Coroa Emax</td><td class="r">R$ 2.600</td></tr><tr><td>Núcleo metálico</td><td class="r">R$ 750</td></tr><tr><td>Pino de fibra</td><td class="r">R$ 500</td></tr></table></div>
-<div class="tblw"><table><tr><th>Implantes</th><th class="r">Valor</th></tr>
-<tr><td>Implante HE <span class="tag warn">confirmar</span></td><td class="r">R$ 1.800</td></tr><tr><td>Implante + coroa</td><td class="r">R$ 5.900</td></tr><tr><td>"2.500 unidade" <span class="tag warn">confirmar</span></td><td class="r">R$ 2.500</td></tr><tr><td>Osso sintético</td><td class="r">R$ 1.500</td></tr><tr><td>Enxerto</td><td class="r">R$ 2.000</td></tr><tr><td>Levantamento de seio</td><td class="r">R$ 3.800</td></tr></table></div>
-<div class="tblw"><table><tr><th>Placas</th><th class="r">Valor</th></tr>
-<tr><td>Placa miorrelaxante</td><td class="r">R$ 1.100</td></tr><tr><td>Contenção</td><td class="r">R$ 350</td></tr></table></div>
+<h2>2. Tabela de preços e simulação</h2>
+<div class="grid g4">
+  <div class="card kpi"><div class="v" id="pr-k-abaixo">0</div><div class="l">Abaixo do piso</div></div>
+  <div class="card kpi"><div class="v" id="pr-k-acima">0</div><div class="l">Acima do piso</div></div>
+  <div class="card kpi"><div class="v" id="pr-k-falta">0</div><div class="l">Faltam dados</div></div>
+  <div class="card kpi"><div class="v" id="pr-k-conf">0</div><div class="l">Confirmar preço</div></div>
 </div>
-
-<h2>Odontopediatria e periodontia</h2>
-<div class="grid g2">
-<div class="tblw"><table><tr><th>Odontopediatria</th><th class="r">Valor</th></tr>
-<tr><td>Consulta/avaliação odontopediátrica</td><td class="r">R$ 220</td></tr><tr><td>Profilaxia + flúor</td><td class="r">R$ 280</td></tr><tr><td>Selante por dente</td><td class="r">R$ 180</td></tr><tr><td>Restauração 1 face</td><td class="r">R$ 300</td></tr><tr><td>Restauração 2 faces</td><td class="r">R$ 380</td></tr><tr><td>Restauração 3 faces</td><td class="r">R$ 450</td></tr><tr><td>Pulpotomia</td><td class="r">R$ 650</td></tr><tr><td>Pulpectomia</td><td class="r">R$ 850</td></tr><tr><td>Exodontia de dente decíduo</td><td class="r">R$ 380</td></tr><tr><td>Mantenedor de espaço</td><td class="r">R$ 900</td></tr></table></div>
-<div class="tblw"><table><tr><th>Periodontia</th><th class="r">Valor</th></tr>
-<tr><td>Profilaxia</td><td class="r">R$ 250</td></tr><tr><td>Raspagem supragengival (por arcada)</td><td class="r">R$ 250</td></tr><tr><td>Raspagem subgengival (por sextante)</td><td class="r">R$ 350</td></tr><tr><td>Tratamento periodontal completo</td><td class="r">R$ 1.800 a R$ 2.800</td></tr><tr><td>Tratamento periodontal grave</td><td class="r">R$ 2.500</td></tr><tr><td>Aumento de coroa clínica</td><td class="r">R$ 1.300</td></tr><tr><td>Frenectomia labial</td><td class="r">R$ 950</td></tr><tr><td>Enxerto gengival</td><td class="r">R$ 2.000</td></tr></table></div>
+<div class="pr-bar">
+  <select id="pr-esp" onchange="prFiltro()">${espOpts}</select>
+  <select id="pr-sit" onchange="prFiltro()"><option value="">Todas as situações</option><option>ABAIXO DO PISO</option><option>ACIMA DO PISO</option><option>FALTAM DADOS</option><option>CONFIRMAR PREÇO</option></select>
+  <input id="pr-q" type="search" placeholder="Buscar procedimento" oninput="prFiltro()">
+  <button onclick="prCsv()">Baixar em planilha (CSV)</button>
+  <button onclick="prReset()">Limpar preenchimento</button>
 </div>
+<div class="tblw"><table id="pr-tab">
+<tr><th>Especialidade</th><th>Procedimento</th><th>Preço atual (R$)</th><th>Tempo (min)</th><th>Materiais (R$)</th><th>Lab / terceiros (R$)</th><th class="r">Custo estimado</th><th class="r">Preço-piso</th><th class="r">Diferença</th><th>Situação</th></tr>
+${body}
+</table></div>
+<p class="src">Campos amarelos são para preencher. O preço atual já vem carregado e pode ser editado para simular. Os números ficam salvos neste navegador. Custo estimado = minutos × custo por minuto + materiais + laboratório. Preço-piso = custo ÷ (1 − soma de impostos, cartão, repasse e margem). Se faltar qualquer campo, o resultado fica em branco.</p>
 
-<h2>Próxima etapa da precificação</h2>
+<h2>Itens para confirmar antes de usar</h2>
+<div class="callout warn"><ul class="clean">
+<li><b>Implante HE:</b> o texto recebido trazia "D1.800". Preço ficou pendente na tabela.</li>
+<li><b>Implante + coroa (R$ 5.900):</b> confirmar o escopo; veio também o texto "2.500 unidade".</li>
+<li><b>Canal unirradicular e birradicular:</b> mesmo valor (R$ 1.250). Pode estar correto ou ser erro de digitação.</li>
+<li><b>Profilaxia:</b> aparece em Prevenção e em Periodontia. Conferir o cadastro.</li>
+<li><b>Tratamento periodontal completo:</b> faixa informada de R$ 1.800 a R$ 2.800; a tabela adota o valor inferior como referência.</li>
+<li><b>Harmonização:</b> confirmar apresentação, unidades e produto (Botox, Dysport e ácido hialurônico).</li>
+<li><b>Clareamento associado:</b> confirmar número de sessões.</li></ul></div>
+
+<div class="callout"><b>Âncora do mercado</b>A D'Or anuncia 10 lentes por R$ 990 (R$ 99 por lente), e a tabela da Sorriso Capital traz lente de contato a R$ 2.500. A comunicação precisa sustentar a diferença com planejamento, naturalidade e caso real, sem entrar em guerra de preço. Use o preço-piso para saber até onde um desconto ainda cobre custo e margem.</div>
+
+<h2>Próxima etapa</h2>
 <div class="card"><ul class="clean">
-<li>Definir custo por procedimento (material, laboratório, hora clínica) para calcular margem real. A tabela atual traz só preço de venda.</li>
-<li>Montar pacotes (ex.: avaliação + planejamento + lentes) e condições de pagamento para a CRC.</li>
-<li>Regra de desconto e quem pode autorizar.</li></ul></div>
-<p class="src">Fonte: tabela de preços enviada (tabela de preços sorriso.txt).</p>
+<li>Levantar tempo, material e laboratório dos 10 procedimentos que mais faturam (pelo Clinicorp) e começar por eles.</li>
+<li>Definir a margem mínima com a proprietária e o percentual real de impostos com o contador.</li>
+<li>Montar pacotes (avaliação, planejamento e tratamento) e a regra de desconto da CRC: quem pode autorizar, e até que preço (o preço-piso).</li></ul></div>
+<p class="src">Fonte: Clinica_Sorriso_Previa_Essencial_Simplificada.xlsx (abas COMECE AQUI e TABELA DE PREÇOS).</p>
 `);
+})();
 
 })();
 
@@ -1111,7 +1230,7 @@ registerView('concorrentes', `
 <tr><td><b>Oral Sin Asa Norte</b></td><td>Implantes</td><td>"Número 1 do Brasil", vídeo.</td></tr>
 <tr><td><b>Sorriso Capital</b></td><td>Coworking</td><td>1 anúncio, 6 palavras de texto. Nenhum para paciente.</td></tr>
 </table></div>
-<div class="callout ok"><b>Coworking é espaço livre</b>Nenhum concorrente anuncia coworking odontológico em Brasília. A Sorriso Capital pode ocupar a categoria.</div>
+<div class="callout ok"><b>Coworking odontológico é espaço livre</b>Nenhum concorrente anuncia coworking só de odontologia em Brasília (coworkings de saúde em geral anunciam). Detalhes e preços na tela "Concorrentes do coworking".</div>
 
 <h2>O que modelar</h2>
 <div class="grid g2">
@@ -1392,6 +1511,122 @@ registerView('cow-ads', `
 <li>Decisão sobre Black Friday e sobre a primeira locação a R$ 50 (por hora ou por período).</li>
 <li>Rastreamento: parâmetros nos links e registro de origem de cada lead.</li></ul></div>
 <p class="src">Fonte: Biblioteca de Anúncios da Meta via Apify, coleta de 12/11/2026. Os anúncios citados são de outras cidades, exceto a própria Sorriso Capital. Rascunhos de texto não foram enviados à plataforma.</p>
+`);
+
+})();
+
+/* ===== view: cow-concorrentes ===== */
+(function(){
+registerView('cow-concorrentes', `
+<div class="crumb">Coworking</div>
+<h1>Concorrentes do <em>coworking</em></h1>
+<p class="lead">Quem aluga consultório e sala odontológica em Brasília, quanto cobra, como aparece no Instagram, se anuncia na Meta e o que oferece a mais do que a Sorriso Capital. Pesquisa feita em 16 e 17/11/2026 (Instagram, Biblioteca de Anúncios da Meta, sites e classificados).</p>
+
+<div class="grid g4">
+  <div class="card kpi"><div class="v">8</div><div class="l">Espaços de saúde mapeados</div><div class="s">Aluguel por hora, período ou mês</div></div>
+  <div class="card kpi"><div class="v">1</div><div class="l">Com sala odontológica dedicada</div><div class="s">UNA, Sudoeste (preço sob consulta)</div></div>
+  <div class="card kpi"><div class="v">R$ 150 a 290</div><div class="l">Período avulso entre dentistas</div><div class="s">Sublocação em classificados (OLX)</div></div>
+  <div class="card kpi"><div class="v">0</div><div class="l">Coworking só de odontologia anunciando</div><div class="s">Na Meta, em Brasília</div></div>
+</div>
+
+<div class="callout warn"><b>Correção importante</b>Na primeira passada eu havia escrito que ninguém anunciava coworking em Brasília. Isso vale só para <b>coworking odontológico</b>. Coworkings de saúde em geral anunciam: Vesali (8+ anúncios ativos), Integrale (3) e outros. O espaço livre é o nicho do dentista, que ninguém ocupa com anúncio.</div>
+
+<h2>1. Mapa de concorrentes em Brasília</h2>
+<div class="tblw"><table>
+<tr><th>Espaço</th><th>Onde</th><th>Atende dentista?</th><th>Quanto cobra</th><th>Como cobra</th></tr>
+<tr><td><b>UNA Especialidades</b></td><td>Sudoeste, SQSW 105</td><td><span class="tag ok">Sim</span> Sala 2 é odontológica</td><td>Não publica. Orçamento por turno e serviços</td><td>Turno semanal: manhã 8h às 13h, tarde 13h às 18h</td></tr>
+<tr><td><b>Integrale Hub de Saúde</b></td><td>Asa Sul (Centro Sul) e Asa Norte (Biosphere)</td><td><span class="tag warn">Parcial</span> só dentista de HOF</td><td>Não publica. Varia por plano e sala</td><td>Por <b>minuto</b>. Planos Avulso, Mensalista Demanda e Mensalista Fixo</td></tr>
+<tr><td><b>Vesali Consultórios</b></td><td>Setor Hospitalar Local Sul 716</td><td><span class="tag bad">Não</span> o site diz que não tem estrutura odontológica</td><td>Só no WhatsApp (4004-3101)</td><td>Hora, dia ou mês. Planos Basic e Premium</td></tr>
+<tr><td><b>Concept Offices (Brasil 21)</b></td><td>SHS Quadra 6, Bloco A</td><td><span class="tag warn">Não indicado</span> salas gerais, psicologia, nutrição</td><td>Planos a partir de R$ 280. Consultório padrão R$ 370 e sala geral R$ 298 (meio turno, 1x por semana)</td><td>Fixo semanal. Domicílio fiscal incluso</td></tr>
+<tr><td><b>Renata Almeida (DF Plaza)</b></td><td>Asa Sul, posts citam DF Plaza e Venâncio</td><td><span class="tag warn">Saúde e estética</span> não é focado em odonto</td><td><b>A partir de R$ 45 por hora</b> (post de 14/08/2026)</td><td>Hora</td></tr>
+<tr><td><b>Arkamatra</b></td><td>Centro de Brasília</td><td><span class="tag bad">Não</span> terapeutas e saúde integral</td><td>Não publica</td><td>Por hora</td></tr>
+<tr><td><b>S.E.R. Saúde em Rede</b></td><td>Asa Sul</td><td><span class="tag warn">Não confirmado</span></td><td>Não publica</td><td>Consultório premium de coworking</td></tr>
+<tr><td><b>Odonto Spot</b></td><td>Brasília</td><td><span class="tag ok">Sim</span> "primeira clínica odontológica de Brasília no modelo coworking"</td><td>Não publica</td><td>Por período. Instagram com últimas publicações visíveis de 2016 a 2018, aparenta parado</td></tr>
+<tr><td><b>Bacelar Coworking Clinical</b></td><td>Brasília (só achei Facebook)</td><td><span class="tag warn">Não verificado</span></td><td>Sem dado</td><td>Sem dado</td></tr>
+</table></div>
+
+<h3 style="margin-top:20px">Dentistas alugando sala direto (classificados)</h3>
+<div class="tblw"><table>
+<tr><th>Onde</th><th class="r">Valor</th><th>O que inclui</th></tr>
+<tr><td>Águas Claras (Pátio Capital, Taguatinga Sul), Dra. Maísa Paz</td><td class="r">R$ 250 consultório 1<br>R$ 230 consultório 2, por período</td><td>Manhã 8h às 12h30 ou tarde 13h30 às 18h. Recepcionista e propé, ar condicionado, bomba a vácuo, compressor. Material e instrumental por conta do dentista. Auxiliar (ASB) opcional com custo extra.</td></tr>
+<tr><td>Taguatinga Centro, sublocação</td><td class="r">R$ 150 (anúncio não diz se é hora ou período)</td><td>Ultrassom, jato de bicarbonato, fotopolimerizador, TV, ar condicionado, propé, café, esterilização completa. O dentista traz só o grau.</td></tr>
+<tr><td>Sudoeste, centro clínico (MGF Imóveis)</td><td class="r">R$ 250 por período</td><td>Consultório em clínica odontológica.</td></tr>
+<tr><td>Asa Norte, arrendamento</td><td class="r">R$ 290</td><td>Anúncio não detalha unidade de cobrança.</td></tr>
+</table></div>
+<p class="src">Faixa de mercado: R$ 230 a R$ 290 por período de 4,5 a 5 horas, ou cerca de R$ 46 a R$ 64 por hora. A Sorriso Capital cobra R$ 350 por 5 horas (R$ 70 por hora) e R$ 80 a hora avulsa. Está acima desse piso, o que precisa ser justificado com serviço (esterilização, secretária, kits, local).</p>
+
+<h2>2. Instagram</h2>
+<div class="tblw"><table>
+<tr><th>Perfil</th><th class="r">Seguidores</th><th class="r">Posts</th><th>Como se comunica</th><th>Desempenho</th></tr>
+<tr><td><b>@esteticarenataalmeida_</b></td><td class="r">16.938</td><td class="r">2.017</td><td>Estética e harmonização; coworking como segundo produto. Mostra o preço (R$ 45 por hora) e reserva por WhatsApp</td><td>Reel do coworking: 49.174 visualizações. É a maior distribuição entre os concorrentes de local</td></tr>
+<tr><td><b>@arkamatra.coworking</b></td><td class="r">4.257</td><td class="r">830</td><td>Comunidade, networking, terapeutas. Link em Linktree</td><td>Sem dado de Reels</td></tr>
+<tr><td><b>@vesaliconsultorios</b></td><td class="r">3.094</td><td class="r">339</td><td>"+300 profissionais já confiaram", "reduza até 85% dos custos fixos". Posts em texto longo sobre custo de ter consultório</td><td>Reel de 12/03/2026: 17.693 visualizações, 128 curtidas. Posts de imagem: 1 a 4 curtidas</td></tr>
+<tr><td><b>@integralehubdesaude</b></td><td class="r">1.515</td><td class="r">454</td><td>Posts quase diários, tom de médico/"experiência do paciente", pouco convite direto</td><td>Reels de 68 a 191 visualizações; 0 a 11 curtidas. Frequência alta, alcance baixo</td></tr>
+<tr><td><b>@ser_saudeemrede</b></td><td class="r">1.487</td><td class="r">86</td><td>"Consultório coworking cheio de estilo na Asa Sul"</td><td>Sem dado</td></tr>
+<tr><td><b>@odontospot</b></td><td class="r">607</td><td class="r">25</td><td>Posicionamento de pioneiro, mas sem conteúdo recente</td><td>Parado</td></tr>
+<tr><td><b>@sorriso.capital</b> (referência)</td><td class="r">612</td><td class="r">97</td><td>Coworking aparece em Reels e anúncio de 6 palavras</td><td>O mesmo Reel de coworking: 39 visualizações na clínica e 13.928 no perfil da Dra. Rayane</td></tr>
+</table></div>
+<div class="callout ok"><b>Leitura</b>Nenhum dos espaços tem mais de 17 mil seguidores. O perfil da Dra. Rayane (9.087) já vence quase todos em alcance de Reel. O que ganha distribuição é conteúdo com preço visível (Renata) ou com pergunta direta ao profissional (Vesali). Frequência alta sem convite (Integrale) não gera alcance.</div>
+
+<h2>3. Campanhas na Meta</h2>
+<div class="tblw"><table>
+<tr><th>Anunciante</th><th>Ativos</th><th>O que dizem</th><th>Formato e destino</th></tr>
+<tr><td><b>Vesali</b></td><td>8+ (de 01/10 a 11/11/2026)</td><td>"Sua única preocupação deve ser o diagnóstico e o bem-estar do seu paciente." Recepção, concierge, limpeza e segurança "em uma única assinatura flexível". "Toque em Ver detalhes para receber os valores"</td><td>Vídeo e carrossel dinâmico. Preço escondido para forçar o contato</td></tr>
+<tr><td><b>Integrale</b></td><td>3 (09/09, 04/11 e 11/11)</td><td>Carrossel e imagem de experiência do paciente; Black Friday em teaser ("novidade por vir")</td><td>WhatsApp</td></tr>
+<tr><td><b>SLE Clínica Lounge Estética e Coworking</b></td><td>1 (12/11)</td><td>Vídeo; sem CTA nem texto lidos na Biblioteca</td><td>Sem destino</td></tr>
+<tr><td><b>Coworking odontológico em Brasília</b></td><td>0</td><td>Nenhum anúncio encontrado, nem da Sorriso Capital com oferta clara (só 1 anúncio de 6 palavras em 29/10)</td><td>Espaço livre</td></tr>
+</table></div>
+<p class="src">A Meta não mostra gasto no Brasil. Vesali parece o maior anunciante do segmento pelo número de variações e pelo tempo no ar.</p>
+
+<h3 style="margin-top:20px">Ideias de fora de Brasília que valem copiar</h3>
+<div class="tblw"><table>
+<tr><th>Quem</th><th>Onde</th><th>O que fazem</th></tr>
+<tr><td><b>Hanel Coworking Médico e Odontológico</b></td><td>Maringá</td><td>Black Friday com <b>1 hora extra a cada período contratado</b>, válida para avulso e pacote mensal, usada em outra data. Muitas variações de anúncio (10+ ativos em 4 dias), copy direta para "Dentista, ..." e CTA WhatsApp. Período de 5h30. Panorâmica contratada à parte.</td></tr>
+<tr><td><b>Doctors</b></td><td>São Paulo</td><td>Preço público de R$ 130 a R$ 250 por hora e planos "de gratuito a completo" com esterilização de instrumentais e recepção como serviços.</td></tr>
+<tr><td><b>Dentshare e Coodonto</b></td><td>São Paulo</td><td>Plataforma de locação por turno; mostra que o modelo "marketplace" existe, mas sem presença local em Brasília.</td></tr>
+</table></div>
+
+<h2>4. O que eles oferecem a mais do que a Sorriso Capital</h2>
+<div class="tblw"><table>
+<tr><th>Diferencial deles</th><th>Quem</th><th>A Sorriso Capital tem?</th><th>O que fazer</th></tr>
+<tr><td>Secretariado completo (agenda, confirmação, recepção, telefone exclusivo)</td><td>UNA, Integrale, Concept, Vesali</td><td><span class="tag ok">Parcial</span> secretária 8h às 18h</td><td>Transformar em item vendido (plano com secretária)</td></tr>
+<tr><td>Faturamento de convênio (guias TISS) e prontuário eletrônico</td><td>UNA</td><td><span class="tag bad">Não</span></td><td>Avaliar se o Clinicorp pode ser cedido ao locatário</td></tr>
+<tr><td>Cobrança por minuto ou plano mensal (fixo e sob demanda)</td><td>Integrale</td><td><span class="tag bad">Não</span> só hora e período</td><td>Criar plano de dia fixo e mensal (ver tela de Oferta)</td></tr>
+<tr><td>Contabilidade, jurídico, endereço fiscal e domicílio fiscal</td><td>Integrale, Concept</td><td><span class="tag bad">Não</span></td><td>Parceria com contador e advogado (comissão ou indicação)</td></tr>
+<tr><td>Marketing do profissional (foto, vídeo, site, podcast)</td><td>Vesali (parceria Neurall)</td><td><span class="tag bad">Não</span></td><td>Cenário de filmagem na sala; pacote com a Dra. Rayane</td></tr>
+<tr><td>Horário ampliado (seg a sex até 21h, sábado 9h às 17h)</td><td>Vesali</td><td><span class="tag warn">Parcial</span> período noturno de R$ 300</td><td>Divulgar a noite e o sábado</td></tr>
+<tr><td>Comunidade e networking, encaminhamento entre especialistas</td><td>Vesali, Arkamatra, UNA</td><td><span class="tag warn">Informal</span></td><td>Grupo de WhatsApp e evento trimestral</td></tr>
+<tr><td>Estacionamento amplo</td><td>UNA, Vesali</td><td><span class="tag warn">A confirmar</span> shopping</td><td>Informar custo e desconto de estacionamento</td></tr>
+<tr><td>Preço público (R$ 45 por hora)</td><td>Renata Almeida</td><td><span class="tag ok">Sim</span> R$ 80, R$ 70 por hora no período</td><td>Manter preço visível: gera alcance</td></tr>
+</table></div>
+
+<h2>5. O que a Sorriso Capital tem e eles não mostram</h2>
+<div class="grid g2">
+  <div class="card"><h3>Pontos fortes</h3><ul class="clean">
+    <li><b>Sala odontológica dedicada</b>: só UNA e Odonto Spot têm, e nenhum anuncia</li>
+    <li><b>Esterilização como serviço</b> (R$ 50 por período) e plano de kit esterilizado para alugar (tela de Kits)</li>
+    <li><b>Entrada de R$ 50</b>: ninguém na lista oferece primeira locação a esse valor</li>
+    <li><b>Local</b>: Venâncio Shopping, Asa Sul, perto de hospitais e do Setor Comercial Sul</li>
+    <li><b>Dona com audiência</b>: Dra. Rayane tem 9.087 seguidores e um Reel de coworking com 13,9 mil visualizações</li></ul></div>
+  <div class="card"><h3>Pontos fracos</h3><ul class="clean">
+    <li>R$ 350 por período fica acima do piso de R$ 230 a R$ 290 dos classificados</li>
+    <li>Sem plano mensal nem de dia fixo (Integrale e Concept têm)</li>
+    <li>Instagram da clínica com 612 seguidores</li>
+    <li>Sem prova social visível (nenhum depoimento de dentista locatário)</li>
+    <li>Sem pacote de apoio ao profissional (marketing, contabilidade, convênio)</li></ul></div>
+</div>
+
+<h2>6. Posicionamento recomendado</h2>
+<div class="card"><p style="margin:0"><b>Não competir no preço baixo.</b> Os classificados de R$ 230 a R$ 290 são consultórios simples: o dentista traz tudo e faz a esterilização. A proposta da Sorriso Capital é <b>sala odontológica pronta com esterilização e secretária, no Venâncio</b>, para o dentista que quer atender sem montar estrutura. Use o R$ 50 de entrada para vencer a objeção de preço e o <b>programa de indicação</b> (tela seguinte) para aproximar o preço do piso de mercado de quem traz outros colegas.</p></div>
+
+<h2>7. O que ainda não consegui levantar</h2>
+<div class="card"><ul class="clean">
+  <li>Valores da UNA, Integrale e Vesali: só saem pelo WhatsApp. Sugestão: pedir orçamento como dentista interessado (a Mari ou o Raffa) e preencher a tabela.</li>
+  <li>Se o Odonto Spot ainda opera e se a UNA tem anúncio ativo (não apareceu na Biblioteca).</li>
+  <li>Bacelar Coworking Clinical: só achei o Facebook; falta confirmar se atende dentista.</li>
+  <li>Hanel (Maringá), Zahn (Belém) e Ravel Locação Odontológica foram descartados da lista de Brasília por não serem daqui ou por não ter localização confirmada.</li>
+  <li>A Clínica Onda Odontologia Premium aparece num Reel do perfil da Dra. Rayane oferecendo coworking odontológico. Preciso que você me diga se é a mesma estrutura da Sorriso Capital.</li></ul></div>
+<p class="src">Fontes: Biblioteca de Anúncios da Meta (consulta de 16 e 17/11/2026), perfis públicos do Instagram, sites de UNA, Integrale, Vesali e Concept Offices, classificados da OLX e MGF. Preços e dados mudam; reconferir antes de usar em material comercial.</p>
 `);
 
 })();
@@ -1679,6 +1914,149 @@ registerView('cow-funil', `
 <li>Esclarecer a primeira locação a R$ 50: vale por hora ou por período?</li>
 <li>Próximas entregas: campanha Meta Ads para profissionais e criativos do coworking.</li></ul></div>
 `);
+
+})();
+
+/* ===== view: cow-indicacao ===== */
+(function(){
+(function(){
+var TIERS = [[1,10],[2,15],[3,20],[4,25]];
+function num(v){ var n = parseFloat(String(v).replace(",",".")); return isNaN(n) ? 0 : n; }
+function brl(n){ return n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+function desc(n){ var d = 0; TIERS.forEach(function(t){ if (n >= t[0]) d = t[1]; }); return d; }
+window.indCalc = function(){
+  var g = function(id){ var e = document.getElementById(id); return e ? num(e.value) : 0; };
+  var set = function(id, t){ var e = document.getElementById(id); if (e) e.textContent = t; };
+  var preco = g("ind-preco"), ind = Math.floor(g("ind-n")), pp = g("ind-pp"), pi = g("ind-pi"), horas = g("ind-h") || 5;
+  var d = desc(ind);
+  var novo = preco * (1 - d/100);
+  var custo = pp * (preco - novo);
+  var receita = ind * pi * preco;
+  set("ind-d", d + "%");
+  set("ind-novo", brl(novo));
+  set("ind-hora", brl(novo / horas));
+  set("ind-custo", brl(custo));
+  set("ind-rec", brl(receita));
+  set("ind-saldo", brl(receita - custo));
+};
+onView("cow-indicacao", function(){ window.indCalc(); });
+
+var rows = TIERS.map(function(t){
+  var p = 350 * (1 - t[1]/100);
+  return '<tr><td><b>'+(t[0]===4 ? '4 ou mais' : t[0])+'</b></td><td class="r">'+t[1]+'%</td><td class="r">'+p.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})+'</td><td class="r">'+(p/5).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})+'</td></tr>';
+}).join("");
+
+registerView("cow-indicacao", `
+<style>
+.ind-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ind-f{display:flex;flex-direction:column;gap:4px}
+.ind-f span{font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--mute)}
+.ind-f input{border:1px solid var(--line);border-radius:8px;padding:9px 10px;font:inherit;background:#FFFEFB;width:100%}
+.ind-f input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,168,67,.18)}
+@media (max-width:560px){.ind-grid{grid-template-columns:1fr}}
+</style>
+<div class="crumb">Coworking</div>
+<h1>Programa de <em>indicação</em></h1>
+<p class="lead">Cada dentista que indica um colega ganha desconto progressivo nas próprias locações. Quanto mais colegas ativos, maior o desconto, com teto para proteger a margem. É a forma mais barata de encher as salas: o custo só existe quando o indicado já pagou uma locação.</p>
+
+<div class="callout warn"><b>Proposta para validar</b>Os percentuais abaixo são uma sugestão. Antes de lançar, o Raffa e a Dra. Rayane precisam confirmar o custo por período e a margem mínima (ver "Simulador"). O regulamento vira anexo do contrato, revisado por advogado.</div>
+
+<div class="grid g3">
+  <div class="card kpi"><div class="v">10% a 25%</div><div class="l">Desconto progressivo</div><div class="s">De 1 a 4 ou mais indicações</div></div>
+  <div class="card kpi"><div class="v">R$ 262,50</div><div class="l">Menor preço do período</div><div class="s">Com 4 indicações (R$ 52,50 por hora)</div></div>
+  <div class="card kpi"><div class="v">R$ 0</div><div class="l">Custo de captação</div><div class="s">Só há desconto após o indicado pagar</div></div>
+</div>
+
+<h2>Por que indicação</h2>
+<div class="card"><ul class="clean">
+  <li><b>Dentista confia em dentista.</b> A concorrência anuncia pouco e esconde preço; o colega que já usou a sala é a prova social que falta (hoje não há nenhum depoimento).</li>
+  <li><b>Preço de mercado onde importa.</b> Os classificados de Brasília cobram R$ 230 a R$ 290 por período. Com 4 indicações, o período de R$ 350 cai para R$ 262,50: o profissional mais ativo paga o preço do mercado, com esterilização, secretária e local nobre.</li>
+  <li><b>Fidelização.</b> O desconto fica enquanto o profissional continua ativo, então ele tem motivo para manter a rotina de locação.</li>
+  <li><b>Ocupação.</b> Cada indicado ocupa períodos que hoje estão vazios, sem anúncio pago.</li></ul></div>
+
+<h2>A escada de desconto</h2>
+<div class="tblw"><table>
+<tr><th>Indicações válidas</th><th class="r">Desconto</th><th class="r">Período de 5h (base R$ 350)</th><th class="r">Hora equivalente</th></tr>
+${rows}
+</table></div>
+<p class="src">Desconto vale sobre a locação por hora ou período. Não incide sobre a taxa de esterilização (R$ 50 por período) nem sobre a primeira locação de R$ 50. Referência de mercado: R$ 230 a R$ 290 por período entre dentistas em Brasília.</p>
+
+<h2>Regras sugeridas</h2>
+<div class="grid g2">
+  <div class="card"><h3>O que conta como indicação válida</h3><ul class="clean">
+    <li>O indicado é dentista novo, sem contrato anterior com o coworking</li>
+    <li>Informa quem o indicou na ficha de cadastro (nome e CRO do indicador)</li>
+    <li>Assina o contrato <b>e paga a primeira locação completa</b> (a de R$ 50 não conta)</li>
+    <li>Um mesmo indicado vale para uma única pessoa</li>
+    <li>Indicar a si mesmo ou a sócio de mesma empresa não vale</li></ul></div>
+  <div class="card"><h3>Como o desconto funciona</h3><ul class="clean">
+    <li>Sobe de nível a cada indicação válida, até o teto de 25%</li>
+    <li>Vale para as locações do indicador a partir do mês seguinte à validação</li>
+    <li>Fica ativo enquanto o indicador tiver pelo menos 2 locações no mês (sugestão)</li>
+    <li>Se o indicado ficar 90 dias sem usar, a indicação deixa de contar (sugestão)</li>
+    <li>Não se soma a outras promoções (por exemplo, Black Friday)</li></ul></div>
+</div>
+
+<div class="callout"><b>Cuidado de ética</b>O desconto é por indicar um <b>colega para alugar a sala</b>. Nunca por encaminhamento de paciente: pagar ou receber vantagem por paciente indicado entre dentistas fere o Código de Ética Odontológico. Validar a redação com o CRO-DF e com o advogado.</div>
+
+<h2>Simulador</h2>
+<div class="grid g2" style="align-items:start">
+  <div class="card"><h3>Preencha</h3><div class="ind-grid" style="margin-top:10px">
+    <label class="ind-f"><span>Preço do período (R$)</span><input id="ind-preco" type="number" min="0" step="any" value="350" oninput="indCalc()"></label>
+    <label class="ind-f"><span>Horas do período</span><input id="ind-h" type="number" min="1" step="any" value="5" oninput="indCalc()"></label>
+    <label class="ind-f"><span>Indicações válidas</span><input id="ind-n" type="number" min="0" step="1" value="2" oninput="indCalc()"></label>
+    <label class="ind-f"><span>Períodos por mês do indicador</span><input id="ind-pp" type="number" min="0" step="any" value="4" oninput="indCalc()"></label>
+    <label class="ind-f"><span>Períodos por mês de cada indicado</span><input id="ind-pi" type="number" min="0" step="any" value="2" oninput="indCalc()"></label>
+  </div><p class="src" style="margin-top:12px">Os valores iniciais são exemplos, não dados da clínica. Troque pelos reais.</p></div>
+  <div class="card"><h3>Resultado</h3>
+    <div class="grid g2" style="margin-top:10px">
+      <div class="card kpi"><div class="v" id="ind-d">-</div><div class="l">Desconto</div></div>
+      <div class="card kpi"><div class="v" id="ind-novo">-</div><div class="l">Período com desconto</div></div>
+      <div class="card kpi"><div class="v" id="ind-hora">-</div><div class="l">Hora equivalente</div></div>
+      <div class="card kpi"><div class="v" id="ind-custo">-</div><div class="l">Custo do desconto por mês</div></div>
+      <div class="card kpi"><div class="v" id="ind-rec">-</div><div class="l">Receita dos indicados por mês</div></div>
+      <div class="card kpi"><div class="v" id="ind-saldo">-</div><div class="l">Saldo (receita menos desconto)</div><div class="s">Antes dos custos do período</div></div>
+    </div></div>
+</div>
+<p class="src">O saldo precisa ser positivo e a hora com desconto precisa cobrir o custo do período (esterilização, limpeza, secretária, energia, desgaste). Sem o custo real, o teto de 25% é uma hipótese.</p>
+
+<h2>Como divulgar</h2>
+<div class="tblw"><table>
+<tr><th>Momento</th><th>Ação</th><th>Responsável</th></tr>
+<tr><td>Assinatura do contrato</td><td>Entregar o resumo do programa e o código do dentista</td><td>Mari / dona</td></tr>
+<tr><td>Depois da 2ª locação</td><td>Mensagem de convite: "indique um colega e reduza seu período"</td><td>Mari</td></tr>
+<tr><td>Fim do mês</td><td>Enviar extrato: indicações válidas, desconto atual, quanto falta para o próximo nível</td><td>Mari</td></tr>
+<tr><td>Instagram</td><td>Stories e Reel mostrando a escada de desconto (sem preço de outro concorrente)</td><td>Dra. Rayane</td></tr>
+<tr><td>Trimestral</td><td>Encontro de dentistas do coworking, com reconhecimento a quem mais indicou</td><td>Dona</td></tr>
+</table></div>
+
+<h3 style="margin-top:20px">Mensagens prontas</h3>
+<div class="card"><p style="margin:0 0 10px"><b>Convite ao dentista ativo:</b><br>
+"Oi, Dr(a). [nome]. Você já fez [número] locações aqui. Se indicar um colega que ainda não conhece o espaço, você passa a ter desconto no seu período a cada colega que fechar. A partir de 4 indicações, o desconto chega a 25%. Quer receber seu código?"</p>
+<p style="margin:0 0 10px"><b>Mensagem para o indicado:</b><br>
+"Oi, Dr(a). [nome]. O(a) Dr(a). [indicador] sugeriu que você conhecesse a sala odontológica da Sorriso Capital, no Venâncio. A primeira locação é R$ 50. Posso te enviar os horários e as regras da casa?"</p>
+<p style="margin:0"><b>Extrato mensal:</b><br>
+"Dr(a). [nome], em [mês] você teve [n] indicações válidas e está no nível de [x]% de desconto. Faltam [y] indicações para chegar a [z]%."</p></div>
+
+<h2>Controle</h2>
+<div class="tblw"><table>
+<tr><th>Campo</th><th>Para que serve</th></tr>
+<tr><td>Dentista indicador (nome e CRO)</td><td>Quem recebe o desconto</td></tr>
+<tr><td>Dentista indicado (nome e CRO)</td><td>Evita duplicidade e autoindicação</td></tr>
+<tr><td>Data do contrato e da 1ª locação completa</td><td>Quando a indicação passa a valer</td></tr>
+<tr><td>Nível de desconto atual e vigência</td><td>Aplicar o preço correto</td></tr>
+<tr><td>Locações do mês do indicador</td><td>Manter ou perder o desconto</td></tr>
+</table></div>
+<p class="src">Esta planilha pode ficar no Clinicorp ou numa tabela simples. Meta de acompanhamento: percentual de novos locatários que vieram por indicação, custo do desconto por indicado ativo e ocupação das salas (ver tela de Métricas do coworking).</p>
+
+<h2>O que preciso de você para fechar</h2>
+<div class="card"><ul class="clean">
+  <li>Custo real por período (esterilização, limpeza, secretária, energia, desgaste) para fixar o teto.</li>
+  <li>Se o desconto será por indicação acumulada (proposta acima) ou por mês ativo.</li>
+  <li>Se o indicado também ganha algo além da primeira locação de R$ 50.</li>
+  <li>Aprovação do advogado e do CRO-DF para o regulamento.</li></ul></div>
+`);
+})();
 
 })();
 
@@ -2140,7 +2518,7 @@ registerView('visao-geral', `
   <div class="card kpi"><div class="v">2</div><div class="l">Unidades de negócio</div><div class="s">Clínica e Coworking</div></div>
   <div class="card kpi"><div class="v">3</div><div class="l">Modelos de receita</div><div class="s">Coworking, parceria 35/65, paciente próprio</div></div>
   <div class="card kpi"><div class="v">9.087</div><div class="l">Seguidores da Dra. Rayane</div><div class="s">15x o perfil da clínica (612)</div></div>
-  <div class="card kpi"><div class="v">0</div><div class="l">Concorrentes anunciando coworking</div><div class="s">Espaço livre no Meta Ads</div></div>
+  <div class="card kpi"><div class="v">0</div><div class="l">Coworking odontológico anunciando</div><div class="s">Espaço livre no Meta Ads (Brasília)</div></div>
 </div>
 
 <h2>Roadmap de entregas</h2>
@@ -2153,6 +2531,7 @@ registerView('visao-geral', `
   <li><div><b>Campanhas Meta Ads</b> <span class="tag ok">Pronto</span><br><span style="color:var(--mute)">Profissionais da saúde (coworking) e paciente (lentes, harmonização, clareamento), com regras de publicidade da odontologia.</span></div></li>
   <li><div><b>Criativos</b> <span class="tag ok">Pronto</span><br><span style="color:var(--mute)">Coworking: 6 Reels e 3 carrosséis. Clínica: 10 Reels e 6 carrosséis, modelados no que funcionou no perfil da Dra. Rayane, Dafine, Ioog e CCD.</span></div></li>
   <li><div><b>Métricas e rotina de acompanhamento</b> <span class="tag ok">Pronto</span><br><span style="color:var(--mute)">Calculadoras do funil da clínica e do coworking, com salvamento no navegador.</span></div></li>
+  <li><div><b>Concorrentes do coworking e programa de indicação</b> <span class="tag ok">Pronto</span><br><span style="color:var(--mute)">Mapa de preços, Instagram e anúncios de 8 espaços de saúde em Brasília; escada de desconto de 10% a 25% por indicação, com simulador.</span></div></li>
   <li><div><b>Checklist de conformidade (RDC 1.002/2025)</b> <span class="tag warn">Em andamento</span><br><span style="color:var(--mute)">73 itens para marcar; depende de licença, projeto aprovado e Responsável Técnico.</span></div></li>
 </ol></div>
 
@@ -2176,7 +2555,7 @@ registerView('visao-geral', `
 function load(id){
   return new Promise(res => {
     if (VIEWS[id]) return res();
-    const s = document.createElement('script'); s.src = 'views/' + id + '.js'; /* offline: telas embutidas */
+    const s = document.createElement('script'); s.src = 'views/' + id + '.js';
     s.onload = res; s.onerror = () => { VIEWS[id] = '<h1>Tela indisponível</h1><p class="lead">Não consegui carregar views/'+id+'.js.</p>'; res(); };
     document.head.appendChild(s);
   });
