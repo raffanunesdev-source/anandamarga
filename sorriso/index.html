@@ -1604,7 +1604,7 @@ registerView('cow-concorrentes', `
 <div class="grid g2">
   <div class="card"><h3>Pontos fortes</h3><ul class="clean">
     <li><b>Sala odontológica dedicada</b>: só UNA e Odonto Spot têm, e nenhum anuncia</li>
-    <li><b>Esterilização como serviço</b> (R$ 50 por período) e plano de kit esterilizado para alugar (tela de Kits)</li>
+    <li><b>Esterilização como serviço</b> (R$ 50 por período) e kits prontos à parte (instrumental esterilizado R$ 25 e descartáveis R$ 15, tela de Kits)</li>
     <li><b>Entrada de R$ 50</b>: ninguém na lista oferece primeira locação a esse valor</li>
     <li><b>Local</b>: Venâncio Shopping, Asa Sul, perto de hospitais e do Setor Comercial Sul</li>
     <li><b>Dona com audiência</b>: Dra. Rayane tem 9.087 seguidores e um Reel de coworking com 13,9 mil visualizações</li></ul></div>
@@ -1864,7 +1864,7 @@ registerView('cow-funil', `
 <tr><th>Objeção</th><th>Resposta baseada na oferta</th></tr>
 <tr><td>"Ainda não tenho pacientes suficientes para alugar"</td><td>Por isso o modelo é por hora ou período, sem mensalidade fixa. A primeira locação custa R$ 50.</td></tr>
 <tr><td>"Tenho que montar e comprar tudo"</td><td>Sala com equipamentos novos, recepção e secretária. Você traz só seus materiais e instrumental.</td></tr>
-<tr><td>"E a esterilização?"</td><td>A clínica tem estrutura de esterilização (R$ 50 por período). Kit esterilizado para locação está em estudo.</td></tr>
+<tr><td>"E a esterilização?"</td><td>A clínica tem estrutura de esterilização (R$ 50 por período). Se esquecer o instrumental, a casa tem kit clínico esterilizado a R$ 25 e kit de descartáveis a R$ 15, cobrados à parte da locação.</td></tr>
 <tr><td>"Vou ficar preso a contrato?"</td><td>Contrato de locação não exclusivo, sem vínculo, rescisão com aviso de 30 dias.</td></tr>
 <tr><td>"E se eu tiver problema com paciente?"</td><td>A responsabilidade técnica é sua, e o paciente assina o termo de ciência. Explicar com transparência antes de assinar.</td></tr>
 <tr><td>"O preço está alto"</td><td>Comparar com o custo de montar e manter consultório próprio; mostrar que o período fica R$ 10 por hora mais barato que a hora avulsa.</td></tr>
@@ -2062,10 +2062,45 @@ ${rows}
 
 /* ===== view: cow-kits ===== */
 (function(){
+(function(){
+var KEY = "sorriso-capital-kits-v1";
+function num(v){ var n = parseFloat(String(v).replace(",",".")); return isNaN(n) ? null : n; }
+function brl(n){ return n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+function load(){ try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){ return {}; } }
+function save(o){ try { localStorage.setItem(KEY, JSON.stringify(o)); } catch(e){} }
+var IDS = ["kt-cb","kt-cd","kt-nb","kt-nd"];
+window.ktCalc = function(){
+  var o = {}, v = {};
+  IDS.forEach(function(id){ var e = document.getElementById(id); o[id] = e ? e.value : ""; v[id] = e ? num(e.value) : null; });
+  save(o);
+  var set = function(id, t){ var e = document.getElementById(id); if (e) e.textContent = t; };
+  var mb = v["kt-cb"] === null ? null : 25 - v["kt-cb"];
+  var md = v["kt-cd"] === null ? null : 15 - v["kt-cd"];
+  set("kt-mb", mb === null ? "-" : brl(mb)); set("kt-mbp", mb === null ? "" : (mb/25*100).toLocaleString("pt-BR",{maximumFractionDigits:0}) + "% do preço");
+  set("kt-md", md === null ? "-" : brl(md)); set("kt-mdp", md === null ? "" : (md/15*100).toLocaleString("pt-BR",{maximumFractionDigits:0}) + "% do preço");
+  var nb = v["kt-nb"] || 0, nd = v["kt-nd"] || 0;
+  set("kt-rec", brl(nb*25 + nd*15));
+  set("kt-lucro", (mb === null || md === null) ? "-" : brl(nb*mb + nd*md));
+};
+onView("cow-kits", function(){
+  var o = load();
+  IDS.forEach(function(id){ var e = document.getElementById(id); if (e) e.value = o[id] || ""; });
+  window.ktCalc();
+});
 registerView('cow-kits', `
+<style>
+.kt-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.kt-f{display:flex;flex-direction:column;gap:4px}
+.kt-f span{font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--mute)}
+.kt-f input{border:1px solid var(--line);border-radius:8px;padding:9px 10px;font:inherit;background:#FFF9E3;width:100%}
+.kt-f input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,168,67,.18)}
+@media (max-width:560px){.kt-grid{grid-template-columns:1fr}}
+</style>
 <div class="crumb">Coworking</div>
 <h1>Kits <em>esterilizados</em></h1>
-<p class="lead">Aluguel de kits de instrumental já esterilizados pela clínica para o dentista que usa o coworking. Resolve o maior atrito da primeira locação: chegar sem instrumental e sem estrutura de esterilização própria.</p>
+<p class="lead">Dois kits prontos, vendidos <b>separados da locação</b>, para o dentista que esqueceu o instrumental ou as luvas: o <b>kit clínico básico esterilizado (R$ 25)</b> e o <b>kit de descartáveis (R$ 15)</b>. A clínica deixa os dois montados e a recepção só entrega.</p>
+
+<div class="callout ok"><b>Decisão da dona (áudio de 16/11/2026)</b>Não oferecer kit junto da locação. A locação continua separada; o kit entra como produto à parte, para quem precisar. Por isso saíram desta tela os formatos "kit incluído na taxa" e "pacote mensal".</div>
 
 <div class="callout warn"><b>Descoberta importante da pesquisa</b>Em 15/12/2025 a Anvisa publicou a <b>RDC 1.002/2025</b>, que regula os serviços de assistência odontológica e <b>cita o Coworking Odontológico</b> como modalidade de consultório compartilhado, com um cirurgião-dentista como <b>Responsável Técnico</b>. Isso afeta o kit e também o contrato do coworking. Leia o bloco "O que a norma diz" antes de lançar.</div>
 
@@ -2085,24 +2120,48 @@ registerView('cow-kits', `
 
 <h2>Por que oferecer kits</h2>
 <div class="grid g3">
-  <div class="card"><h3>Remove atrito da 1ª locação</h3><p style="margin:0;color:var(--mute)">O dentista chega só com a agenda. Combina com a oferta de primeira locação a R$ 50.</p></div>
-  <div class="card"><h3>Receita adicional</h3><p style="margin:0;color:var(--mute)">Cobrança por uso, além da hora ou do período e da taxa de esterilização (R$ 50 por período, hoje).</p></div>
+  <div class="card"><h3>Resolve o esquecimento</h3><p style="margin:0;color:var(--mute)">O dentista que esqueceu o instrumental ou as luvas não para o atendimento, e a recepção não precisa emprestar material da clínica.</p></div>
+  <div class="card"><h3>Receita adicional</h3><p style="margin:0;color:var(--mute)">R$ 25 e R$ 15 por kit usado, além da locação e da taxa de esterilização (R$ 50 por período, hoje).</p></div>
   <div class="card"><h3>Diferencial na Meta</h3><p style="margin:0;color:var(--mute)">Um anunciante de coworking (Le Doc) já lista instrumental e esterilização como parte da sala. Na minha busca não achei serviço de aluguel de kit esterilizado separado: espaço para diferenciar.</p></div>
 </div>
 
-<h2>Como ficaria a oferta (3 formatos)</h2>
+<h2>Os 2 kits da oferta</h2>
 <div class="tblw"><table>
-<tr><th>Formato</th><th>Como funciona</th><th>Quando usar</th><th class="r">Preço</th></tr>
-<tr><td><b>A. Kit incluído</b></td><td>Kit básico já vem na taxa de esterilização; o profissional não paga à parte.</td><td>Campanha de aquisição; reduz a barreira na primeira locação.</td><td class="r">Definir</td></tr>
-<tr><td><b>B. Kit por uso</b></td><td>Cobrança por kit usado no período (básico, dentística, cirúrgico etc.).</td><td>Modelo principal; paga quem usa.</td><td class="r">Definir</td></tr>
-<tr><td><b>C. Pacote mensal</b></td><td>Número fixo de kits por mês com preço menor por unidade.</td><td>Profissional recorrente.</td><td class="r">Definir</td></tr>
+<tr><th>Kit</th><th>O que vai dentro</th><th>Como funciona</th><th class="r">Preço</th></tr>
+<tr><td><b>Kit clínico básico esterilizado</b></td><td>Instrumental de rotina, com a <b>carpule</b> e os itens que o dentista mais usa. Lista final a definir com a dona e o Responsável Técnico (ver "Pendências").</td><td>Para o dentista que esqueceu o dele. Ele usa, <b>devolve na área suja</b> e a clínica limpa, embala e esteriliza depois. Cobra-se por uso.</td><td class="r"><b>R$ 25</b></td></tr>
+<tr><td><b>Kit de descartáveis</b></td><td>Gaze, <b>3 pares de luva</b>, <b>1 máscara</b> e <b>1 gorro</b>.</td><td>Já fica montado, para a recepção entregar quando o dentista pedir luva ou material. Uso único, <b>não volta</b>.</td><td class="r"><b>R$ 15</b></td></tr>
 </table></div>
-<p class="src">Não coloquei valores: dependem do custo real por ciclo (modelo abaixo). A taxa de esterilização atual é R$ 50 por período.</p>
+<p class="src">Transcrição do áudio: "gol" foi lido como gorro e "carpole" como carpule. Se a dona quis dizer outra coisa, é só corrigir.</p>
 
-<h2>Tipos de kit para definir</h2>
-<div class="card"><p style="margin-top:0;color:var(--mute)">A lista de itens e as quantidades devem ser definidas pelo Responsável Técnico e pela dona, com base nos procedimentos que o coworking recebe. Categorias para começar:</p>
+<h3 style="margin-top:20px">Regras da oferta</h3>
+<div class="card"><ul class="clean">
+<li>Kit <b>separado da locação</b>: não entra na taxa de esterilização (R$ 50) nem em pacote. Cada um é cobrado quando usado.</li>
+<li>O kit básico volta para a clínica, que faz a esterilização. O de descartáveis é de uso único.</li>
+<li>Os dois ficam <b>prontos em estoque</b>, lacrados, para entrega na hora.</li>
+<li>No flyer e na conversa de venda, apresentar como "esqueceu algo? A casa tem": sem empurrar kit na primeira locação de R$ 50.</li></ul></div>
+
+<h3 style="margin-top:20px">Simulador de margem</h3>
+<div class="grid g2" style="align-items:start">
+  <div class="card"><h3>Preencha o custo real</h3>
+    <div class="kt-grid" style="margin-top:10px">
+      <label class="kt-f"><span>Custo por ciclo do kit básico (R$)</span><input id="kt-cb" type="number" min="0" step="any" oninput="ktCalc()"></label>
+      <label class="kt-f"><span>Custo do kit de descartáveis (R$)</span><input id="kt-cd" type="number" min="0" step="any" oninput="ktCalc()"></label>
+      <label class="kt-f"><span>Kits básicos por mês</span><input id="kt-nb" type="number" min="0" step="any" oninput="ktCalc()"></label>
+      <label class="kt-f"><span>Kits de descartáveis por mês</span><input id="kt-nd" type="number" min="0" step="any" oninput="ktCalc()"></label>
+    </div>
+    <p class="src" style="margin-top:10px">Custo do básico: embalagem, indicador, água e energia, tempo do auxiliar e desgaste do instrumental (tabela "Custo e preço" abaixo). Descartáveis: gaze, 3 luvas, máscara, gorro e embalagem.</p></div>
+  <div class="card"><h3>Resultado</h3>
+    <div class="grid g2" style="margin-top:10px">
+      <div class="card kpi"><div class="v" id="kt-mb">-</div><div class="l">Margem por kit básico</div><div class="s" id="kt-mbp"></div></div>
+      <div class="card kpi"><div class="v" id="kt-md">-</div><div class="l">Margem por kit de descartáveis</div><div class="s" id="kt-mdp"></div></div>
+      <div class="card kpi"><div class="v" id="kt-rec">-</div><div class="l">Receita por mês</div><div class="s">R$ 25 e R$ 15 por kit</div></div>
+      <div class="card kpi"><div class="v" id="kt-lucro">-</div><div class="l">Margem por mês</div><div class="s">Antes de rateio da estrutura</div></div>
+    </div></div>
+</div>
+
+<h2>Outros kits (fase 2, só se houver demanda)</h2>
+<div class="card"><p style="margin-top:0;color:var(--mute)">Começa só com os 2 kits acima. Se os dentistas pedirem, o Responsável Técnico e a dona definem itens e preço de kits por especialidade:</p>
 <ul class="clean">
-<li><b>Kit clínico básico:</b> exame e atendimento de rotina</li>
 <li><b>Kit dentística:</b> restaurações e estética</li>
 <li><b>Kit periodontia:</b> raspagem e cirurgias gengivais</li>
 <li><b>Kit cirúrgico:</b> exodontia e procedimentos cirúrgicos</li>
@@ -2110,7 +2169,8 @@ registerView('cow-kits', `
 <li><b>Kit harmonização / estética:</b> só se a clínica quiser atender a sala de estética</li></ul>
 <p style="margin:10px 0 0;color:var(--mute)">Itens críticos esterilizados sem embalagem só podem ser usados em necessidade de uso imediato (art. 83). Os kits devem sair lacrados.</p></div>
 
-<h2>Ciclo do kit</h2>
+<h2>Ciclo do kit clínico básico</h2>
+<p class="src" style="margin:-6px 0 10px">O kit de descartáveis é de uso único: sai lacrado e não volta. Este ciclo vale só para o kit básico.</p>
 <div class="card"><ol class="steps">
 <li><div><b>Entrega.</b> Kit sai lacrado da área de guarda, com etiqueta (data, preparador, lote, itens). A recepção registra quem recebeu e para qual período.</div></li>
 <li><div><b>Uso.</b> O profissional abre o pacote na cadeira. O lote do kit é anotado no prontuário do paciente, para rastrear a utilização.</div></li>
@@ -2152,10 +2212,11 @@ registerView('cow-kits', `
 <tr><td>Desgaste e reposição de instrumental</td><td>Custo do kit ÷ número de ciclos de vida útil</td><td class="r">Definir</td></tr>
 <tr><td>Manutenção e qualificação da autoclave</td><td>Custo anual ÷ ciclos</td><td class="r">Definir</td></tr>
 </table></div>
-<div class="callout"><b>Preço</b>Preço do kit = custo por ciclo + margem. A taxa de esterilização de R$ 50 por período já cobre o uso da estrutura do profissional com instrumental próprio; o kit é um serviço diferente (instrumental da clínica) e deve ser precificado à parte.</div>
+<div class="callout"><b>Preço</b>A dona já definiu <b>R$ 25</b> (kit básico) e <b>R$ 15</b> (descartáveis). Use o simulador acima com o custo real para confirmar que cada kit deixa margem. A taxa de esterilização de R$ 50 por período cobre o instrumental do próprio profissional; o kit é outro serviço (instrumental da clínica) e é cobrado à parte.</div>
 
 <h2>Cláusulas para o contrato do kit</h2>
 <div class="card"><ul class="clean">
+<li>Os kits são contratados e cobrados à parte da locação (R$ 25 o básico e R$ 15 o de descartáveis, valores sujeitos a reajuste informado).</li>
 <li>O instrumental é da clínica; uso exclusivo durante o período contratado.</li>
 <li>Kit lacrado só deve ser aberto na cadeira, no momento do atendimento.</li>
 <li>Devolução no fim do período, sem lavagem, conferida em checklist.</li>
@@ -2188,16 +2249,21 @@ registerView('cow-kits', `
 <tr><td>A autoclave tem bomba de vácuo? Qual o volume da câmara?</td><td>Define Bowie &amp; Dick e a norma aplicável (acima de 60 litros segue outra RDC).</td></tr>
 <tr><td>Operar esterilização em volume ou terceirizar?</td><td>Comparar custo e capacidade; terceirizar exige empresa licenciada e contrato.</td></tr>
 <tr><td>Quem opera o processamento no dia a dia?</td><td>Treinar e registrar; a norma exige operador identificado.</td></tr>
+<tr><td>O kit de descartáveis "esterilizado": luva, máscara e gorro são de uso único e não vão para autoclave</td><td>Confirmar com o RT o que a dona quis dizer: kit lacrado e limpo, e gaze já esterilizada de fábrica. Reprocessar material de uso único não é permitido.</td></tr>
+<tr><td>Lista de itens do kit básico (além da carpule)</td><td>Dona e RT fecham a lista e a quantidade de cada item.</td></tr>
+<tr><td>Se o dentista não devolver ou danificar o kit básico</td><td>Cobrar reposição a preço de tabela (cláusula do contrato).</td></tr>
 </table></div>
 
 <h2>Próximos passos</h2>
 <div class="card"><ul class="clean">
 <li>Confirmar com o Responsável Técnico e com a Vigilância Sanitária os pontos acima.</li>
 <li>Inventariar instrumental e esterilização atual (autoclave, embalagem, rotina).</li>
-<li>Definir composição de 2 ou 3 kits iniciais e medir o custo por ciclo.</li>
-<li>Só depois fechar o preço, revisar o contrato e anunciar o kit no coworking.</li>
+<li>Fechar a lista de itens do kit básico e dos descartáveis, e montar o primeiro lote.</li>
+<li>Medir o custo real de cada kit no simulador e confirmar a margem dos preços de R$ 25 e R$ 15.</li>
+<li>Incluir os kits (separados da locação) no flyer e no contrato.</li>
 <li>Antes de anunciar, atualizar o flyer e o contrato com a esterilização e a ciência da norma.</li></ul></div>
 `);
+})();
 
 })();
 
